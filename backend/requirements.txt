@@ -1,0 +1,13 @@
+Flask==3.0.2
+Flask-Cors==4.0.0
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+pydantic==2.6.4
+PyJWT==2.8.0
+bcrypt==4.1.2
+PyMuPDF==1.24.1
+pytesseract==0.3.10
+boto3==1.34.69
+gunicorn==21.2.0
+python-dotenv==1.0.1
+pytest==8.1.1

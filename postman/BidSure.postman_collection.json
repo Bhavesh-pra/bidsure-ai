@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "bidsure-sih-api-collection",
+		"name": "BidSure AI API Collection",
+		"description": "Postman API Collection for BidSure AI Modular Monolith API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tenders",
+			"item": [
+				{
+					"name": "Get All Tenders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/tenders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tenders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tender",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tender_number\": \"GEM/2026/B/1001\",\n  \"title\": \"Supply of Server Infrastructure\",\n  \"entity\": \"MeitY\",\n  \"category\": \"EQUIPMENT\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/tenders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tenders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
