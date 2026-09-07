@@ -1,0 +1,24 @@
+[
+  {
+    "id": "EVD-001",
+    "document_id": "DOC-GST-001",
+    "requirement_id": "REQ-001",
+    "field": "gstin",
+    "value": "27ABCDE1234F1Z5",
+    "normalized_value": "27ABCDE1234F1Z5",
+    "page": 1,
+    "extraction_method": "OCR_LLM",
+    "confidence": 0.98
+  },
+  {
+    "id": "EVD-002",
+    "document_id": "DOC-AUDIT-001",
+    "requirement_id": "REQ-003",
+    "field": "average_turnover",
+    "value": 68000000,
+    "normalized_value": 68000000,
+    "page": 4,
+    "extraction_method": "OCR_LLM",
+    "confidence": 0.94
+  }
+]

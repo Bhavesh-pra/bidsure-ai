@@ -1,0 +1,13 @@
+{
+  "requirement_id": "REQ-002",
+  "verification_type": "GOVERNMENT_SOURCE",
+  "source": "UDYAM_PORTAL_API",
+  "status": "UNABLE_TO_VERIFY",
+  "error": {
+    "code": "SOURCE_TIMEOUT",
+    "message": "Udyam portal verification service timed out after 10000ms"
+  },
+  "expected_handling": {
+    "system_action": "Do NOT mark requirement as FAIL or PASS. Set status to UNABLE_TO_VERIFY and trigger REVIEW_REQUIRED for Procurement Officer."
+  }
+}
