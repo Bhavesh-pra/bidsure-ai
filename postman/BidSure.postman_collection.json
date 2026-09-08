@@ -336,6 +336,39 @@
 			]
 		},
 		{
+			"name": "Tender Documents & Requirements",
+			"item": [
+				{
+					"name": "Upload Tender PDF",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": "{{pdfPath}}"}]},
+						"url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}/documents", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}", "documents"]}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tender Documents",
+					"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}], "url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}/documents", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}", "documents"]}},
+					"response": []
+				},
+				{
+					"name": "Get Extracted Requirements",
+					"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}], "url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}/requirements", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}", "requirements"]}},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Compliance Rules",
+			"item": [
+				{"name": "Generate Tender Rules", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}], "url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}/rules/generate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}", "rules", "generate"]}}, "response": []},
+				{"name": "Get Tender Rules", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}], "url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}/rules", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}", "rules"]}}, "response": []},
+				{"name": "Evaluate Rule", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"rule_id\": \"{{ruleId}}\",\n  \"evidence\": {\n    \"actual_value\": 75000000\n  }\n}"}, "url": {"raw": "{{baseUrl}}/api/v1/rules/evaluate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "rules", "evaluate"]}}, "response": []}
+			]
+		},
+		{
 			"name": "Bids",
 			"item": [
 				{
@@ -425,12 +458,17 @@
 			"type": "string"
 		},
 		{
-			"key": "accessToken",
+			"key": "tenderId",
+			"value": "TND-001",
+			"type": "string"
+		},
+		{
+			"key": "pdfPath",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "tenderId",
+			"key": "ruleId",
 			"value": "",
 			"type": "string"
 		}

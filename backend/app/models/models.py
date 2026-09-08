@@ -56,6 +56,7 @@ class Tender(db.Model):
 
     versions = db.relationship("TenderVersion", backref="tender", lazy=True)
     bids = db.relationship("Bid", backref="tender", lazy=True)
+    documents = db.relationship("Document", backref="tender", lazy=True)
 
     def to_summary_dict(self):
         return {
@@ -113,6 +114,37 @@ class Requirement(db.Model):
     source_clause = db.Column(db.String(100), nullable=True)
     source_page = db.Column(db.Integer, nullable=True)
     confidence = db.Column(db.Float, nullable=True)
+    rules = db.relationship("ComplianceRule", backref="requirement", lazy=True, cascade="all, delete-orphan")
+
+class ComplianceRule(db.Model):
+    __tablename__ = "compliance_rules"
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    requirement_id = db.Column(db.String(36), db.ForeignKey("requirements.id"), nullable=False, index=True)
+    rule_type = db.Column(db.String(50), nullable=False)
+    operator = db.Column(db.String(30), nullable=True)
+    expected_value = db.Column(db.Text, nullable=True)
+    parameters = db.Column(db.JSON, nullable=False, default=dict)
+    priority = db.Column(db.Integer, nullable=False, default=100)
+    enabled = db.Column(db.Boolean, nullable=False, default=True)
+    version = db.Column(db.Integer, nullable=False, default=1)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "requirement_id": self.requirement_id,
+            "rule_type": self.rule_type,
+            "operator": self.operator,
+            "expected_value": self.expected_value,
+            "parameters": self.parameters or {},
+            "priority": self.priority,
+            "enabled": self.enabled,
+            "version": self.version,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
 class Bidder(db.Model):
     __tablename__ = "bidders"
@@ -145,7 +177,8 @@ class Document(db.Model):
     __tablename__ = "documents"
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
-    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id"), nullable=False)
+    tender_id = db.Column(db.String(36), db.ForeignKey("tenders.id"), nullable=True, index=True)
+    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id"), nullable=True)
     document_type = db.Column(db.String(50), nullable=False)
     original_filename = db.Column(db.String(255), nullable=False)
     storage_key = db.Column(db.String(500), nullable=False)
@@ -154,4 +187,22 @@ class Document(db.Model):
     sha256 = db.Column(db.String(64), nullable=False)
     page_count = db.Column(db.Integer, nullable=True)
     processing_status = db.Column(db.String(50), default="UPLOADED", nullable=False)
+    uploaded_by = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "document_id": self.id,
+            "tender_id": self.tender_id,
+            "filename": self.original_filename,
+            "original_filename": self.original_filename,
+            "mime_type": self.mime_type,
+            "size_bytes": self.size_bytes,
+            "sha256": self.sha256,
+            "storage_key": self.storage_key,
+            "page_count": self.page_count,
+            "processing_status": self.processing_status,
+            "uploaded_by": self.uploaded_by,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }

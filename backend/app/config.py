@@ -10,6 +10,8 @@ class Config:
         "DATABASE_URL", "postgresql://bidsure:bidsure123@localhost:5432/bidsure_db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_BYTES", str(10 * 1024 * 1024)))
+    UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage"))
     
     JWT_SECRET_KEY = os.getenv("JWT_SECRET", os.getenv("JWT_SECRET_KEY", "jwt-dev-secret-key-bidsure-2026"))
     JWT_REFRESH_SECRET_KEY = os.getenv("JWT_REFRESH_SECRET", "jwt-refresh-dev-secret-key-bidsure-2026")

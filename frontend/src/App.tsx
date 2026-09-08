@@ -7,6 +7,7 @@ import LoginPage from './pages/Login';
 import TendersPage from './pages/Tenders';
 import TenderDetailsPage from './pages/TenderDetails';
 import CreateTenderPage from './pages/CreateTender';
+import RequirementDetailsPage from './pages/RequirementDetails';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import BidDetailsPage from './pages/BidDetails';
 import BidVerificationPage from './pages/BidVerification';
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/tenders" element={<ProtectedRoute><TendersPage /></ProtectedRoute>} />
           <Route path="/tenders/new" element={<ProtectedRoute><CreateTenderPage /></ProtectedRoute>} />
           <Route path="/tenders/:id" element={<ProtectedRoute><TenderDetailsPage /></ProtectedRoute>} />
+          <Route path="/tenders/:id/requirements/:requirementId" element={<ProtectedRoute><RequirementDetailsPage /></ProtectedRoute>} />
           <Route path="/bids" element={<BidDetailsPage />} />
           <Route path="/bids/:id" element={<BidDetailsPage />} />
           <Route path="/bids/:id/verification" element={<BidVerificationPage />} />

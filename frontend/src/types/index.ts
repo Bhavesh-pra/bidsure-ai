@@ -45,6 +45,7 @@ export {
   TENDER_STATUSES,
   TENDER_TYPES,
 } from './tender';
+export type { ComplianceRule, RuleResultStatus, RuleType } from './rule';
 
 export interface Bidder {
   id: string;
@@ -68,6 +69,8 @@ export interface Bid {
 
 export interface Document {
   id: string;
+  document_id?: string;
+  tender_id?: string;
   bid_id?: string;
   document_type: string;
   original_filename: string;
@@ -77,6 +80,8 @@ export interface Document {
   sha256: string;
   page_count?: number;
   processing_status: string;
+  uploaded_by?: string;
+  created_at?: string;
 }
 
 export interface Evidence {

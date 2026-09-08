@@ -1,0 +1,5 @@
+[
+  {"name": "document exists", "rule_type": "MANDATORY_DOCUMENT", "evidence": {"exists": true}, "expected": "PASS"},
+  {"name": "document missing", "rule_type": "MANDATORY_DOCUMENT", "evidence": {"exists": false}, "expected": "FAIL"},
+  {"name": "evidence absent", "rule_type": "MANDATORY_DOCUMENT", "evidence": {}, "expected": "EVIDENCE_MISSING"}
+]

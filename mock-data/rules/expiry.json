@@ -1,0 +1,5 @@
+[
+  {"name": "certificate future", "rule_type": "EXPIRY", "evidence": {"expiry_date": "2027-03-31", "evaluation_date": "2026-09-09"}, "expected": "PASS"},
+  {"name": "certificate expired", "rule_type": "EXPIRY", "evidence": {"expiry_date": "2025-03-31", "evaluation_date": "2026-09-09"}, "expected": "FAIL"},
+  {"name": "certificate invalid date", "rule_type": "EXPIRY", "evidence": {"expiry_date": "not-a-date"}, "expected": "REVIEW"}
+]

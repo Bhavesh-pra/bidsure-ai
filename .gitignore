@@ -23,6 +23,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Local tender document storage
+backend/storage/
+
 # IDE / OS
 .idea/
 .vscode/

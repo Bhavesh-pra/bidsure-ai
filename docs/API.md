@@ -192,6 +192,47 @@ All API requests and responses use JSON (`Content-Type: application/json`).
 - **Description**: List all bids submitted for a specific tender.
 - **Response**: `200 OK`
 
+### Tender Document Extraction
+
+#### `POST /api/v1/tenders/{id}/documents`
+- **Description**: Upload a tender PDF, extract page-aware text, and persist structured requirements for the authenticated organization.
+- **Request**: `multipart/form-data` with a `file` field.
+- **Validation**: PDF extension, PDF signature, MIME type, non-empty content, and configured maximum size.
+- **Response**: `201 Created` with document ID, processing status, page count, and extracted requirement count.
+
+#### `GET /api/v1/tenders/{id}/documents`
+- **Description**: List tender documents and processing metadata.
+- **Response**: `200 OK`
+
+#### `GET /api/v1/tenders/{id}/requirements`
+- **Description**: List requirements extracted from the latest tender version.
+- **Response**: `200 OK`; includes category, mandatory state, thresholds, source page, and extraction confidence. These are not compliance results.
+
+### Compliance Rules
+
+#### `POST /api/v1/requirements/{id}/rules`
+- **Description**: Create a deterministic rule from a requirement, optionally overriding generated fields.
+
+#### `GET /api/v1/requirements/{id}/rules`
+- **Description**: List rules associated with a requirement.
+
+#### `POST /api/v1/tenders/{id}/rules/generate`
+- **Description**: Generate rules for the latest extracted requirements of a tender.
+
+#### `GET /api/v1/tenders/{id}/rules`
+- **Description**: List all generated rules for a tender.
+
+#### `POST /api/v1/rules/evaluate`
+- **Description**: Development/testing endpoint for deterministic rule evaluation.
+- **Request**:
+```json
+{
+  "rule_id": "RULE-001",
+  "evidence": {"actual_value": 75000000}
+}
+```
+- **Response**: Rule status and explainable reason; no bidder compliance record is persisted in Cycle 5.
+
 #### `GET /api/v1/bids/{id}`
 - **Description**: Get full bid overview and status.
 - **Response**: `200 OK`

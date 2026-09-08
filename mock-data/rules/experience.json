@@ -1,0 +1,5 @@
+[
+  {"name": "experience pass", "rule_type": "EXPERIENCE", "operator": ">=", "expected_value": 3, "evidence": {"experience_years": 5}, "expected": "PASS"},
+  {"name": "experience fail", "rule_type": "EXPERIENCE", "operator": ">=", "expected_value": 3, "evidence": {"experience_years": 1}, "expected": "FAIL"},
+  {"name": "experience wrong type", "rule_type": "EXPERIENCE", "operator": ">=", "expected_value": 3, "evidence": {"experience_years": "unknown"}, "expected": "REVIEW"}
+]

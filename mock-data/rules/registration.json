@@ -1,0 +1,5 @@
+[
+  {"name": "GST active", "rule_type": "REGISTRATION", "expected_value": "ACTIVE", "evidence": {"status": "ACTIVE"}, "expected": "PASS"},
+  {"name": "GST cancelled", "rule_type": "REGISTRATION", "expected_value": "ACTIVE", "evidence": {"status": "CANCELLED"}, "expected": "FAIL"},
+  {"name": "registration unknown", "rule_type": "REGISTRATION", "expected_value": "ACTIVE", "evidence": {}, "expected": "EVIDENCE_MISSING"}
+]

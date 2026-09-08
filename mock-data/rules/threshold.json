@@ -1,0 +1,6 @@
+[
+  {"name": "turnover pass", "rule_type": "THRESHOLD", "operator": ">=", "expected_value": 50000000, "evidence": {"actual_value": 75000000}, "expected": "PASS"},
+  {"name": "turnover equal", "rule_type": "THRESHOLD", "operator": ">=", "expected_value": 50000000, "evidence": {"actual_value": 50000000}, "expected": "PASS"},
+  {"name": "turnover fail", "rule_type": "THRESHOLD", "operator": ">=", "expected_value": 50000000, "evidence": {"actual_value": 30000000}, "expected": "FAIL"},
+  {"name": "turnover review", "rule_type": "THRESHOLD", "operator": ">=", "expected_value": 50000000, "evidence": {}, "expected": "REVIEW"}
+]

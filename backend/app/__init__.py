@@ -1,5 +1,7 @@
 import os
 from flask import Flask
+from werkzeug.exceptions import RequestEntityTooLarge
+from app.utils.response import error_response
 from flask_cors import CORS
 from app.config import config_by_name
 from app.models.models import db
@@ -10,6 +12,10 @@ def create_app(config_name=None):
 
     app = Flask(__name__)
     app.config.from_object(config_by_name.get(config_name, config_by_name["default"]))
+
+    @app.errorhandler(RequestEntityTooLarge)
+    def handle_oversized_upload(_error):
+        return error_response("VALIDATION_ERROR", "Uploaded file exceeds the maximum allowed size", 413)
 
     # Initialize extensions
     CORS(app)
@@ -26,11 +32,15 @@ def create_app(config_name=None):
     from app.api.health import health_bp
     from app.api.auth import auth_bp
     from app.api.tenders import tenders_bp
+    from app.api.documents import documents_bp
+    from app.api.rules import rules_bp
     from app.api.bids import bids_bp
 
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
     app.register_blueprint(tenders_bp, url_prefix="/api/v1")
+    app.register_blueprint(documents_bp, url_prefix="/api/v1")
+    app.register_blueprint(rules_bp, url_prefix="/api/v1")
     app.register_blueprint(bids_bp, url_prefix="/api/v1")
 
     # Create tables in development mode if database exists
