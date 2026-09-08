@@ -15,6 +15,13 @@ def create_app(config_name=None):
     CORS(app)
     db.init_app(app)
 
+    try:
+        from flask_migrate import Migrate
+        migrate = Migrate()
+        migrate.init_app(app, db)
+    except ImportError:
+        pass
+
     # Register blueprints
     from app.api.health import health_bp
     from app.api.tenders import tenders_bp

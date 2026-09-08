@@ -11,7 +11,8 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-dev-secret-key-bidsure-2026")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET", os.getenv("JWT_SECRET_KEY", "jwt-dev-secret-key-bidsure-2026"))
+    JWT_REFRESH_SECRET_KEY = os.getenv("JWT_REFRESH_SECRET", "jwt-refresh-dev-secret-key-bidsure-2026")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(
         minutes=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES_MINUTES", "60"))
     )
@@ -20,6 +21,9 @@ class Config:
     S3_BUCKET = os.getenv("S3_BUCKET", "bidsure-documents")
     S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
     S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
+
+    LLM_API_KEY = os.getenv("LLM_API_KEY")
+    LLM_MODEL = os.getenv("LLM_MODEL", "gemini-1.5-pro")
 
 class DevelopmentConfig(Config):
     DEBUG = True
