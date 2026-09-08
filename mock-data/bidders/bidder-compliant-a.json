@@ -1,0 +1,25 @@
+{
+  "id": "BDR-COMPLIANT-A",
+  "legal_name": "ABC Technologies Private Limited",
+  "pan": "ABCDE1234F",
+  "gstin": "27ABCDE1234F1Z5",
+  "udyam_number": "UDYAM-MH-03-0012345",
+  "organization_type": "PRIVATE_LIMITED",
+  "financials": {
+    "average_turnover": 68000000,
+    "currency": "INR",
+    "audited": true
+  },
+  "experience": {
+    "completed_similar_projects": 4
+  },
+  "oem_authorization": {
+    "status": "VALID",
+    "issuer": "ServerCorp International"
+  },
+  "expected_outcome": {
+    "compliance_status": "VERIFIED_PASS",
+    "risk_level": "LOW",
+    "recommendation": "QUALIFIED"
+  }
+}

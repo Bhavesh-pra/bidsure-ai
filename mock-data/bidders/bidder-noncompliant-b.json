@@ -1,0 +1,35 @@
+{
+  "id": "BDR-PROBLEMATIC-B",
+  "legal_name": "XYZ Solutions & Services",
+  "pan": "XYZPS9876K",
+  "gstin": "27XYZPS9876K1Z9",
+  "udyam_number": "UDYAM-DL-01-0099999",
+  "organization_type": "PROPRIETORSHIP",
+  "financials": {
+    "average_turnover": 32000000,
+    "currency": "INR",
+    "audited": false
+  },
+  "experience": {
+    "completed_similar_projects": 1
+  },
+  "oem_authorization": {
+    "status": "MISSING",
+    "issuer": null
+  },
+  "expected_outcome": {
+    "compliance_status": "REVIEW_REQUIRED",
+    "risk_level": "HIGH",
+    "findings": [
+      {
+        "requirement_id": "REQ-003",
+        "issue": "Turnover ₹3.2 Cr is below required threshold of ₹5 Cr"
+      },
+      {
+        "requirement_id": "REQ-005",
+        "issue": "Mandatory OEM Authorization Certificate is missing"
+      }
+    ],
+    "recommendation": "DISQUALIFIED_OR_CLARIFY"
+  }
+}
