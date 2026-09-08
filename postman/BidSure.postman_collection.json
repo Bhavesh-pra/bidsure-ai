@@ -7,6 +7,22 @@
 	},
 	"item": [
 		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"officer@example.gov.in\",\n  \"password\": \"change-me\"\n}"},
+						"url": {"raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"]}
+					},
+					"event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 200) {", "  const json = pm.response.json();", "  const token = json.data.access_token || json.data.token;", "  if (token) pm.collectionVariables.set('accessToken', token);", "}"]}}],
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "System Health",
 			"request": {
 				"method": "GET",
@@ -32,7 +48,7 @@
 					"name": "Get All Tenders",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/tenders",
 							"host": [
@@ -55,11 +71,12 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
-							}
+							},
+							{"key": "Authorization", "value": "Bearer {{accessToken}}"}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tender_number\": \"GEM/2026/B/1001\",\n  \"title\": \"Supply of Server Infrastructure\",\n  \"entity\": \"MeitY\",\n  \"category\": \"EQUIPMENT\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
+							"raw": "{\n  \"tender_number\": \"GEM/2026/B/1234567\",\n  \"title\": \"Supply of Industrial Equipment\",\n  \"description\": \"Supply and installation of industrial equipment\",\n  \"category\": \"TECHNICAL\",\n  \"tender_type\": \"OPEN\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/tenders",
@@ -72,6 +89,16 @@
 								"tenders"
 							]
 						}
+					},
+					"event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 201) {", "  pm.collectionVariables.set('tenderId', pm.response.json().data.id);", "}"]}}],
+					"response": []
+				},
+				{
+					"name": "Get Tender",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+						"url": {"raw": "{{baseUrl}}/api/v1/tenders/{{tenderId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "tenders", "{{tenderId}}"]}
 					},
 					"response": []
 				}
@@ -150,6 +177,16 @@
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tenderId",
+			"value": "",
 			"type": "string"
 		}
 	]

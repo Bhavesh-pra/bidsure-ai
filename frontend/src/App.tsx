@@ -6,6 +6,8 @@ import DashboardPage from './pages/Dashboard';
 import LoginPage from './pages/Login';
 import TendersPage from './pages/Tenders';
 import TenderDetailsPage from './pages/TenderDetails';
+import CreateTenderPage from './pages/CreateTender';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import BidDetailsPage from './pages/BidDetails';
 import BidVerificationPage from './pages/BidVerification';
 import BidEvidencePage from './pages/BidEvidence';
@@ -19,9 +21,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/tenders" element={<TendersPage />} />
-          <Route path="/tenders/:id" element={<TenderDetailsPage />} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/tenders" element={<ProtectedRoute><TendersPage /></ProtectedRoute>} />
+          <Route path="/tenders/new" element={<ProtectedRoute><CreateTenderPage /></ProtectedRoute>} />
+          <Route path="/tenders/:id" element={<ProtectedRoute><TenderDetailsPage /></ProtectedRoute>} />
           <Route path="/bids" element={<BidDetailsPage />} />
           <Route path="/bids/:id" element={<BidDetailsPage />} />
           <Route path="/bids/:id/verification" element={<BidVerificationPage />} />
