@@ -33,16 +33,18 @@ export interface Requirement {
   confidence?: number;
 }
 
-export interface Tender {
-  id: string;
-  tender_number: string;
-  title: string;
-  entity: string;
-  category: string;
-  submission_deadline: string;
-  status: string;
-  requirements?: Requirement[];
-}
+export type {
+  CreateTenderPayload,
+  Tender,
+  TenderCategory,
+  TenderStatus,
+  TenderType,
+} from './tender';
+export {
+  TENDER_CATEGORIES,
+  TENDER_STATUSES,
+  TENDER_TYPES,
+} from './tender';
 
 export interface Bidder {
   id: string;

@@ -35,4 +35,23 @@ Run Flask health check test:
 
 ```powershell
 python -c "from app import create_app; app = create_app('testing'); client = app.test_client(); res = client.get('/api/v1/health'); print(res.status_code); print(res.json)"
+
+## Cycle 3 Tender Creation Test Matrix
+
+| ID | Test Scenario | Expected Outcome |
+| :--- | :--- | :--- |
+| **C3-01** | Create valid tender with JWT | `201 Created`, draft tender returned |
+| **C3-02** | Missing tender number | `400`/`422` validation envelope |
+| **C3-03** | Missing title | `400`/`422` validation envelope |
+| **C3-04** | Invalid category | `400`/`422` validation envelope |
+| **C3-05** | Invalid tender type | `400`/`422` validation envelope |
+| **C3-06** | Invalid or past deadline | `400`/`422` validation envelope |
+| **C3-07** | Duplicate tender number within organization | `409 Conflict` |
+| **C3-08** | List authenticated organization tenders | `200`, organization-scoped list |
+| **C3-09** | Get tender details | `200`, complete metadata |
+| **C3-10** | Missing/expired/invalid JWT | `401 Unauthorized` |
+| **C3-11** | Cross-organization tender access | `403 Forbidden` |
+| **C3-12** | Refresh and retrieve persisted tender | Tender remains available from PostgreSQL |
+
+Automated contract coverage is in `backend/tests/test_cycle3_tenders.py`. These tests are the release gate for the Cycle 3 backend implementation; they should not be weakened to accommodate a stub endpoint.
 ```

@@ -61,6 +61,7 @@
 									"var jsonData = pm.response.json();",
 									"if (jsonData.data && jsonData.data.access_token) {",
 									"    pm.environment.set(\"jwt_token\", jsonData.data.access_token);",
+									"    pm.environment.set(\"accessToken\", jsonData.data.access_token);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -420,6 +421,16 @@
 		},
 		{
 			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tenderId",
 			"value": "",
 			"type": "string"
 		}
