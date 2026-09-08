@@ -1,0 +1,26 @@
+[
+  {
+    "id": "TND-001",
+    "organization_id": "ORG-001",
+    "tender_number": "GEM/2026/B/1001",
+    "title": "Supply, Installation, and Commissioning of Enterprise High-Performance Server Infrastructure",
+    "entity": "Ministry of Electronics and Information Technology (MeitY)",
+    "category": "EQUIPMENT",
+    "estimated_value": 75000000.0,
+    "submission_deadline": "2026-10-15T17:00:00Z",
+    "status": "ACTIVE",
+    "evaluation_criteria": "LEAST_COST_QUALIFIED",
+    "requirements_summary": [
+      "GST Registration",
+      "PAN Card",
+      "Udyam MSME Registration",
+      "Minimum Annual Turnover (INR 50M)",
+      "Past Experience in IT Infrastructure (3+ Years)",
+      "OEM Manufacturer Authorization",
+      "Class-I Local Content (>= 50%)",
+      "Technical Specification Compliance",
+      "Delivery Timeline Commitment (<= 60 Days)"
+    ],
+    "created_at": "2026-09-01T10:00:00Z"
+  }
+]

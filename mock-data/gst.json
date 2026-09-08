@@ -1,0 +1,29 @@
+{
+  "records": [
+    {
+      "identifier": "27ABCDE1234F1Z5",
+      "status": "ACTIVE",
+      "legal_name": "ABC Technologies Private Limited",
+      "trade_name": "ABC Technologies",
+      "state_jurisdiction": "Maharashtra",
+      "registration_date": "2018-04-12",
+      "taxpayer_type": "REGULAR",
+      "compliance_rating": 5,
+      "verified_at": "2026-09-08T10:00:00Z",
+      "adapter_source": "GSTN_SANDBOX_ADAPTER"
+    },
+    {
+      "identifier": "27XYZAB9876C1Z1",
+      "status": "CANCELLED",
+      "cancellation_date": "2026-03-31",
+      "legal_name": "QuickNet Solutions LLP",
+      "trade_name": "QuickNet",
+      "state_jurisdiction": "Maharashtra",
+      "registration_date": "2023-01-10",
+      "taxpayer_type": "REGULAR",
+      "compliance_rating": 1,
+      "verified_at": "2026-09-08T10:00:00Z",
+      "adapter_source": "GSTN_SANDBOX_ADAPTER"
+    }
+  ]
+}

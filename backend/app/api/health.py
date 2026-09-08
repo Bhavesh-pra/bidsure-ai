@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Blueprint
 from app.utils.response import success_response
 
@@ -10,5 +10,5 @@ def health_check():
         "status": "healthy",
         "service": "BidSure AI Modular Monolith API",
         "version": "1.0.0",
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.now(timezone.utc).isoformat()
     })

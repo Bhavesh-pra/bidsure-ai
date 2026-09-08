@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "identifier": "ABCDE1234F",
+      "status": "VALID",
+      "legal_name": "ABC Technologies Private Limited",
+      "pan_status": "OPERATIVE",
+      "category": "COMPANY",
+      "aadhaar_seeding_status": "NOT_APPLICABLE",
+      "verified_at": "2026-09-08T10:00:00Z",
+      "adapter_source": "INCOME_TAX_PAN_ADAPTER"
+    },
+    {
+      "identifier": "XYZAB9876C",
+      "status": "VALID",
+      "legal_name": "QuickNet Solutions LLP",
+      "pan_status": "OPERATIVE",
+      "category": "LIMITED_LIABILITY_PARTNERSHIP",
+      "aadhaar_seeding_status": "NOT_APPLICABLE",
+      "verified_at": "2026-09-08T10:00:00Z",
+      "adapter_source": "INCOME_TAX_PAN_ADAPTER"
+    }
+  ]
+}

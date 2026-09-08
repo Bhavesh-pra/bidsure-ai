@@ -1,37 +1,52 @@
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Optional, Union
-from pydantic import BaseModel, Field
+from typing import List, Optional
+from pydantic import BaseModel, Field, ConfigDict
 
-class RequirementCategory(str, Enum):
-    STATUTORY = "STATUTORY"
-    FINANCIAL = "FINANCIAL"
-    TECHNICAL = "TECHNICAL"
-    REGISTRATION = "REGISTRATION"
-    DOCUMENT = "DOCUMENT"
-    ELIGIBILITY = "ELIGIBILITY"
+# Re-export Requirement domain components for backward compatibility
+from app.domain.requirement.schemas import (
+    RequirementSchema,
+    RequirementCategory,
+    ComparisonOperator,
+)
 
-class ComparisonOperator(str, Enum):
-    EQUALS = "=="
-    NOT_EQUALS = "!="
-    GREATER_THAN_OR_EQUAL = ">="
-    LESS_THAN_OR_EQUAL = "<="
-    CONTAINS = "CONTAINS"
-    EXISTS = "EXISTS"
+class TenderStatus(str, Enum):
+    DRAFT = "DRAFT"
+    PUBLISHED = "PUBLISHED"
+    ACTIVE = "ACTIVE"
+    EVALUATION = "EVALUATION"
+    AWARDED = "AWARDED"
+    CANCELLED = "CANCELLED"
 
-class RequirementSchema(BaseModel):
-    id: str = Field(..., description="Unique requirement identifier, e.g. REQ-001")
-    title: str = Field(..., description="Short title of the requirement")
-    description: Optional[str] = Field(None, description="Detailed description or clause text")
-    category: RequirementCategory = Field(..., description="Domain category")
-    mandatory: bool = Field(True, description="Whether requirement is compulsory for qualification")
-    applicability: str = Field("ALL_BIDDERS", description="Applicability scope or exception rule")
-    operator: Optional[ComparisonOperator] = Field(None, description="Deterministic rule comparison operator")
-    expected_value: Optional[Union[str, float, int, bool]] = Field(None, description="Target value for evaluation")
-    unit: Optional[str] = Field(None, description="Unit of measurement, e.g. INR, Years, Days")
-    evaluation_period: Optional[str] = Field(None, description="Evaluation period reference, e.g. FY 2024-25")
-    source_clause: Optional[str] = Field(None, description="Tender document clause reference")
-    source_page: Optional[int] = Field(None, description="Page number in tender PDF")
-    confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="LLM extraction confidence score")
+class TenderVersionSchema(BaseModel):
+    id: str = Field(..., description="Unique tender version ID")
+    tender_id: str = Field(..., description="Associated parent tender ID")
+    version_number: int = Field(1, description="Sequential version index")
+    source_document_id: Optional[str] = Field(None, description="Original tender document reference")
+    effective_from: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Effective timestamp")
+    change_summary: Optional[str] = Field(None, description="Summary of changes in this version")
+    requirements: List[RequirementSchema] = Field(default_factory=list, description="Extracted requirements")
 
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
+
+class TenderSchema(BaseModel):
+    id: str = Field(..., description="Unique tender ID, e.g. TND-001")
+    organization_id: str = Field(..., description="Procurement organization ID")
+    tender_number: str = Field(..., description="Official tender identifier, e.g. GEM/2026/B/1001")
+    title: str = Field(..., description="Official title of the tender")
+    entity: str = Field(..., description="Issuing government entity/department")
+    category: str = Field(..., description="Tender category, e.g. GOODS, SERVICES, EQUIPMENT")
+    submission_deadline: datetime = Field(..., description="Submission deadline timestamp")
+    status: TenderStatus = Field(TenderStatus.ACTIVE, description="Current tender lifecycle status")
+    requirements: List[RequirementSchema] = Field(default_factory=list, description="List of tender requirements")
+
+    model_config = ConfigDict(use_enum_values=True)
+
+__all__ = [
+    "TenderSchema",
+    "TenderVersionSchema",
+    "TenderStatus",
+    "RequirementSchema",
+    "RequirementCategory",
+    "ComparisonOperator",
+]

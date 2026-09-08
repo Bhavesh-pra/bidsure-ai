@@ -1,0 +1,82 @@
+[
+  {
+    "id": "BIDDER-001",
+    "name": "Bidder A (Compliant Demo)",
+    "legal_name": "ABC Technologies Private Limited",
+    "pan": "ABCDE1234F",
+    "gstin": "27ABCDE1234F1Z5",
+    "udyam_number": "UDYAM-MH-01-0012345",
+    "organization_type": "PRIVATE_LIMITED",
+    "incorporation_date": "2018-04-12",
+    "quoted_amount": 68500000.0,
+    "proposed_completion_days": 45,
+    "local_content_percentage": 65.0,
+    "compliance_profile": {
+      "overall_status": "PASS",
+      "compliance_score": 95,
+      "risk_level": "LOW",
+      "risk_score": 12,
+      "evaluations": [
+        { "requirement_id": "REQ-001", "status": "PASS", "evidence_field": "gstin", "value": "27ABCDE1234F1Z5" },
+        { "requirement_id": "REQ-002", "status": "PASS", "evidence_field": "pan", "value": "ABCDE1234F" },
+        { "requirement_id": "REQ-003", "status": "PASS", "evidence_field": "udyam", "value": "UDYAM-MH-01-0012345" },
+        { "requirement_id": "REQ-004", "status": "PASS", "evidence_field": "annual_turnover", "value": 65000000 },
+        { "requirement_id": "REQ-005", "status": "PASS", "evidence_field": "experience_years", "value": 5 },
+        { "requirement_id": "REQ-006", "status": "PASS", "evidence_field": "oem_auth_code", "value": "OEM-AUTH-2026-9901" },
+        { "requirement_id": "REQ-007", "status": "PASS", "evidence_field": "local_content", "value": 65.0 },
+        { "requirement_id": "REQ-008", "status": "PASS", "evidence_field": "tech_spec_sheet", "value": "COMPLIANT" },
+        { "requirement_id": "REQ-009", "status": "PASS", "evidence_field": "delivery_days", "value": 45 }
+      ]
+    },
+    "documents": [
+      { "id": "DOC-A-001", "document_type": "GST_CERTIFICATE", "filename": "abc_gst_cert.pdf", "verified": true },
+      { "id": "DOC-A-002", "document_type": "PAN_CARD", "filename": "abc_pan_card.pdf", "verified": true },
+      { "id": "DOC-A-003", "document_type": "UDYAM_CERTIFICATE", "filename": "abc_udyam_cert.pdf", "verified": true },
+      { "id": "DOC-A-004", "document_type": "FINANCIAL_AUDIT", "filename": "abc_audited_turnover.pdf", "verified": true },
+      { "id": "DOC-A-005", "document_type": "OEM_AUTHORIZATION", "filename": "dell_oem_auth.pdf", "verified": true },
+      { "id": "DOC-A-006", "document_type": "LOCAL_CONTENT_DECLARATION", "filename": "local_content_declaration.pdf", "verified": true }
+    ]
+  },
+  {
+    "id": "BIDDER-002",
+    "name": "Bidder B (Non-Compliant Golden Demo)",
+    "legal_name": "QuickNet Solutions LLP",
+    "pan": "XYZAB9876C",
+    "gstin": "27XYZAB9876C1Z1",
+    "udyam_number": "UDYAM-DL-02-0099881",
+    "organization_type": "LLP",
+    "incorporation_date": "2023-01-10",
+    "quoted_amount": 54000000.0,
+    "proposed_completion_days": 90,
+    "local_content_percentage": 25.0,
+    "defects_summary": [
+      "Missing OEM Authorization document (REQ-006)",
+      "PAN Mismatch: Certificate name 'Delta Networks' differs from registered entity (REQ-002)",
+      "Expired GST Registration: Suspended/Cancelled in GSTN on 2026-03-31 (REQ-001)",
+      "Deficient Local Content: 25% declared vs 50% statutory minimum (REQ-007)"
+    ],
+    "compliance_profile": {
+      "overall_status": "FAIL",
+      "compliance_score": 35,
+      "risk_level": "CRITICAL",
+      "risk_score": 88,
+      "evaluations": [
+        { "requirement_id": "REQ-001", "status": "FAIL", "evidence_field": "gstin", "finding": "GST status CANCELLED on 2026-03-31" },
+        { "requirement_id": "REQ-002", "status": "FAIL", "evidence_field": "pan", "finding": "Name mismatch: PAN holder does not match entity legal name" },
+        { "requirement_id": "REQ-003", "status": "PASS", "evidence_field": "udyam", "value": "UDYAM-DL-02-0099881" },
+        { "requirement_id": "REQ-004", "status": "FAIL", "evidence_field": "annual_turnover", "finding": "Audited turnover INR 42M below INR 50M required" },
+        { "requirement_id": "REQ-005", "status": "FAIL", "evidence_field": "experience_years", "finding": "2 years experience below 3 years required" },
+        { "requirement_id": "REQ-006", "status": "EVIDENCE_MISSING", "evidence_field": "oem_auth_code", "finding": "No OEM authorization submitted" },
+        { "requirement_id": "REQ-007", "status": "FAIL", "evidence_field": "local_content", "finding": "Local content 25% is below statutory threshold of 50%" },
+        { "requirement_id": "REQ-008", "status": "REVIEW_REQUIRED", "evidence_field": "tech_spec_sheet", "finding": "Minor deviations in server cache memory" },
+        { "requirement_id": "REQ-009", "status": "FAIL", "evidence_field": "delivery_days", "finding": "Proposed 90 days delivery exceeds 60 days limit" }
+      ]
+    },
+    "documents": [
+      { "id": "DOC-B-001", "document_type": "GST_CERTIFICATE", "filename": "quicknet_gst_expired.pdf", "verified": false },
+      { "id": "DOC-B-002", "document_type": "PAN_CARD", "filename": "mismatched_pan.pdf", "verified": false },
+      { "id": "DOC-B-003", "document_type": "UDYAM_CERTIFICATE", "filename": "quicknet_udyam.pdf", "verified": true },
+      { "id": "DOC-B-004", "document_type": "FINANCIAL_AUDIT", "filename": "turnover_below_limit.pdf", "verified": false }
+    ]
+  }
+]

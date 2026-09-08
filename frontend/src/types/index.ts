@@ -14,7 +14,8 @@ export type RequirementCategory =
   | 'TECHNICAL'
   | 'REGISTRATION'
   | 'DOCUMENT'
-  | 'ELIGIBILITY';
+  | 'ELIGIBILITY'
+  | 'OPERATIONAL';
 
 export interface Requirement {
   id: string;
@@ -63,6 +64,19 @@ export interface Bid {
   submission_time?: string;
 }
 
+export interface Document {
+  id: string;
+  bid_id?: string;
+  document_type: string;
+  original_filename: string;
+  storage_key: string;
+  mime_type: string;
+  size_bytes: number;
+  sha256: string;
+  page_count?: number;
+  processing_status: string;
+}
+
 export interface Evidence {
   id: string;
   document_id: string;
@@ -71,28 +85,67 @@ export interface Evidence {
   value: string | number | boolean;
   normalized_value?: string | number | boolean;
   page?: number;
-  extraction_method: string;
+  extraction_method: 'OCR_LLM' | 'OCR_TESSERACT' | 'REGEX' | 'MANUAL_ENTRY' | 'BARCODE_QR' | string;
   confidence: number;
 }
 
 export type VerificationStatus =
+  | 'VERIFIED'
   | 'VERIFIED_PASS'
   | 'VERIFIED_FAIL'
-  | 'PARTIAL'
   | 'REVIEW_REQUIRED'
-  | 'EVIDENCE_MISSING'
-  | 'NOT_APPLICABLE'
   | 'UNABLE_TO_VERIFY'
-  | 'CONFLICTING_EVIDENCE';
+  | 'CONFLICTING_EVIDENCE'
+  | 'EVIDENCE_MISSING'
+  | 'NOT_APPLICABLE';
 
 export interface Verification {
   id: string;
-  bid_id: string;
+  bid_id?: string;
   requirement_id: string;
+  evidence_id?: string;
   verification_type: string;
   source: string;
   status: VerificationStatus;
-  match_result: string;
+  match_result: boolean | string;
+  source_reference?: string;
+  response_snapshot?: Record<string, unknown>;
+}
+
+export type ComplianceStatus =
+  | 'PASS'
+  | 'FAIL'
+  | 'REVIEW_REQUIRED'
+  | 'NOT_APPLICABLE'
+  | 'EVIDENCE_MISSING'
+  | 'UNABLE_TO_VERIFY';
+
+export interface ComplianceResult {
+  requirement_id: string;
+  status: ComplianceStatus;
+  score?: number;
+  finding?: string | null;
+  reason?: string;
+  supporting_evidence_ids?: string[];
+}
+
+export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+
+export interface RiskFactor {
+  type: string;
+  severity: RiskLevel;
+  description?: string;
+  requirement_id?: string;
+}
+
+export interface RiskAssessment {
+  id: string;
+  bid_id?: string;
+  risk_score: number;
+  risk_level: RiskLevel;
+  factors: RiskFactor[];
+  explanation?: string;
+  methodology_version?: string;
 }
 
 export interface Finding {
@@ -100,18 +153,21 @@ export interface Finding {
   bid_id: string;
   requirement_id?: string;
   category: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  severity: RiskLevel;
   status: string;
   title: string;
   description: string;
   requires_review: boolean;
 }
 
+export type RecommendationStatus = 'APPROVED' | 'REJECTED' | 'REVIEW_REQUIRED' | 'PASS' | 'FAIL';
+
 export interface Recommendation {
   id: string;
-  bid_id: string;
-  status: VerificationStatus;
+  bid_id?: string;
+  status: RecommendationStatus;
   rationale: string;
   supporting_findings: string[];
+  officer_authority_disclaimer: string;
   generated_by: string;
 }

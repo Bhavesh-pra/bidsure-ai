@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ORG-001",
+    "name": "Demo Procurement Organization",
+    "code": "DPO-IND",
+    "status": "ACTIVE",
+    "department": "Department of Public Enterprises",
+    "jurisdiction": "Central Government",
+    "created_at": "2026-01-15T09:00:00Z"
+  }
+]

@@ -1,11 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 def generate_uuid():
     return str(uuid.uuid4())
+
+def get_utc_now():
+    return datetime.now(timezone.utc)
 
 class Organization(db.Model):
     __tablename__ = "organizations"
@@ -14,7 +17,7 @@ class Organization(db.Model):
     name = db.Column(db.String(255), nullable=False)
     code = db.Column(db.String(50), unique=True, nullable=False)
     status = db.Column(db.String(20), default="ACTIVE", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     users = db.relationship("User", backref="organization", lazy=True)
     tenders = db.relationship("Tender", backref="organization", lazy=True)
@@ -29,7 +32,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(50), nullable=False, default="PROCUREMENT_OFFICER")
     status = db.Column(db.String(20), default="ACTIVE", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
 class Tender(db.Model):
     __tablename__ = "tenders"
@@ -43,7 +46,7 @@ class Tender(db.Model):
     submission_deadline = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(50), default="DRAFT", nullable=False)
     current_version_id = db.Column(db.String(36), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     versions = db.relationship("TenderVersion", backref="tender", lazy=True)
     bids = db.relationship("Bid", backref="tender", lazy=True)
@@ -55,9 +58,9 @@ class TenderVersion(db.Model):
     tender_id = db.Column(db.String(36), db.ForeignKey("tenders.id"), nullable=False)
     version_number = db.Column(db.Integer, nullable=False, default=1)
     source_document_id = db.Column(db.String(36), nullable=True)
-    effective_from = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    effective_from = db.Column(db.DateTime, default=get_utc_now, nullable=False)
     change_summary = db.Column(db.String(500), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     requirements = db.relationship("Requirement", backref="tender_version", lazy=True)
 
@@ -87,7 +90,7 @@ class Bidder(db.Model):
     gstin = db.Column(db.String(15), nullable=True)
     udyam_number = db.Column(db.String(50), nullable=True)
     organization_type = db.Column(db.String(50), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     bids = db.relationship("Bid", backref="bidder", lazy=True)
 
@@ -97,11 +100,11 @@ class Bid(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     tender_id = db.Column(db.String(36), db.ForeignKey("tenders.id"), nullable=False)
     bidder_id = db.Column(db.String(36), db.ForeignKey("bidders.id"), nullable=False)
-    submission_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    submission_time = db.Column(db.DateTime, default=get_utc_now, nullable=False)
     quoted_amount = db.Column(db.Numeric(15, 2), nullable=False)
     proposed_completion_date = db.Column(db.Date, nullable=True)
     status = db.Column(db.String(50), default="SUBMITTED", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     documents = db.relationship("Document", backref="bid", lazy=True)
 
@@ -118,4 +121,4 @@ class Document(db.Model):
     sha256 = db.Column(db.String(64), nullable=False)
     page_count = db.Column(db.Integer, nullable=True)
     processing_status = db.Column(db.String(50), default="UPLOADED", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
