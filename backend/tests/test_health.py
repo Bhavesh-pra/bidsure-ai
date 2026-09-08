@@ -19,9 +19,20 @@ def test_health_check(client):
     assert data["data"]["status"] == "healthy"
     assert "request_id" in data
 
-def test_get_tenders_stub(client):
+def test_get_tenders_unauthenticated(client):
     response = client.get("/api/v1/tenders")
+    assert response.status_code == 401
+    data = response.get_json()
+    assert data["success"] is False
+    assert data["error"]["code"] == "UNAUTHORIZED"
+
+def test_get_tenders_authenticated(client):
+    from app.security.jwt_manager import create_access_token
+    with client.application.app_context():
+        token = create_access_token("test-user", "ORG-001", "PROCUREMENT_OFFICER")
+    response = client.get("/api/v1/tenders", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     data = response.get_json()
     assert data["success"] is True
-    assert "tenders" in data["data"]
+    assert isinstance(data["data"], list)
+

@@ -1,62 +1,90 @@
 {
+  "id": "TND-001",
   "tender_number": "GEM/2026/B/1001",
   "title": "Supply and Maintenance of High-Performance Server Infrastructure",
+  "description": "Procurement, deployment, and 3-year warranty maintenance of high-performance enterprise compute cluster servers for state data centre.",
+  "organization": "Ministry of Electronics and Information Technology",
+  "organization_id": "ORG-001",
   "entity": "Ministry of Electronics and Information Technology (MeitY)",
-  "category": "EQUIPMENT",
+  "category": "TECHNICAL",
+  "tender_type": "OPEN",
   "submission_deadline": "2026-10-15T17:00:00Z",
+  "status": "DRAFT",
+  "created_at": "2026-09-08T10:00:00Z",
+  "updated_at": "2026-09-08T10:00:00Z",
   "requirements": [
     {
       "id": "REQ-001",
       "title": "GST Registration",
+      "description": "Bidder must possess active GST registration in the state of supply.",
       "category": "STATUTORY",
       "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
       "operator": "==",
       "expected_value": "ACTIVE",
       "source_clause": "Clause 4.1",
-      "source_page": 5
+      "source_page": 5,
+      "confidence": 0.98
     },
     {
       "id": "REQ-002",
       "title": "Udyam / MSME Registration",
+      "description": "Active Udyam registration certificate for MSE exemption benefits.",
       "category": "STATUTORY",
       "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
       "operator": "EXISTS",
       "expected_value": true,
       "source_clause": "Clause 4.2",
-      "source_page": 5
+      "source_page": 5,
+      "confidence": 0.95
     },
     {
       "id": "REQ-003",
       "title": "Minimum Annual Turnover",
+      "description": "Average annual turnover of at least ₹5 Crore in last 3 financial years.",
       "category": "FINANCIAL",
       "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
       "operator": ">=",
       "expected_value": 50000000,
       "unit": "INR",
       "evaluation_period": "3 Financial Years (2022-25)",
       "source_clause": "Clause 5.1",
-      "source_page": 8
+      "source_page": 8,
+      "confidence": 0.92
     },
     {
       "id": "REQ-004",
       "title": "Similar Project Experience",
+      "description": "Minimum 3 successfully completed similar server/compute deployments.",
       "category": "ELIGIBILITY",
       "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
       "operator": ">=",
       "expected_value": 3,
       "unit": "Projects",
       "source_clause": "Clause 5.3",
-      "source_page": 9
+      "source_page": 9,
+      "confidence": 0.9
     },
     {
       "id": "REQ-005",
       "title": "OEM Authorization Certificate",
+      "description": "Tender-specific Manufacturer Authorization Form from OEM.",
       "category": "TECHNICAL",
       "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
       "operator": "EXISTS",
       "expected_value": true,
       "source_clause": "Clause 6.2",
-      "source_page": 12
+      "source_page": 12,
+      "confidence": 0.96
     }
   ]
 }

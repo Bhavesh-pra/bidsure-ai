@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "bidsure-sih-api-collection",
 		"name": "BidSure AI API Collection",
-		"description": "Postman API Collection for BidSure AI Modular Monolith API",
+		"description": "Postman API Collection for BidSure AI Modular Monolith API - Cycle 3 Tender Creation",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -23,7 +23,111 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"body": "{\n  \"success\": true,\n  \"data\": {\n    \"status\": \"healthy\",\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-09-08T22:00:00Z\"\n  },\n  \"request_id\": \"REQ-HEALTH-001\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login (Procurement Officer)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.access_token) {",
+									"    pm.environment.set(\"jwt_token\", jsonData.data.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"officer@bidsure.gov.in\",\n  \"password\": \"officer123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"officer@bidsure.gov.in\",\n  \"password\": \"officer123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"token_type\": \"Bearer\",\n    \"user\": {\n      \"id\": \"USR-OFFICER-001\",\n      \"email\": \"officer@bidsure.gov.in\",\n      \"name\": \"Procurement Officer\",\n      \"role\": \"PROCUREMENT_OFFICER\",\n      \"organization_id\": \"ORG-001\"\n    }\n  },\n  \"request_id\": \"REQ-20260908220000-A1B2C3\"\n}"
+						}
+					]
+				}
+			]
 		},
 		{
 			"name": "Tenders",
@@ -32,7 +136,12 @@
 					"name": "Get All Tenders",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/tenders",
 							"host": [
@@ -45,7 +154,35 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Tender List Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/tenders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tenders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": \"TND-001\",\n      \"tender_number\": \"GEM/2026/B/1234567\",\n      \"title\": \"Supply of Industrial Equipment\",\n      \"category\": \"TECHNICAL\",\n      \"status\": \"DRAFT\"\n    }\n  ],\n  \"request_id\": \"REQ-20260908220000-B2C3D4\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Create Tender",
@@ -53,13 +190,17 @@
 						"method": "POST",
 						"header": [
 							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
 								"key": "Content-Type",
 								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tender_number\": \"GEM/2026/B/1001\",\n  \"title\": \"Supply of Server Infrastructure\",\n  \"entity\": \"MeitY\",\n  \"category\": \"EQUIPMENT\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
+							"raw": "{\n  \"tender_number\": \"GEM/2026/B/1234567\",\n  \"title\": \"Supply of Industrial Equipment\",\n  \"description\": \"Supply and installation of equipment\",\n  \"category\": \"TECHNICAL\",\n  \"tender_type\": \"OPEN\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/tenders",
@@ -73,7 +214,123 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Tender Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tender_number\": \"GEM/2026/B/1234567\",\n  \"title\": \"Supply of Industrial Equipment\",\n  \"description\": \"Supply and installation of equipment\",\n  \"category\": \"TECHNICAL\",\n  \"tender_type\": \"OPEN\",\n  \"submission_deadline\": \"2026-10-15T17:00:00Z\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/tenders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tenders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"TND-001\",\n    \"tender_number\": \"GEM/2026/B/1234567\",\n    \"title\": \"Supply of Industrial Equipment\",\n    \"status\": \"DRAFT\"\n  },\n  \"request_id\": \"REQ-20260908220000-C3D4E5\"\n}"
+						},
+						{
+							"name": "Validation Error (Duplicate Number)",
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"DUPLICATE_TENDER_NUMBER\",\n    \"message\": \"Tender number 'GEM/2026/B/1234567' already exists in this organization\"\n  },\n  \"request_id\": \"REQ-20260908220000-D4E5F6\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Tender Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/tenders/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tenders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TND-001"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Tender Details Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/tenders/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tenders",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "TND-001"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"TND-001\",\n    \"organization_id\": \"ORG-001\",\n    \"tender_number\": \"GEM/2026/B/1234567\",\n    \"title\": \"Supply of Industrial Equipment\",\n    \"description\": \"Supply and installation of equipment\",\n    \"category\": \"TECHNICAL\",\n    \"tender_type\": \"OPEN\",\n    \"submission_deadline\": \"2026-10-15T17:00:00+00:00\",\n    \"status\": \"DRAFT\",\n    \"created_at\": \"2026-09-08T22:00:00+00:00\",\n    \"updated_at\": \"2026-09-08T22:00:00+00:00\"\n  },\n  \"request_id\": \"REQ-20260908220000-E5F6G7\"\n}"
+						},
+						{
+							"name": "Tender Not Found",
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Tender with ID 'TND-NONEXISTENT' was not found\"\n  },\n  \"request_id\": \"REQ-20260908220000-F6G7H8\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -84,7 +341,12 @@
 					"name": "Get All Bids for Tender",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/tenders/:tender_id/bids",
 							"host": [
@@ -100,7 +362,7 @@
 							"variable": [
 								{
 									"key": "tender_id",
-									"value": "TENDER-001"
+									"value": "TND-001"
 								}
 							]
 						}
@@ -112,6 +374,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
 							{
 								"key": "Content-Type",
 								"value": "application/json"
@@ -136,7 +402,7 @@
 							"variable": [
 								{
 									"key": "tender_id",
-									"value": "TENDER-001"
+									"value": "TND-001"
 								}
 							]
 						}
@@ -150,6 +416,11 @@
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
 			"type": "string"
 		}
 	]

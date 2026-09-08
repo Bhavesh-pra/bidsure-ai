@@ -1,0 +1,159 @@
+[
+  {
+    "case_id": "NEG-001",
+    "name": "Missing Tender Number",
+    "description": "Payload omitted the required tender_number field.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "title": "Supply of Enterprise Servers",
+      "category": "TECHNICAL",
+      "tender_type": "OPEN",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-002",
+    "name": "Blank / Pure Whitespace Tender Number",
+    "description": "tender_number contains only space characters.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "   ",
+      "title": "Supply of Enterprise Servers",
+      "category": "TECHNICAL",
+      "tender_type": "OPEN",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-003",
+    "name": "Missing Title",
+    "description": "Payload omitted the required title field.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999001",
+      "category": "TECHNICAL",
+      "tender_type": "OPEN",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-004",
+    "name": "Blank / Pure Whitespace Title",
+    "description": "title contains only whitespace characters.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999002",
+      "title": "     ",
+      "category": "TECHNICAL",
+      "tender_type": "OPEN",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-005",
+    "name": "Missing Category",
+    "description": "Payload omitted the required category field.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999003",
+      "title": "Supply of Network Switches",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-006",
+    "name": "Invalid Category",
+    "description": "Category value not in recognized categories list.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999004",
+      "title": "Supply of Network Switches",
+      "category": "NON_EXISTENT_CATEGORY",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-007",
+    "name": "Invalid Tender Type",
+    "description": "tender_type not in recognized enum (OPEN, LIMITED, etc.).",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999005",
+      "title": "Supply of Storage Systems",
+      "category": "TECHNICAL",
+      "tender_type": "PRIVATE_SECRET_AUCTION",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-008",
+    "name": "Missing Submission Deadline",
+    "description": "submission_deadline field is omitted.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999006",
+      "title": "Supply of Storage Systems",
+      "category": "TECHNICAL"
+    }
+  },
+  {
+    "case_id": "NEG-009",
+    "name": "Past Submission Deadline",
+    "description": "submission_deadline is set to an expired date in the past.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999007",
+      "title": "Supply of Fiber Optic Cables",
+      "category": "TECHNICAL",
+      "submission_deadline": "2020-01-01T00:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-010",
+    "name": "Invalid Date Format",
+    "description": "submission_deadline is not parseable as ISO-8601.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999008",
+      "title": "Supply of Fiber Optic Cables",
+      "category": "TECHNICAL",
+      "submission_deadline": "15th October 2026 5pm"
+    }
+  },
+  {
+    "case_id": "NEG-011",
+    "name": "Excessive Title Length",
+    "description": "Title length exceeds the 500-character maximum.",
+    "expected_status": 400,
+    "expected_error_code": "VALIDATION_ERROR",
+    "payload": {
+      "tender_number": "GEM/2026/B/9999009",
+      "title": "TitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLengthTitleExceedingMaximumAllowedLength",
+      "category": "TECHNICAL",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  },
+  {
+    "case_id": "NEG-012",
+    "name": "Duplicate Tender Number in Same Tenant",
+    "description": "Re-creating tender with identical tender_number within same organization.",
+    "expected_status": 409,
+    "expected_error_code": "DUPLICATE_TENDER_NUMBER",
+    "payload": {
+      "tender_number": "GEM/2026/B/1001",
+      "title": "Duplicate Submission of Existing Tender",
+      "category": "TECHNICAL",
+      "submission_deadline": "2026-10-15T17:00:00Z"
+    }
+  }
+]

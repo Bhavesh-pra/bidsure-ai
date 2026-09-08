@@ -1,8 +1,22 @@
 # BidSure AI Domain Schemas Package
-from app.domain.tender.schemas import TenderSchema, TenderVersionSchema, TenderStatus
+from app.domain.tender.schemas import (
+    TenderSchema,
+    TenderVersionSchema,
+    TenderStatus,
+    TenderType,
+)
+from app.domain.tender.contracts import (
+    ExtractionInput,
+    ExtractedClause,
+    ExtractedRequirement,
+    ExtractionResult,
+    RequirementExtractionProtocol,
+)
 from app.domain.requirement.schemas import (
     RequirementSchema,
     RequirementCategory,
+    RequirementMandatoryLevel,
+    RequirementReviewStatus,
     ComparisonOperator,
 )
 from app.domain.document.schemas import (
@@ -39,8 +53,16 @@ __all__ = [
     "TenderSchema",
     "TenderVersionSchema",
     "TenderStatus",
+    "TenderType",
+    "ExtractionInput",
+    "ExtractedClause",
+    "ExtractedRequirement",
+    "ExtractionResult",
+    "RequirementExtractionProtocol",
     "RequirementSchema",
     "RequirementCategory",
+    "RequirementMandatoryLevel",
+    "RequirementReviewStatus",
     "ComparisonOperator",
     "DocumentSchema",
     "DocumentType",

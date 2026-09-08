@@ -1,0 +1,61 @@
+{
+  "id": "TND-002",
+  "tender_number": "GEM/2026/B/2045678",
+  "title": "Procurement of Advanced Diagnostic Imaging Systems",
+  "description": "Supply, installation, and commissioning of digital radiography and ultrasound diagnostic imaging equipment with 5-year comprehensive warranty.",
+  "organization": "All India Institute of Medical Sciences (AIIMS)",
+  "organization_id": "ORG-001",
+  "entity": "AIIMS Procurement Division",
+  "category": "TECHNICAL",
+  "tender_type": "OPEN",
+  "submission_deadline": "2026-11-20T15:00:00Z",
+  "status": "ACTIVE",
+  "created_at": "2026-09-08T11:00:00Z",
+  "updated_at": "2026-09-08T11:00:00Z",
+  "requirements": [
+    {
+      "id": "REQ-T2-001",
+      "title": "AERB / CDSCO Regulatory Approval",
+      "description": "Valid regulatory type approval certificate from AERB and registration with CDSCO for medical imaging devices.",
+      "category": "STATUTORY",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": "EXISTS",
+      "expected_value": true,
+      "source_clause": "Clause 3.1",
+      "source_page": 4,
+      "confidence": 0.99
+    },
+    {
+      "id": "REQ-T2-002",
+      "title": "Annual Healthcare Turnover",
+      "description": "Average annual turnover of at least ₹8 Crore over past 3 financial years.",
+      "category": "FINANCIAL",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": ">=",
+      "expected_value": 80000000,
+      "unit": "INR",
+      "evaluation_period": "3 Financial Years (2022-25)",
+      "source_clause": "Clause 4.2",
+      "source_page": 7,
+      "confidence": 0.94
+    },
+    {
+      "id": "REQ-T2-003",
+      "title": "ISO 13485 Medical Devices Certification",
+      "description": "OEM manufacturing facility must hold ISO 13485:2016 certification.",
+      "category": "TECHNICAL",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": "EXISTS",
+      "expected_value": true,
+      "source_clause": "Clause 5.1",
+      "source_page": 10,
+      "confidence": 0.95
+    }
+  ]
+}

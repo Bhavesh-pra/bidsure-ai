@@ -47,13 +47,19 @@ Main procurement tenders.
 | Column | Type | Constraints | Description |
 |---|---|---|---|
 | `id` | VARCHAR(36) | PRIMARY KEY | Tender UUID |
-| `organization_id` | VARCHAR(36) | FOREIGN KEY | Owner organization |
-| `tender_number` | VARCHAR(100) | UNIQUE, NOT NULL | Official Tender Reference Number |
+| `organization_id` | VARCHAR(36) | FOREIGN KEY, NOT NULL | Owner organization reference |
+| `tender_number` | VARCHAR(100) | NOT NULL, UNIQUE(org_id, tender_number) | Official Tender Reference Number |
 | `title` | VARCHAR(500) | NOT NULL | Tender Title |
-| `entity` | VARCHAR(255) | NOT NULL | Procurement Entity Name |
-| `category` | VARCHAR(100) | NOT NULL | Goods/Services/Works category |
-| `submission_deadline` | TIMESTAMP | NOT NULL | Deadline |
-| `status` | VARCHAR(50) | DEFAULT 'DRAFT' | State machine status |
+| `description` | TEXT | NULL | Detailed Tender Description |
+| `entity` | VARCHAR(255) | NULL | Procurement Entity Name |
+| `category` | VARCHAR(100) | NOT NULL | Technical/Financial/Statutory/Goods category |
+| `tender_type` | VARCHAR(50) | NOT NULL, DEFAULT 'OPEN' | Tender Type: `OPEN`, `LIMITED`, `CLOSED`, `EOI`, `RFP` |
+| `submission_deadline` | TIMESTAMP | NOT NULL | Submission Deadline |
+| `status` | VARCHAR(50) | NOT NULL, DEFAULT 'DRAFT' | State machine status: `DRAFT`, `ACTIVE`, `CLOSED`, `CANCELLED` |
+| `current_version_id` | VARCHAR(36) | NULL | Reference to current TenderVersion |
+| `created_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, DEFAULT NOW() | Last update timestamp |
+
 
 ### `requirements`
 Extracted qualification requirements from tender specifications.

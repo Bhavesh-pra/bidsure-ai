@@ -2,7 +2,15 @@
 from app.domain.requirement.schemas import (
     RequirementSchema,
     RequirementCategory,
+    RequirementMandatoryLevel,
+    RequirementReviewStatus,
     ComparisonOperator,
 )
 
-__all__ = ["RequirementSchema", "RequirementCategory", "ComparisonOperator"]
+__all__ = [
+    "RequirementSchema",
+    "RequirementCategory",
+    "RequirementMandatoryLevel",
+    "RequirementReviewStatus",
+    "ComparisonOperator",
+]

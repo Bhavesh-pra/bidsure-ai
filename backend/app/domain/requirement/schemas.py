@@ -11,6 +11,15 @@ class RequirementCategory(str, Enum):
     ELIGIBILITY = "ELIGIBILITY"
     OPERATIONAL = "OPERATIONAL"
 
+class RequirementMandatoryLevel(str, Enum):
+    MANDATORY = "MANDATORY"
+    OPTIONAL = "OPTIONAL"
+
+class RequirementReviewStatus(str, Enum):
+    REQUIRED = "REQUIRED"
+    NOT_REQUIRED = "NOT_REQUIRED"
+    REVIEW = "REVIEW"
+
 class ComparisonOperator(str, Enum):
     EQUALS = "EQUALS"
     NOT_EQUALS = "NOT_EQUALS"
@@ -32,6 +41,8 @@ class RequirementSchema(BaseModel):
     description: Optional[str] = Field(None, description="Detailed requirement specification")
     category: RequirementCategory = Field(..., description="Requirement category")
     mandatory: bool = Field(True, description="Whether requirement is compulsory for qualification")
+    mandatory_level: Optional[RequirementMandatoryLevel] = Field(None, description="MANDATORY or OPTIONAL classification")
+    review_status: Optional[RequirementReviewStatus] = Field(None, description="Review classification (REQUIRED, NOT_REQUIRED, REVIEW)")
     applicability: str = Field("ALL_BIDDERS", description="Target applicability, e.g. ALL_BIDDERS, MSME_ONLY")
     operator: Optional[ComparisonOperator] = Field(None, description="Evaluation operator")
     expected_value: Optional[Union[str, float, int, bool]] = Field(None, description="Expected value for compliance")

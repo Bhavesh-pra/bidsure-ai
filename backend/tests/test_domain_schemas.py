@@ -8,6 +8,8 @@ from pydantic import ValidationError
 from app.domain.requirement.schemas import (
     RequirementSchema,
     RequirementCategory,
+    RequirementMandatoryLevel,
+    RequirementReviewStatus,
     ComparisonOperator,
 )
 from app.domain.document.schemas import (
@@ -42,6 +44,13 @@ from app.domain.recommendation.schemas import (
 from app.domain.tender.schemas import (
     TenderSchema,
     TenderStatus,
+    TenderType,
+)
+from app.domain.tender.contracts import (
+    ExtractionInput,
+    ExtractedClause,
+    ExtractedRequirement,
+    ExtractionResult,
 )
 
 # 1. Requirement Schema Tests
@@ -219,3 +228,164 @@ def test_tender_schema():
     )
     assert tender.tender_number == "GEM/2026/B/1001"
     assert len(tender.requirements) == 1
+
+
+# 11. Cycle 3 Main Dev 1 Schema & Validation Tests
+
+def test_tender_schema_full_cycle3_metadata():
+    from datetime import datetime, timezone
+    deadline = datetime(2026, 10, 15, 17, 0, 0, tzinfo=timezone.utc)
+    tender = TenderSchema(
+        tender_number="GEM/2026/B/1234567",
+        title="Supply of Industrial Equipment",
+        description="Supply and installation of industrial equipment",
+        organization="Example Government Organization",
+        category="TECHNICAL",
+        tender_type=TenderType.OPEN,
+        submission_deadline=deadline,
+        status=TenderStatus.DRAFT,
+    )
+    assert tender.tender_number == "GEM/2026/B/1234567"
+    assert tender.title == "Supply of Industrial Equipment"
+    assert tender.description == "Supply and installation of industrial equipment"
+    assert tender.organization == "Example Government Organization"
+    assert tender.entity == "Example Government Organization"
+    assert tender.category == "TECHNICAL"
+    assert tender.tender_type == "OPEN"
+    assert tender.status == "DRAFT"
+    assert tender.id.startswith("TND-")
+    assert tender.created_at is not None
+    assert tender.updated_at is not None
+
+
+def test_tender_schema_blank_tender_number_rejected():
+    from datetime import datetime, timezone
+    with pytest.raises(ValidationError) as exc:
+        TenderSchema(
+            tender_number="   ",
+            title="Valid Title",
+            category="TECHNICAL",
+            submission_deadline=datetime(2026, 10, 15, 17, 0, 0, tzinfo=timezone.utc),
+        )
+    assert "tender_number" in str(exc.value)
+
+
+def test_tender_schema_blank_title_rejected():
+    from datetime import datetime, timezone
+    with pytest.raises(ValidationError) as exc:
+        TenderSchema(
+            tender_number="GEM/2026/B/1001",
+            title="",
+            category="TECHNICAL",
+            submission_deadline=datetime(2026, 10, 15, 17, 0, 0, tzinfo=timezone.utc),
+        )
+    assert "title" in str(exc.value)
+
+
+def test_tender_schema_invalid_status_rejected():
+    from datetime import datetime, timezone
+    with pytest.raises(ValidationError):
+        TenderSchema(
+            tender_number="GEM/2026/B/1001",
+            title="Valid Title",
+            category="TECHNICAL",
+            submission_deadline=datetime(2026, 10, 15, 17, 0, 0, tzinfo=timezone.utc),
+            status="NON_EXISTENT_STATUS",
+        )
+
+
+def test_tender_schema_invalid_tender_type_rejected():
+    from datetime import datetime, timezone
+    with pytest.raises(ValidationError):
+        TenderSchema(
+            tender_number="GEM/2026/B/1001",
+            title="Valid Title",
+            category="TECHNICAL",
+            tender_type="INVALID_TYPE",
+            submission_deadline=datetime(2026, 10, 15, 17, 0, 0, tzinfo=timezone.utc),
+        )
+
+
+def test_requirement_classification_enums():
+    # Test Mandatory Level enum
+    assert RequirementMandatoryLevel.MANDATORY == "MANDATORY"
+    assert RequirementMandatoryLevel.OPTIONAL == "OPTIONAL"
+
+    # Test Review Status enum
+    assert RequirementReviewStatus.REQUIRED == "REQUIRED"
+    assert RequirementReviewStatus.NOT_REQUIRED == "NOT_REQUIRED"
+    assert RequirementReviewStatus.REVIEW == "REVIEW"
+
+    # Test RequirementSchema with new enums
+    req = RequirementSchema(
+        id="REQ-TEST-001",
+        title="Valid GST",
+        category=RequirementCategory.STATUTORY,
+        mandatory=True,
+        mandatory_level=RequirementMandatoryLevel.MANDATORY,
+        review_status=RequirementReviewStatus.REQUIRED,
+    )
+    assert req.mandatory_level == "MANDATORY"
+    assert req.review_status == "REQUIRED"
+
+
+# 12. Cycle 4 Extraction Contract Tests
+
+def test_cycle4_extraction_contract_valid():
+    input_contract = ExtractionInput(
+        tender_id="TND-001",
+        document_id="DOC-001",
+        file_path="storage/tenders/TND-001/rfp.pdf",
+    )
+    assert input_contract.tender_id == "TND-001"
+    assert input_contract.document_id == "DOC-001"
+
+    req1 = ExtractedRequirement(
+        id="REQ-001",
+        title="Annual Turnover",
+        description="Average annual turnover >= 5 Cr",
+        category=RequirementCategory.FINANCIAL,
+        mandatory=True,
+        mandatory_level=RequirementMandatoryLevel.MANDATORY,
+        operator=ComparisonOperator.GREATER_THAN_EQUAL,
+        expected_value=50000000,
+        unit="INR",
+        source_clause="Clause 5.1",
+        source_page=8,
+        confidence=0.95,
+    )
+    req2 = ExtractedRequirement(
+        id="REQ-002",
+        title="GST Registration",
+        category=RequirementCategory.STATUTORY,
+        mandatory=True,
+        confidence=0.99,
+    )
+
+    clause = ExtractedClause(
+        clause_id="Clause 5.1",
+        text="The bidder must possess average turnover of at least Rs 5 Cr.",
+        page_number=8,
+        section="Financial Qualifications",
+    )
+
+    result = ExtractionResult(
+        tender_id=input_contract.tender_id,
+        document_id=input_contract.document_id,
+        requirements=[req1, req2],
+        raw_clauses=[clause],
+    )
+    assert result.total_requirements == 2
+    assert result.avg_confidence == 0.97  # (0.95 + 0.99) / 2
+    assert len(result.raw_clauses) == 1
+    assert result.raw_clauses[0].clause_id == "Clause 5.1"
+
+
+def test_cycle4_extraction_confidence_out_of_bounds():
+    with pytest.raises(ValidationError):
+        ExtractedRequirement(
+            title="Invalid Confidence",
+            category=RequirementCategory.TECHNICAL,
+            confidence=1.5,  # must be <= 1.0
+        )
+

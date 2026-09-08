@@ -36,20 +36,53 @@ class User(db.Model):
 
 class Tender(db.Model):
     __tablename__ = "tenders"
+    __table_args__ = (
+        db.UniqueConstraint("organization_id", "tender_number", name="uq_org_tender_number"),
+    )
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
-    organization_id = db.Column(db.String(36), db.ForeignKey("organizations.id"), nullable=False)
-    tender_number = db.Column(db.String(100), unique=True, nullable=False)
+    organization_id = db.Column(db.String(36), db.ForeignKey("organizations.id"), nullable=False, index=True)
+    tender_number = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(500), nullable=False)
-    entity = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    entity = db.Column(db.String(255), nullable=True)
     category = db.Column(db.String(100), nullable=False)
+    tender_type = db.Column(db.String(50), default="OPEN", nullable=False)
     submission_deadline = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(50), default="DRAFT", nullable=False)
     current_version_id = db.Column(db.String(36), nullable=True)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     versions = db.relationship("TenderVersion", backref="tender", lazy=True)
     bids = db.relationship("Bid", backref="tender", lazy=True)
+
+    def to_summary_dict(self):
+        return {
+            "id": self.id,
+            "tender_number": self.tender_number,
+            "title": self.title,
+            "category": self.category,
+            "status": self.status,
+        }
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "organization_id": self.organization_id,
+            "tender_number": self.tender_number,
+            "title": self.title,
+            "description": self.description,
+            "entity": self.entity,
+            "category": self.category,
+            "tender_type": self.tender_type,
+            "submission_deadline": self.submission_deadline.isoformat() if self.submission_deadline else None,
+            "status": self.status,
+            "current_version_id": self.current_version_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
 
 class TenderVersion(db.Model):
     __tablename__ = "tender_versions"

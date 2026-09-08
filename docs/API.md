@@ -52,6 +52,7 @@ All API requests and responses use JSON (`Content-Type: application/json`).
 ### Health & Monitoring
 #### `GET /api/v1/health`
 - **Description**: Public system health check.
+- **Authentication**: None
 - **Response**:
 ```json
 {
@@ -67,28 +68,110 @@ All API requests and responses use JSON (`Content-Type: application/json`).
 
 ---
 
-### Tender Management
-#### `POST /api/v1/tenders`
-- **Description**: Create a new tender record.
+### Authentication
+#### `POST /api/v1/auth/login`
+- **Description**: Authenticate user credentials and receive a JWT Bearer access token.
+- **Authentication**: None (Public)
 - **Request Body**:
 ```json
 {
-  "tender_number": "GEM/2026/B/1001",
-  "title": "Supply of High-Performance Server Infrastructure",
-  "entity": "Ministry of Electronics & IT",
-  "category": "EQUIPMENT",
+  "email": "officer@bidsure.gov.in",
+  "password": "officer123"
+}
+```
+- **Response (`200 OK`)**:
+```json
+{
+  "success": true,
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "Bearer",
+    "user": {
+      "id": "USR-OFFICER-001",
+      "email": "officer@bidsure.gov.in",
+      "name": "Procurement Officer",
+      "role": "PROCUREMENT_OFFICER",
+      "organization_id": "ORG-001"
+    }
+  },
+  "request_id": "REQ-001"
+}
+```
+
+---
+
+### Tender Management
+#### `POST /api/v1/tenders`
+- **Description**: Create a new tender record for the authenticated tenant.
+- **Authentication**: Bearer JWT (`PROCUREMENT_OFFICER`, `ADMIN`)
+- **Request Body**:
+```json
+{
+  "tender_number": "GEM/2026/B/1234567",
+  "title": "Supply of Industrial Equipment",
+  "description": "Supply and installation of equipment",
+  "category": "TECHNICAL",
+  "tender_type": "OPEN",
   "submission_deadline": "2026-10-15T17:00:00Z"
 }
 ```
-- **Response**: `201 Created`
+- **Response (`201 Created`)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "TND-001",
+    "tender_number": "GEM/2026/B/1234567",
+    "title": "Supply of Industrial Equipment",
+    "status": "DRAFT"
+  },
+  "request_id": "REQ-001"
+}
+```
 
 #### `GET /api/v1/tenders`
-- **Description**: Retrieve all tenders scoped to current user organization.
-- **Response**: `200 OK`
+- **Description**: Retrieve all tenders scoped to the caller's organization.
+- **Authentication**: Bearer JWT
+- **Response (`200 OK`)**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "TND-001",
+      "tender_number": "GEM/2026/B/1234567",
+      "title": "Supply of Industrial Equipment",
+      "category": "TECHNICAL",
+      "status": "DRAFT"
+    }
+  ],
+  "request_id": "REQ-002"
+}
+```
 
 #### `GET /api/v1/tenders/{id}`
-- **Description**: Get tender details including current requirements.
-- **Response**: `200 OK`
+- **Description**: Get full tender details with tenant isolation enforcement.
+- **Authentication**: Bearer JWT
+- **Response (`200 OK`)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "TND-001",
+    "organization_id": "ORG-001",
+    "tender_number": "GEM/2026/B/1234567",
+    "title": "Supply of Industrial Equipment",
+    "description": "Supply and installation of equipment",
+    "category": "TECHNICAL",
+    "tender_type": "OPEN",
+    "submission_deadline": "2026-10-15T17:00:00+00:00",
+    "status": "DRAFT",
+    "created_at": "2026-09-08T22:00:00+00:00",
+    "updated_at": "2026-09-08T22:00:00+00:00"
+  },
+  "request_id": "REQ-003"
+}
+```
 
 ---
 

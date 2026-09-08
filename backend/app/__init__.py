@@ -24,10 +24,12 @@ def create_app(config_name=None):
 
     # Register blueprints
     from app.api.health import health_bp
+    from app.api.auth import auth_bp
     from app.api.tenders import tenders_bp
     from app.api.bids import bids_bp
 
     app.register_blueprint(health_bp, url_prefix="/api/v1")
+    app.register_blueprint(auth_bp, url_prefix="/api/v1")
     app.register_blueprint(tenders_bp, url_prefix="/api/v1")
     app.register_blueprint(bids_bp, url_prefix="/api/v1")
 

@@ -1,0 +1,61 @@
+{
+  "id": "TND-003",
+  "tender_number": "GEM/2026/B/3098124",
+  "title": "Construction and Solar Electrification of Rural Primary Health Centres",
+  "description": "Civil construction, rooftop solar PV micro-grid installation, and electrical distribution across 12 rural primary health centres.",
+  "organization": "National Health Mission",
+  "organization_id": "ORG-001",
+  "entity": "National Health Mission (NHM) Infrastructure Cell",
+  "category": "ELIGIBILITY",
+  "tender_type": "LIMITED",
+  "submission_deadline": "2026-12-05T18:00:00Z",
+  "status": "DRAFT",
+  "created_at": "2026-09-08T12:00:00Z",
+  "updated_at": "2026-09-08T12:00:00Z",
+  "requirements": [
+    {
+      "id": "REQ-T3-001",
+      "title": "CPWD / State PWD Contractor Registration",
+      "description": "Bidder must hold valid Class-A or Class-I contractor registration with CPWD or State PWD.",
+      "category": "REGISTRATION",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": "EXISTS",
+      "expected_value": true,
+      "source_clause": "Clause 2.1",
+      "source_page": 3,
+      "confidence": 0.97
+    },
+    {
+      "id": "REQ-T3-002",
+      "title": "Civil & Solar Works Experience",
+      "description": "Executed at least 2 turnkey civil-cum-solar electrification projects in remote/rural areas.",
+      "category": "ELIGIBILITY",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": ">=",
+      "expected_value": 2,
+      "unit": "Projects",
+      "source_clause": "Clause 3.4",
+      "source_page": 6,
+      "confidence": 0.91
+    },
+    {
+      "id": "REQ-T3-003",
+      "title": "Bank Solvency Certificate",
+      "description": "Bank solvency certificate of minimum ₹1.5 Crore issued within last 6 months.",
+      "category": "FINANCIAL",
+      "mandatory": true,
+      "mandatory_level": "MANDATORY",
+      "review_status": "REQUIRED",
+      "operator": ">=",
+      "expected_value": 15000000,
+      "unit": "INR",
+      "source_clause": "Clause 4.1",
+      "source_page": 8,
+      "confidence": 0.93
+    }
+  ]
+}

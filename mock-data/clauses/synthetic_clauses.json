@@ -1,0 +1,92 @@
+[
+  {
+    "clause_id": "CLAUSE-001",
+    "title": "GST Registration",
+    "text": "The bidder must possess a valid and active Goods and Services Tax (GST) registration certificate issued by the competent authority in the State/UT of supply and must submit the latest GSTR-3B return acknowledgement.",
+    "category": "STATUTORY",
+    "page_number": 4,
+    "section": "Statutory & Tax Compliance",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-002",
+    "title": "Udyam / MSME Registration",
+    "text": "Micro and Small Enterprises (MSEs) registered with the Udyam Registration Portal shall be eligible for waiver of tender fee and earnest money deposit (EMD), provided a valid Udyam Registration Certificate is furnished.",
+    "category": "STATUTORY",
+    "page_number": 5,
+    "section": "MSME & Startup Preferences",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-003",
+    "title": "Minimum Annual Turnover",
+    "text": "The bidder must have achieved an average annual financial turnover of not less than ₹5,00,00,000 (INR Five Crore) during the previous three financial years (FY 2022-23, FY 2023-24, and FY 2024-25), duly certified by a practicing Chartered Accountant with UDIN.",
+    "category": "FINANCIAL",
+    "page_number": 8,
+    "section": "Financial Standing Criteria",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-004",
+    "title": "Similar Completed Projects",
+    "text": "The bidder must have completed at least three similar supply, installation, and commissioning projects of compute servers or IT datacenter equipment of value not less than ₹1,50,00,000 each in any Central/State Government Ministry, Department, PSU, or autonomous body during the preceding five years.",
+    "category": "ELIGIBILITY",
+    "page_number": 9,
+    "section": "Past Experience Criteria",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-005",
+    "title": "OEM Manufacturer Authorization",
+    "text": "The bidder, if not being the Original Equipment Manufacturer (OEM), must submit a Manufacturer's Authorization Form (MAF) strictly in the format prescribed in Annexure-B, signed by an authorized signatory of the OEM with corporate seal.",
+    "category": "TECHNICAL",
+    "page_number": 12,
+    "section": "Technical Specifications & Authorization",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-006",
+    "title": "Bank Solvency Certificate",
+    "text": "The bidder must submit a solvency certificate from any nationalized or scheduled commercial bank in India for an amount not less than ₹1,50,00,000 (INR One Crore Fifty Lakh) issued not earlier than six months prior to the bid closing date.",
+    "category": "FINANCIAL",
+    "page_number": 10,
+    "section": "Financial Solvency",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-007",
+    "title": "Non-Blacklisting Undertaking",
+    "text": "The bidder must provide a non-judicial notarized stamp paper affidavit confirming that the firm, its directors, or partners have never been debarred, blacklisted, or banned from participating in public procurement by any Government Ministry, PSU, or statutory body as on the bid submission date.",
+    "category": "DOCUMENT",
+    "page_number": 6,
+    "section": "Integrity & Debarment",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-008",
+    "title": "Make in India Local Content",
+    "text": "In accordance with Public Procurement (Preference to Make in India) Order, Class-I Local Suppliers with local value addition of not less than 50% shall be given purchase preference. A self-certificate indicating percentage of local content must be uploaded.",
+    "category": "STATUTORY",
+    "page_number": 7,
+    "section": "Make in India Preference",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-009",
+    "title": "ISO Quality Management Certification",
+    "text": "The OEM and bidder must possess valid ISO 9001:2015 (Quality Management System) and ISO 27001:2022 (Information Security Management) certifications covering hardware manufacturing and assembly facilities.",
+    "category": "TECHNICAL",
+    "page_number": 14,
+    "section": "Quality & Standards Certification",
+    "source_tender": "GEM/2026/B/1001"
+  },
+  {
+    "clause_id": "CLAUSE-010",
+    "title": "Local Service Center Availability",
+    "text": "The bidder or authorized OEM partner must have an operational, fully-staffed technical service center located within 100 kilometers of the delivery site with 24x7 escalation support and spare parts inventory.",
+    "category": "OPERATIONAL",
+    "page_number": 16,
+    "section": "Warranty & Support Facilities",
+    "source_tender": "GEM/2026/B/1001"
+  }
+]
