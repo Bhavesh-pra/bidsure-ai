@@ -65,7 +65,11 @@ class Tender(db.Model):
             "tender_number": self.tender_number,
             "title": self.title,
             "category": self.category,
+            "entity": self.entity,
+            "tender_type": self.tender_type,
+            "submission_deadline": self.submission_deadline.isoformat() if self.submission_deadline else None,
             "status": self.status,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
     def to_dict(self):
@@ -290,4 +294,73 @@ class DocumentPage(db.Model):
             "extraction_method": self.extraction_method,
             "processing_metadata": self.processing_metadata or {},
             "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class OfficerDecision(db.Model):
+    __tablename__ = "officer_decisions"
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id", ondelete="CASCADE"), nullable=False, index=True)
+    officer_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False, index=True)
+    decision = db.Column(db.String(50), nullable=False)
+    action = db.Column(db.String(50), nullable=False)
+    remarks = db.Column(db.Text, nullable=True)
+    conditions = db.Column(db.JSON, nullable=True, default=list)
+    compliance_score_at_decision = db.Column(db.Float, nullable=True)
+    risk_level_at_decision = db.Column(db.String(50), nullable=True)
+    recommendation_at_decision = db.Column(db.String(50), nullable=True)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+
+    officer = db.relationship("User", backref="officer_decisions", lazy=True)
+    bid = db.relationship("Bid", backref=db.backref("officer_decisions", lazy=True, order_by="OfficerDecision.created_at.desc()"))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "bid_id": self.bid_id,
+            "officer_id": self.officer_id,
+            "officer_name": self.officer.name if self.officer else None,
+            "decision": self.decision,
+            "action": self.action,
+            "remarks": self.remarks,
+            "conditions": self.conditions or [],
+            "compliance_score_at_decision": self.compliance_score_at_decision,
+            "risk_level_at_decision": self.risk_level_at_decision,
+            "recommendation_at_decision": self.recommendation_at_decision,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class AuditEvent(db.Model):
+    __tablename__ = "audit_events"
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    entity_type = db.Column(db.String(50), nullable=False, default="BID")
+    entity_id = db.Column(db.String(36), nullable=False, index=True)
+    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id", ondelete="CASCADE"), nullable=True, index=True)
+    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=True, index=True)
+    action = db.Column(db.String(100), nullable=False)
+    previous_state = db.Column(db.JSON, nullable=True)
+    new_state = db.Column(db.JSON, nullable=True)
+    metadata_payload = db.Column("metadata", db.JSON, nullable=True, default=dict)
+    ip_address = db.Column(db.String(50), nullable=True)
+    timestamp = db.Column(db.DateTime, default=get_utc_now, nullable=False, index=True)
+
+    user = db.relationship("User", backref="audit_events", lazy=True)
+    bid = db.relationship("Bid", backref=db.backref("audit_events", lazy=True, order_by="AuditEvent.timestamp.desc()"))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "entity_type": self.entity_type,
+            "entity_id": self.entity_id,
+            "bid_id": self.bid_id,
+            "user_id": self.user_id,
+            "user_name": self.user.name if self.user else None,
+            "action": self.action,
+            "previous_state": self.previous_state,
+            "new_state": self.new_state,
+            "metadata": self.metadata_payload or {},
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
         }

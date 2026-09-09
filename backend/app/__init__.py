@@ -38,6 +38,8 @@ def create_app(config_name=None):
     from app.api.bidders import bidders_bp
     from app.api.bid_documents import bid_documents_bp
     from app.api.evidence import evidence_bp
+    from app.api.verification import verification_bp
+    from app.api.decision import decision_bp
 
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
@@ -48,11 +50,20 @@ def create_app(config_name=None):
     app.register_blueprint(bidders_bp, url_prefix="/api/v1")
     app.register_blueprint(bid_documents_bp, url_prefix="/api/v1")
     app.register_blueprint(evidence_bp, url_prefix="/api/v1")
+    app.register_blueprint(verification_bp, url_prefix="/api/v1")
+    app.register_blueprint(decision_bp, url_prefix="/api/v1")
 
-    # Create tables in development mode if database exists
+    # Add root /auth/login route so both /auth/login and /api/v1/auth/login work
+    from app.api.auth import login as auth_login
+    app.add_url_rule("/auth/login", endpoint="auth_login_root", view_func=auth_login, methods=["POST"])
+
+    # Create tables in development mode if database exists and seed baseline demo data
     with app.app_context():
         try:
             db.create_all()
+            if config_name == "development":
+                from app.services.seed_service import seed_demo_data
+                seed_demo_data()
         except Exception:
             pass  # Will handle via migrations / active DB connection later
 
