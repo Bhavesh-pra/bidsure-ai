@@ -8,17 +8,17 @@ export interface BadgeProps {
 
 export const Badge: React.FC<BadgeProps> = ({ variant = 'default', children, className = '' }) => {
   const styles = {
-    default: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-    neutral: 'bg-slate-100 text-slate-700 border-slate-200',
-    success: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    warning: 'bg-amber-100 text-amber-800 border-amber-200',
-    danger: 'bg-rose-100 text-rose-800 border-rose-200',
-    info: 'bg-sky-100 text-sky-800 border-sky-200',
+    default: 'bg-[#F0F4F8] text-[#0F2747] border-[#CBD5E1]',
+    neutral: 'bg-[#F1F5F9] text-[#475569] border-[#E2E8F0]',
+    success: 'bg-[#ECFDF3] text-[#15803D] border-[#A7F3D0]',
+    warning: 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]',
+    danger: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FCA5A5]',
+    info: 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]',
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold ${styles[variant]} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-[4px] border px-2 py-0.5 text-xs font-semibold tracking-wide ${styles[variant]} ${className}`}
     >
       {children}
     </span>

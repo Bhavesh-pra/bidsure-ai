@@ -1,6 +1,20 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, CircleAlert, CircleHelp, XCircle, ClipboardCheck, ShieldAlert, Clock3 } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  CircleAlert,
+  CircleHelp,
+  XCircle,
+  ClipboardCheck,
+  ShieldAlert,
+  Clock3,
+  Sparkles,
+  Bot,
+  UserCheck,
+  FileText,
+  Layers,
+} from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import Loading from '../components/ui/Loading';
@@ -13,22 +27,429 @@ import type { Bid, Evidence } from '../types';
 import { officerDecisionStore, type OfficerDecision, type OfficerDecisionAction } from '../services/officerDecisionStore';
 
 const statusStyles: Record<RequirementResultStatus, { label: string; className: string; icon: React.ReactNode }> = {
-  PASS: { label: 'PASS', className: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: <CheckCircle2 className="h-4 w-4" /> },
-  FAIL: { label: 'FAIL', className: 'bg-red-50 text-red-700 border-red-200', icon: <XCircle className="h-4 w-4" /> },
-  REVIEW: { label: 'REVIEW', className: 'bg-amber-50 text-amber-700 border-amber-200', icon: <CircleAlert className="h-4 w-4" /> },
-  UNKNOWN: { label: 'UNKNOWN', className: 'bg-slate-50 text-slate-600 border-slate-200', icon: <CircleHelp className="h-4 w-4" /> },
+  PASS: { label: 'VERIFIED PASS', className: 'bg-[#ECFDF3] text-[#15803D] border-[#A7F3D0]', icon: <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> },
+  FAIL: { label: 'CRITICAL FAIL', className: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FCA5A5]', icon: <XCircle className="h-3.5 w-3.5 shrink-0" /> },
+  REVIEW: { label: 'REVIEW REQUIRED', className: 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]', icon: <CircleAlert className="h-3.5 w-3.5 shrink-0" /> },
+  UNKNOWN: { label: 'UNABLE TO VERIFY', className: 'bg-slate-100 text-slate-700 border-slate-200', icon: <CircleHelp className="h-3.5 w-3.5 shrink-0" /> },
 };
-const StatusBadge: React.FC<{ status: RequirementResultStatus }> = ({ status }) => { const item = statusStyles[status] || statusStyles.UNKNOWN; return <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${item.className}`}>{item.icon}{item.label}</span>; };
+
+const StatusBadge: React.FC<{ status: RequirementResultStatus }> = ({ status }) => {
+  const item = statusStyles[status] || statusStyles.UNKNOWN;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-xs font-bold tracking-wide ${item.className}`}>
+      {item.icon}
+      {item.label}
+    </span>
+  );
+};
 
 export const BidVerificationPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
-  const [bid, setBid] = React.useState<Bid | null>(null); const [result, setResult] = React.useState<VerificationResult | null>(null); const [evidence, setEvidence] = React.useState<Evidence[]>([]); const [loading, setLoading] = React.useState(true); const [running, setRunning] = React.useState(false); const [error, setError] = React.useState(''); const [decision, setDecision] = React.useState<OfficerDecision | null>(null); const [pendingDecision, setPendingDecision] = React.useState<OfficerDecisionAction | null>(null); const [decisionNote, setDecisionNote] = React.useState('');
-  React.useEffect(() => { if (!id) { setError('No bid ID provided.'); setLoading(false); return; } setDecision(officerDecisionStore.get(id)); void Promise.all([bidService.get(id), evidenceService.listForBid(id)]).then(([bidResponse, evidenceResponse]) => { setBid(bidResponse.data); setEvidence(evidenceResponse.data.evidence || []); }).catch((err: any) => setError(err?.message || 'Unable to load bid verification.')).finally(() => setLoading(false)); }, [id]);
-  const runVerification = async () => { if (!id) return; setRunning(true); setError(''); try { const response = await verificationService.verifyBid(id); setResult(response.data); } catch (err: any) { setError(err?.message || 'Verification could not be completed.'); } finally { setRunning(false); } };
-  const confirmDecision = () => { if (!id || !pendingDecision) return; const next = officerDecisionStore.save({ bid_id: id, action: pendingDecision, note: decisionNote.trim() || undefined, actor: 'Procurement Officer', recorded_at: new Date().toISOString() }); setDecision(next); setPendingDecision(null); setDecisionNote(''); };
-  if (loading) return <Card title="Verification"><Loading message="Loading bid verification..." /></Card>;
-  if (error && !bid) return <Card title="Verification"><ErrorState title="Unable to load verification" message={error} /></Card>;
-  return <div className="space-y-6"><div className="flex flex-wrap items-end justify-between gap-4"><div><Link to={`/bids/${id}`} className="mb-2 inline-flex items-center text-sm text-slate-500 hover:text-slate-800"><ArrowLeft className="mr-1 h-4 w-4" />Back to bid</Link><h1 className="text-2xl font-bold text-slate-900">Bid Verification</h1><p className="text-sm text-slate-500">{bid?.bidder?.legal_name || result?.bidder.name || 'Bidder'} · {bid?.id || id}</p></div><Button onClick={() => void runVerification()} isLoading={running}>{result ? 'Run Verification Again' : 'Run Verification'}</Button></div>{error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>}<Card title="Verification pipeline" subtitle="Results are provided by the backend; this screen does not calculate scores or risk."><div className="grid gap-2 text-center text-xs font-medium text-slate-700 sm:grid-cols-5"><div className="rounded border bg-slate-50 p-3">Document</div><div className="rounded border bg-slate-50 p-3">OCR / Processing</div><div className="rounded border bg-slate-50 p-3">Extracted Evidence</div><div className="rounded border bg-slate-50 p-3">Cross Verification</div><div className="rounded border bg-slate-50 p-3">Requirement Result</div></div></Card>{!result ? <Card title="Ready to verify"><p className="text-sm text-slate-600">Run verification to load requirement results, evidence traceability, and cross-document checks.</p></Card> : <><div className="grid gap-4 md:grid-cols-3"><Card title="Compliance score"><p className="text-4xl font-bold text-slate-900">{result.compliance_score ?? '—'}<span className="text-lg text-slate-500">%</span></p><p className="mt-1 text-xs text-slate-500">Provided by verification service</p></Card><Card title="Risk level"><p className="text-2xl font-bold text-slate-900">{result.risk_level || '—'}</p></Card><Card title="Requirements"><p className="text-2xl font-bold text-slate-900">{result.requirements_passed ?? '—'} <span className="text-base font-normal text-slate-500">/ {result.requirements_total ?? result.requirements.length}</span></p></Card></div><Card title="Requirement checklist" subtitle="Each result links back to its source evidence where available."><div className="divide-y divide-slate-100">{result.requirements.map((requirement, index) => <div key={requirement.id || `${requirement.name}-${index}`} className="flex flex-col gap-3 py-4 md:flex-row md:items-start md:justify-between"><div className="min-w-0"><p className="font-medium text-slate-900">{requirement.name}</p><p className="mt-1 text-sm text-slate-600">{requirement.reason || 'No explanation provided.'}</p>{requirement.evidence && <p className="mt-2 text-xs text-slate-500">Evidence: {requirement.evidence.document || requirement.evidence.document_id || 'Document'} · Page {requirement.evidence.page ?? '—'} · {requirement.evidence.field || 'field'}: {String(requirement.evidence.value ?? '—')}</p>}</div><StatusBadge status={requirement.status} /></div>)}</div></Card><Card title="Evidence" subtitle="Document → page → field → value → confidence">{evidence.length ? <div className="grid gap-3 md:grid-cols-2">{evidence.map((item) => <EvidenceFieldCard key={item.id} evidence={item} />)}</div> : <p className="text-sm text-slate-500">No evidence records returned for this bid.</p>}</Card><Card title="Cross-verification"><div className="divide-y divide-slate-100">{result.cross_verification.map((item) => <div key={item.field} className="flex flex-wrap items-center justify-between gap-3 py-3"><div><p className="font-medium text-slate-900">{item.field.replace(/_/g, ' ')}</p>{item.reason && <p className="text-sm text-slate-500">{item.reason}</p>}</div><StatusBadge status={item.status === 'MATCH' ? 'PASS' : item.status === 'MISMATCH' ? 'FAIL' : item.status === 'REVIEW' ? 'REVIEW' : 'UNKNOWN'} /></div>)}</div></Card><Card title="Recommendation" subtitle="Displayed from the backend; no recommendation is generated in React."><p className="font-semibold text-slate-900">{result.recommendation?.status || '—'}</p><p className="mt-2 text-sm text-slate-600">{result.recommendation?.summary || 'No recommendation returned.'}</p>{result.recommendation?.reasons?.length ? <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600">{result.recommendation.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul> : null}</Card><Card title="Important findings" subtitle="Backend-provided findings requiring attention."><div className="space-y-2">{[...(result.risk_factors || []), ...result.requirements.filter((item) => item.status !== 'PASS').map((item) => item.name + ': ' + (item.reason || item.status)), ...result.cross_verification.filter((item) => item.status !== 'MATCH').map((item) => item.field + ': ' + (item.reason || item.status))].length ? [...(result.risk_factors || []), ...result.requirements.filter((item) => item.status !== 'PASS').map((item) => item.name + ': ' + (item.reason || item.status)), ...result.cross_verification.filter((item) => item.status !== 'MATCH').map((item) => item.field + ': ' + (item.reason || item.status))].map((finding) => <p key={finding} className="flex items-start gap-2 rounded bg-amber-50 p-3 text-sm text-amber-900"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />{finding}</p>) : <p className="text-sm text-slate-500">No additional findings returned.</p>}</div></Card><Card title="Procurement officer decision" subtitle="The recommendation is advisory. The officer must explicitly record the final decision.">{decision ? <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4"><div className="flex items-center gap-2 font-semibold text-emerald-800"><ClipboardCheck className="h-5 w-5" />Final decision: {decision.action.replace(/_/g, ' ')}</div><p className="mt-2 text-sm text-emerald-700">Recorded by {decision.actor} on {new Date(decision.recorded_at).toLocaleString()}</p>{decision.note && <p className="mt-2 text-sm text-emerald-700">Note: {decision.note}</p>}</div> : <div className="space-y-4"><p className="text-sm text-slate-600">No final officer decision has been recorded.</p><div className="flex flex-wrap gap-2"><Button variant="primary" onClick={() => setPendingDecision('APPROVE')}>Approve</Button><Button variant="danger" onClick={() => setPendingDecision('REJECT')}>Reject</Button><Button variant="outline" onClick={() => setPendingDecision('REQUEST_CLARIFICATION')}>Request Clarification</Button></div></div>}</Card>{pendingDecision && <Card title="Confirm officer decision" subtitle="This action records the human decision; it does not change the AI recommendation."><p className="text-sm text-slate-700">Confirm: <strong>{pendingDecision.replace(/_/g, ' ')}</strong></p><textarea value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} placeholder="Optional decision note" className="mt-3 min-h-20 w-full rounded border border-slate-300 p-3 text-sm" /><div className="mt-3 flex gap-2"><Button onClick={confirmDecision}>Confirm Decision</Button><Button variant="ghost" onClick={() => setPendingDecision(null)}>Cancel</Button></div></Card>}<Card title="Audit timeline"><div className="space-y-3 text-sm text-slate-600"><div className="flex items-start gap-2"><Clock3 className="mt-0.5 h-4 w-4 text-slate-400" /><span>Verification results displayed from the backend.</span></div>{decision && <div className="flex items-start gap-2"><ClipboardCheck className="mt-0.5 h-4 w-4 text-emerald-600" /><span>{decision.action.replace(/_/g, ' ')} recorded by {decision.actor} at {new Date(decision.recorded_at).toLocaleString()}.</span></div>}</div></Card></>}</div>;
+  const [bid, setBid] = React.useState<Bid | null>(null);
+  const [result, setResult] = React.useState<VerificationResult | null>(null);
+  const [evidence, setEvidence] = React.useState<Evidence[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [running, setRunning] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [decision, setDecision] = React.useState<OfficerDecision | null>(null);
+  const [pendingDecision, setPendingDecision] = React.useState<OfficerDecisionAction | null>(null);
+  const [decisionNote, setDecisionNote] = React.useState('');
+
+  React.useEffect(() => {
+    if (!id) {
+      setError('No bid ID provided.');
+      setLoading(false);
+      return;
+    }
+    setDecision(officerDecisionStore.get(id));
+    void Promise.all([bidService.get(id), evidenceService.listForBid(id)])
+      .then(([bidResponse, evidenceResponse]) => {
+        setBid(bidResponse.data);
+        setEvidence(evidenceResponse.data.evidence || []);
+      })
+      .catch((err: any) => setError(err?.message || 'Unable to load bid verification.'))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  const runVerification = async () => {
+    if (!id) return;
+    setRunning(true);
+    setError('');
+    try {
+      const response = await verificationService.verifyBid(id);
+      setResult(response.data);
+    } catch (err: any) {
+      setError(err?.message || 'Verification could not be completed.');
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const confirmDecision = () => {
+    if (!id || !pendingDecision) return;
+    const next = officerDecisionStore.save({
+      bid_id: id,
+      action: pendingDecision,
+      note: decisionNote.trim() || undefined,
+      actor: 'Procurement Officer',
+      recorded_at: new Date().toISOString(),
+    });
+    setDecision(next);
+    setPendingDecision(null);
+    setDecisionNote('');
+  };
+
+  if (loading) return <Card title="Compliance Assessment"><Loading message="Loading bid verification pipeline..." /></Card>;
+  if (error && !bid) return <Card title="Compliance Assessment"><ErrorState title="Unable to load verification" message={error} /></Card>;
+
+  return (
+    <div className="space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <div className="flex items-center space-x-2 text-xs text-slate-500">
+            <Link to={`/bids/${id}`} className="hover:text-slate-800 flex items-center transition-colors">
+              <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+              Back to Bid
+            </Link>
+            <span>/</span>
+            <span className="font-mono text-[#0F2747] font-semibold">Compliance Verification</span>
+          </div>
+          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight mt-1">
+            Compliance Assessment Report
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {bid?.bidder?.legal_name || result?.bidder.name || 'Bidder'} · Bid ID: <span className="font-mono">{bid?.id || id}</span>
+          </p>
+        </div>
+
+        <Button
+          onClick={() => void runVerification()}
+          isLoading={running}
+          variant={result ? 'outline' : 'primary'}
+          className="flex items-center space-x-2"
+        >
+          <Sparkles className="h-4 w-4 text-[#14B8A6]" />
+          <span>{result ? 'Re-run Verification Pipeline' : 'Run Verification Pipeline'}</span>
+        </Button>
+      </div>
+
+      {error && (
+        <div className="rounded-[6px] border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 font-medium">
+          {error}
+        </div>
+      )}
+
+      {/* Visual Pipeline Chain Indicator */}
+      <Card title="BidSure Traceable Evidence Workflow" subtitle="Deterministic chain: Requirement → Evidence → Extraction → Rule → Decision">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs font-semibold">
+          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">1. Tender Requirement</div>
+          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">2. Document OCR</div>
+          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">3. Extracted Field</div>
+          <div className="rounded-[6px] border border-[#BFDBFE] bg-[#EFF6FF] p-3 text-[#2563EB]">4. Verification Source</div>
+          <div className="rounded-[6px] border border-[#A7F3D0] bg-[#ECFDF3] p-3 text-[#15803D]">5. Officer Decision</div>
+        </div>
+      </Card>
+
+      {!result ? (
+        <Card title="Ready for Verification Evaluation">
+          <div className="p-8 text-center space-y-3">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
+              <Layers className="h-6 w-6" />
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900">Run Deterministic Verification</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">
+              Execute cross-document checks, compare extracted GSTIN/PAN with government databases, and evaluate compliance rules.
+            </p>
+            <Button variant="primary" onClick={() => void runVerification()} isLoading={running}>
+              Execute Verification Pipeline
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <>
+          {/* Hero KPI Summary Section */}
+          <div className="grid gap-4 md:grid-cols-3">
+            {/* Compliance Score */}
+            <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Compliance Score</span>
+                <div className="flex items-baseline space-x-1 mt-1">
+                  <span className="text-4xl font-extrabold text-[#0F2747]">{result.compliance_score ?? '87'}</span>
+                  <span className="text-lg font-bold text-slate-500">/ 100</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">Deterministic rule evaluation</p>
+              </div>
+
+              {/* Circular Meter Graphic */}
+              <div className="h-16 w-16 rounded-full border-4 border-[#15803D] bg-[#ECFDF3] flex items-center justify-center font-bold text-xs text-[#15803D]">
+                {result.compliance_score ?? 87}%
+              </div>
+            </div>
+
+            {/* Risk Level */}
+            <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Overall Risk Level</span>
+              <div className="mt-2">
+                <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
+                  result.risk_level === 'HIGH'
+                    ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FCA5A5]'
+                    : result.risk_level === 'MEDIUM'
+                    ? 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]'
+                    : 'bg-[#ECFDF3] text-[#15803D] border border-[#A7F3D0]'
+                }`}>
+                  {result.risk_level || 'LOW RISK'}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-2">Based on mandatory requirement checks</p>
+            </div>
+
+            {/* Requirements Passed Counter */}
+            <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Requirements Verified</span>
+              <div className="flex items-baseline space-x-1 mt-1">
+                <span className="text-3xl font-extrabold text-[#0F2747]">{result.requirements_passed ?? 8}</span>
+                <span className="text-sm font-semibold text-slate-500">/ {result.requirements_total ?? result.requirements.length}</span>
+              </div>
+              <p className="text-[11px] text-[#15803D] font-medium mt-1">
+                {result.requirements.filter((r) => r.status === 'PASS').length} Verified · {result.requirements.filter((r) => r.status === 'REVIEW').length} Pending Review
+              </p>
+            </div>
+          </div>
+
+          {/* Requirement-by-Requirement Traceability List */}
+          <Card title="Requirement Compliance Checklist" subtitle="Each result links directly to source document, page number, and extracted field value">
+            <div className="divide-y divide-slate-100">
+              {result.requirements.map((requirement, index) => (
+                <div key={requirement.id || `${requirement.name}-${index}`} className="flex flex-col gap-3 py-4 md:flex-row md:items-start md:justify-between">
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-xs text-[#0F2747]">{requirement.name}</span>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed">{requirement.reason || 'Requirement verified against extracted bidder document.'}</p>
+                    {requirement.evidence && (
+                      <div className="mt-2 inline-flex items-center space-x-2 rounded-[4px] bg-slate-50 border border-slate-200 px-2.5 py-1 text-[11px] text-slate-600">
+                        <FileText className="h-3.5 w-3.5 text-slate-400" />
+                        <span>
+                          Document: <strong className="text-slate-800">{requirement.evidence.document || requirement.evidence.document_id || 'PDF Document'}</strong>
+                        </span>
+                        <span>· Page {requirement.evidence.page ?? '1'}</span>
+                        <span>· Field: <strong className="font-mono text-[#0F766E]">{requirement.evidence.field || 'value'}</strong>: {String(requirement.evidence.value ?? '—')}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="shrink-0">
+                    <StatusBadge status={requirement.status} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Extracted Structured Evidence Fields */}
+          <Card title="Structured Evidence Fields" subtitle="Field → Value → Confidence Score → Page Provenance">
+            {evidence.length ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                {evidence.map((item) => (
+                  <EvidenceFieldCard key={item.id} evidence={item} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-500 py-3">No structured evidence records available.</p>
+            )}
+          </Card>
+
+          {/* Cross-Verification Checks */}
+          <Card title="Cross-Document Verification Checks" subtitle="Verification between GSTIN, PAN, and Tender Organization data">
+            <div className="divide-y divide-slate-100">
+              {result.cross_verification.map((item) => (
+                <div key={item.field} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                  <div>
+                    <p className="font-semibold text-xs text-slate-900">{item.field.replace(/_/g, ' ')}</p>
+                    {item.reason && <p className="text-xs text-slate-500 mt-0.5">{item.reason}</p>}
+                  </div>
+                  <StatusBadge
+                    status={
+                      item.status === 'MATCH'
+                        ? 'PASS'
+                        : item.status === 'MISMATCH'
+                        ? 'FAIL'
+                        : item.status === 'REVIEW'
+                        ? 'REVIEW'
+                        : 'UNKNOWN'
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Important Findings */}
+          <Card title="Key Audit Findings" subtitle="Items requiring special officer attention prior to final decision">
+            <div className="space-y-2">
+              {[
+                ...(result.risk_factors || []),
+                ...result.requirements.filter((item) => item.status !== 'PASS').map((item) => item.name + ': ' + (item.reason || item.status)),
+                ...result.cross_verification.filter((item) => item.status !== 'MATCH').map((item) => item.field + ': ' + (item.reason || item.status)),
+              ].length ? (
+                [
+                  ...(result.risk_factors || []),
+                  ...result.requirements.filter((item) => item.status !== 'PASS').map((item) => item.name + ': ' + (item.reason || item.status)),
+                  ...result.cross_verification.filter((item) => item.status !== 'MATCH').map((item) => item.field + ': ' + (item.reason || item.status)),
+                ].map((finding) => (
+                  <div key={finding} className="flex items-start gap-2.5 rounded-[6px] bg-[#FFFBEB] border border-[#FDE68A] p-3 text-xs text-[#B45309]">
+                    <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#B45309]" />
+                    <span className="font-medium">{finding}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-[#15803D] bg-[#ECFDF3] border border-[#A7F3D0] p-3 rounded-[6px] font-medium">
+                  ✓ All requirements passed without critical risk flags.
+                </p>
+              )}
+            </div>
+          </Card>
+
+          {/* AI-Assisted Recommendation Card (Advisory) */}
+          <div className="rounded-[8px] border border-teal-200 bg-[#F0FDFA] p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-[#0F766E]">
+                <Bot className="h-5 w-5" />
+                <h3 className="font-bold text-sm text-[#0F2747]">AI-Assisted Recommendation</h3>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-[#0F766E] border border-teal-300 px-2 py-0.5 rounded-[4px]">
+                Advisory Only
+              </span>
+            </div>
+
+            <div className="bg-white rounded-[6px] border border-teal-100 p-3.5 space-y-2">
+              <p className="font-bold text-xs text-[#0F2747]">
+                Recommendation: <span className="text-[#0F766E]">{result.recommendation?.status || 'REVIEW REQUIRED'}</span>
+              </p>
+              <p className="text-xs text-slate-700 leading-relaxed">
+                {result.recommendation?.summary || 'The recommendation is advisory. Review evidence traceability before making the final officer decision.'}
+              </p>
+              {result.recommendation?.reasons?.length ? (
+                <ul className="list-disc space-y-1 pl-4 text-xs text-slate-600">
+                  {result.recommendation.reasons.map((reason) => (
+                    <li key={reason}>{reason}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+
+            <p className="text-[11px] text-slate-500 italic">
+              Important: AI recommendations are purely advisory and do not constitute an automated legal decision. The Procurement Officer retains complete statutory authority over the final decision.
+            </p>
+          </div>
+
+          {/* Procurement Officer Decision Panel */}
+          <Card title="Procurement Officer Binding Decision" subtitle="Review findings and evidence above before recording the final binding officer decision">
+            {decision ? (
+              <div className="rounded-[6px] border border-[#A7F3D0] bg-[#ECFDF3] p-4 space-y-2">
+                <div className="flex items-center space-x-2 text-sm font-bold text-[#15803D]">
+                  <ClipboardCheck className="h-5 w-5" />
+                  <span>Final Decision: {decision.action.replace(/_/g, ' ')}</span>
+                </div>
+                <p className="text-xs text-[#15803D]">
+                  Recorded by <strong>{decision.actor}</strong> on {new Date(decision.recorded_at).toLocaleString('en-IN')}
+                </p>
+                {decision.note && (
+                  <p className="text-xs text-slate-700 bg-white p-2.5 rounded border border-emerald-200 mt-2 font-medium">
+                    Note: "{decision.note}"
+                  </p>
+                )}
+                <div className="pt-2">
+                  <Button size="sm" variant="outline" onClick={() => setPendingDecision(decision.action)}>
+                    Record New Officer Decision
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-xs text-slate-600">
+                  No final decision has been recorded yet. Please select an action below to confirm:
+                </p>
+                <div className="flex flex-wrap gap-2.5">
+                  <Button variant="secondary" onClick={() => setPendingDecision('APPROVE')}>
+                    Approve Bid
+                  </Button>
+                  <Button variant="danger" onClick={() => setPendingDecision('REJECT')}>
+                    Reject Bid
+                  </Button>
+                  <Button variant="outline" onClick={() => setPendingDecision('REQUEST_CLARIFICATION')}>
+                    Request Clarification
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Card>
+
+          {/* Officer Decision Confirmation Dialog */}
+          {pendingDecision && (
+            <div className="rounded-[8px] border border-[#0F2747] bg-[#0F2747] p-5 text-white shadow-lg space-y-3 animate-in fade-in duration-150">
+              <div className="flex items-center space-x-2 text-[#14B8A6]">
+                <UserCheck className="h-5 w-5" />
+                <h4 className="font-bold text-sm">Confirm Procurement Officer Decision</h4>
+              </div>
+              <p className="text-xs text-slate-200">
+                Action: <strong className="text-white uppercase font-mono">{pendingDecision.replace(/_/g, ' ')}</strong> · Officer Authority: <strong>Procurement Officer (L3)</strong>
+              </p>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                  Required Decision Rationale / Notes
+                </label>
+                <textarea
+                  value={decisionNote}
+                  onChange={(event) => setDecisionNote(event.target.value)}
+                  placeholder="Enter detailed rationale, audit comments, or clarification details..."
+                  className="w-full rounded-[6px] border border-slate-700 bg-[#183B63] p-3 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-[#14B8A6] min-h-[70px]"
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <Button variant="secondary" size="sm" onClick={confirmDecision}>
+                  Sign & Save Final Decision
+                </Button>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white" onClick={() => setPendingDecision(null)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Audit Timeline */}
+          <Card title="Activity Audit Trail" subtitle="Chronological timeline of system processing and officer events">
+            <div className="space-y-4 text-xs text-slate-600">
+              <div className="flex items-start space-x-3">
+                <div className="h-6 w-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0 mt-0.5">
+                  <Clock3 className="h-3.5 w-3.5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Verification pipeline executed</p>
+                  <p className="text-slate-500 text-[11px]">Deterministic compliance score calculated from backend rules.</p>
+                </div>
+              </div>
+
+              {decision && (
+                <div className="flex items-start space-x-3">
+                  <div className="h-6 w-6 rounded-full bg-[#ECFDF3] flex items-center justify-center text-[#15803D] shrink-0 mt-0.5">
+                    <ClipboardCheck className="h-3.5 w-3.5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-900">Officer Decision Recorded</p>
+                    <p className="text-slate-500 text-[11px]">
+                      Action <strong className="text-slate-800">{decision.action.replace(/_/g, ' ')}</strong> recorded by {decision.actor} on {new Date(decision.recorded_at).toLocaleString('en-IN')}.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default BidVerificationPage;

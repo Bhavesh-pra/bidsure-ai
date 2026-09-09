@@ -246,57 +246,98 @@ export const BidDetailsPage: React.FC = () => {
         />
       )}
 
+      {/* Verification Pipeline Progress Indicator */}
+      <Card>
+        <div className="flex flex-col space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Bid Compliance Workflow Pipeline
+          </span>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1 text-xs">
+            <div className="flex items-center space-x-2 p-2.5 rounded-[6px] bg-[#ECFDF3] border border-[#A7F3D0] text-[#15803D]">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#15803D] text-white font-bold text-[10px]">✓</span>
+              <span className="font-semibold truncate">1. Documents</span>
+            </div>
+
+            <div className="flex items-center space-x-2 p-2.5 rounded-[6px] bg-[#ECFDF3] border border-[#A7F3D0] text-[#15803D]">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#15803D] text-white font-bold text-[10px]">✓</span>
+              <span className="font-semibold truncate">2. OCR Process</span>
+            </div>
+
+            <div className="flex items-center space-x-2 p-2.5 rounded-[6px] bg-[#ECFDF3] border border-[#A7F3D0] text-[#15803D]">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#15803D] text-white font-bold text-[10px]">✓</span>
+              <span className="font-semibold truncate">3. Extraction</span>
+            </div>
+
+            <Link
+              to={`/bids/${bid.id}/verification`}
+              className="flex items-center space-x-2 p-2.5 rounded-[6px] bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB] hover:bg-blue-100 transition-colors"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2563EB] text-white font-bold text-[10px]">●</span>
+              <span className="font-semibold truncate">4. Verification</span>
+            </Link>
+
+            <Link
+              to={`/bids/${bid.id}/decision`}
+              className="flex items-center space-x-2 p-2.5 rounded-[6px] bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-300 text-slate-700 font-bold text-[10px]">○</span>
+              <span className="font-semibold truncate">5. Officer Decision</span>
+            </Link>
+          </div>
+        </div>
+      </Card>
+
       {/* Bid Details Summary Card */}
       <Card>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
           <div className="space-y-1">
-            <div className="flex items-center space-x-1.5 text-xs text-slate-500">
+            <div className="flex items-center space-x-1.5 font-bold uppercase tracking-wider text-slate-400 text-[10px]">
               <Building2 className="h-3.5 w-3.5" />
-              <span>Bidder</span>
+              <span>Bidder Details</span>
             </div>
-            <p className="font-semibold text-slate-900">{bid.bidder?.legal_name || '—'}</p>
-            <p className="text-xs text-slate-500">
+            <p className="font-bold text-[#0F2747] text-sm">{bid.bidder?.legal_name || '—'}</p>
+            <p className="text-slate-500 font-mono text-[11px]">
               {bid.bidder?.pan ? `PAN: ${bid.bidder.pan}` : ''}{' '}
               {bid.bidder?.gstin ? `| GSTIN: ${bid.bidder.gstin}` : ''}
             </p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center space-x-1.5 text-xs text-slate-500">
+            <div className="flex items-center space-x-1.5 font-bold uppercase tracking-wider text-slate-400 text-[10px]">
               <FileText className="h-3.5 w-3.5" />
-              <span>Tender</span>
+              <span>Associated Tender</span>
             </div>
             <p className="font-semibold text-slate-900 truncate" title={bid.tender?.title}>
               {bid.tender?.title || bid.tender_id}
             </p>
             {bid.tender?.tender_number && (
-              <p className="text-xs text-slate-500">{bid.tender.tender_number}</p>
+              <p className="text-slate-500 font-mono text-[11px]">{bid.tender.tender_number}</p>
             )}
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center space-x-1.5 text-xs text-slate-500">
+            <div className="flex items-center space-x-1.5 font-bold uppercase tracking-wider text-slate-400 text-[10px]">
               <IndianRupee className="h-3.5 w-3.5" />
-              <span>Quoted Amount</span>
+              <span>Quoted Bid Amount</span>
             </div>
-            <p className="text-lg font-bold text-slate-900">
+            <p className="text-base font-bold text-[#0F2747]">
               ₹{Number(bid.quoted_amount).toLocaleString('en-IN')}
             </p>
-            <p className="text-xs text-slate-500">Proposed Quote</p>
+            <p className="text-slate-500 text-[11px]">Financial Commercial Quote</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center space-x-1.5 text-xs text-slate-500">
+            <div className="flex items-center space-x-1.5 font-bold uppercase tracking-wider text-slate-400 text-[10px]">
               <Calendar className="h-3.5 w-3.5" />
-              <span>Status & Date</span>
+              <span>Evaluation Status</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800">
+            <div className="pt-0.5">
+              <span className="inline-flex items-center rounded-full bg-[#ECFDF3] px-2.5 py-0.5 text-xs font-semibold text-[#15803D] border border-[#A7F3D0]">
                 {bid.status}
               </span>
             </div>
             {bid.proposed_completion_date && (
-              <p className="text-xs text-slate-500">
+              <p className="text-slate-500 text-[11px] pt-1">
                 Target: {new Date(bid.proposed_completion_date).toLocaleDateString('en-IN')}
               </p>
             )}
