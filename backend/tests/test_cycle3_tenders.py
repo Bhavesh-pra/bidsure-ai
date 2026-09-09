@@ -24,11 +24,28 @@ VALID_TENDER = {
 }
 
 
+from app.security.jwt_manager import create_access_token
+
+
 @pytest.fixture
 def client():
     app = create_app("testing")
     with app.test_client() as test_client:
         yield test_client
+
+
+@pytest.fixture
+def auth_headers(client):
+    with client.application.app_context():
+        token = create_access_token("USR-TEST-1", "ORG-A", "PROCUREMENT_OFFICER")
+        return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def org_b_headers(client):
+    with client.application.app_context():
+        token = create_access_token("USR-TEST-2", "ORG-B", "PROCUREMENT_OFFICER")
+        return {"Authorization": f"Bearer {token}"}
 
 
 def assert_error(response, status_code, code=None):
@@ -61,10 +78,10 @@ def test_list_tenders_requires_authentication(client):
         ("submission_deadline", "not-a-date"),
     ],
 )
-def test_invalid_tender_metadata_returns_validation_error(client, field, value):
+def test_invalid_tender_metadata_returns_validation_error(client, auth_headers, field, value):
     payload = {**VALID_TENDER, field: value}
     response = client.post(
-        "/api/v1/tenders", json=payload, headers={"Authorization": "Bearer test-token"}
+        "/api/v1/tenders", json=payload, headers=auth_headers
     )
     assert response.status_code in (400, 422)
     body = response.get_json()
@@ -72,36 +89,32 @@ def test_invalid_tender_metadata_returns_validation_error(client, field, value):
     assert body["error"]["code"] in ("VALIDATION_ERROR", "INVALID_REQUEST")
 
 
-def test_duplicate_tender_number_is_rejected(client):
-    headers = {"Authorization": "Bearer org-a-token"}
-    first = client.post("/api/v1/tenders", json=VALID_TENDER, headers=headers)
+def test_duplicate_tender_number_is_rejected(client, auth_headers):
+    first = client.post("/api/v1/tenders", json=VALID_TENDER, headers=auth_headers)
     assert first.status_code == 201
 
-    duplicate = client.post("/api/v1/tenders", json=VALID_TENDER, headers=headers)
+    duplicate = client.post("/api/v1/tenders", json=VALID_TENDER, headers=auth_headers)
     assert_error(duplicate, 409, "DUPLICATE_TENDER_NUMBER")
 
 
-def test_created_tender_is_returned_by_list_and_details(client):
-    headers = {"Authorization": "Bearer org-a-token"}
-    created = client.post("/api/v1/tenders", json=VALID_TENDER, headers=headers)
+def test_created_tender_is_returned_by_list_and_details(client, auth_headers):
+    created = client.post("/api/v1/tenders", json=VALID_TENDER, headers=auth_headers)
     assert created.status_code == 201
     created_data = created.get_json()["data"]
     assert created_data["tender_number"] == VALID_TENDER["tender_number"]
     assert created_data["status"] == "DRAFT"
 
-    listed = client.get("/api/v1/tenders", headers=headers)
+    listed = client.get("/api/v1/tenders", headers=auth_headers)
     assert listed.status_code == 200
     assert any(item["id"] == created_data["id"] for item in listed.get_json()["data"])
 
-    details = client.get(f"/api/v1/tenders/{created_data['id']}", headers=headers)
+    details = client.get(f"/api/v1/tenders/{created_data['id']}", headers=auth_headers)
     assert details.status_code == 200
     assert details.get_json()["data"]["title"] == VALID_TENDER["title"]
 
 
-def test_tender_isolation_between_organizations(client):
-    org_a_headers = {"Authorization": "Bearer org-a-token"}
-    org_b_headers = {"Authorization": "Bearer org-b-token"}
-    created = client.post("/api/v1/tenders", json=VALID_TENDER, headers=org_a_headers)
+def test_tender_isolation_between_organizations(client, auth_headers, org_b_headers):
+    created = client.post("/api/v1/tenders", json=VALID_TENDER, headers=auth_headers)
     assert created.status_code == 201
     tender_id = created.get_json()["data"]["id"]
 
@@ -114,3 +127,4 @@ def test_missing_expired_or_invalid_jwt_is_rejected(client, authorization):
     headers = {} if authorization is None else {"Authorization": authorization}
     response = client.get("/api/v1/tenders", headers=headers)
     assert_error(response, 401)
+

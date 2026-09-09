@@ -35,7 +35,7 @@ class TenderRequirementExtractor:
 
     @staticmethod
     def _clauses(text: str) -> List[str]:
-        return [part.strip(" .;:-") for part in re.split(r"(?<=[.;])\s+|\n+", text) if len(part.strip()) >= 12]
+        return [part.strip(" .;:-") for part in re.split(r"(?<!\b(?:Rs|No|Dr|Ms|Mr)\.)(?<=[.;])\s+|\n+", text, flags=re.IGNORECASE) if len(part.strip()) >= 12]
 
     def _extract_clause(self, clause: str, page: int) -> ExtractedRequirement | None:
         lower = clause.lower()

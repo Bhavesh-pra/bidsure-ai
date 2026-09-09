@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
@@ -14,7 +14,9 @@ export const DashboardPage: React.FC = () => (
         <StatusBadge status="UNABLE_TO_VERIFY" />
       </div>
       <div className="pt-2">
-        <Button variant="primary">Create Tender</Button>
+        <Link to="/tenders/new">
+          <Button variant="primary">Create Tender</Button>
+        </Link>
       </div>
     </div>
   </Card>
