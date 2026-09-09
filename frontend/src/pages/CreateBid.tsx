@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { BidForm } from '../components/bidders/BidForm';
 import { bidderService } from '../services/bidderService';
 import { bidService } from '../services/bidService';
 import type { Bidder } from '../types';
+import { FileCheck } from 'lucide-react';
 
 export default function CreateBidPage() {
   const { id, tenderId } = useParams<{ id?: string; tenderId?: string }>();
@@ -22,13 +24,34 @@ export default function CreateBidPage() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Link
-          to={activeTenderId ? `/tenders/${activeTenderId}` : '/tenders'}
-          className="text-xs text-indigo-600 hover:text-indigo-800"
-        >
-          ← Back to Tender
+    <div className="space-y-6">
+      <Breadcrumbs
+        items={[
+          { label: 'Tenders', href: '/tenders' },
+          {
+            label: activeTenderId ? `Tender #${activeTenderId}` : 'Tender Details',
+            href: activeTenderId ? `/tenders/${activeTenderId}` : '/tenders',
+          },
+          { label: 'Create New Bid' },
+        ]}
+      />
+
+      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div>
+          <div className="flex items-center space-x-2 text-xs font-semibold text-[#0F766E]">
+            <FileCheck className="h-4 w-4" />
+            <span>Bid Submission Entry</span>
+          </div>
+          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight mt-0.5">Submit Bidder Proposal</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Register a vendor commercial response against Tender #{activeTenderId || '—'}
+          </p>
+        </div>
+
+        <Link to={activeTenderId ? `/tenders/${activeTenderId}` : '/tenders'}>
+          <Button variant="outline" size="sm">
+            Cancel
+          </Button>
         </Link>
       </div>
 

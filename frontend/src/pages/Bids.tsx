@@ -4,6 +4,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import Loading from '../components/ui/Loading';
 import ErrorState from '../components/ui/ErrorState';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { bidService } from '../services/bidService';
 import type { Bid } from '../types';
 import {
@@ -58,6 +59,8 @@ export const BidsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: 'Bids & Evidence Directory' }]} />
+
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>

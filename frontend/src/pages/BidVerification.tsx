@@ -21,6 +21,8 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import Loading from '../components/ui/Loading';
 import ErrorState from '../components/ui/ErrorState';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
+import { Tooltip } from '../components/ui/Tooltip';
 import { EvidenceFieldCard } from '../components/documents';
 import { bidService } from '../services/bidService';
 import { evidenceService } from '../services/evidenceService';
@@ -170,30 +172,37 @@ export const BidVerificationPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs
+        items={[
+          { label: 'Tenders', href: '/tenders' },
+          { label: `Bid #${id}`, href: `/bids/${id}` },
+          { label: 'Compliance Verification' },
+        ]}
+      />
+
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <Link to={`/bids/${id}`} className="hover:text-slate-800 flex items-center transition-colors">
-              <ArrowLeft className="h-3.5 w-3.5 mr-1" />
-              Back to Bid
-            </Link>
-            <span>/</span>
-            <span className="font-mono text-[#0F2747] font-semibold">Compliance Verification</span>
+          <div className="flex items-center space-x-2 text-xs text-slate-500 mb-1">
+            <span className="font-semibold text-[#0F766E] uppercase tracking-wider text-[10px] bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+              Verification Engine
+            </span>
+            <span>·</span>
+            <span className="font-mono text-[#0F2747] font-semibold">Deterministic Rule Evaluation</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight mt-1">
+          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight">
             Compliance Assessment Report
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            {bid?.bidder?.legal_name || result?.bidder?.legal_name || result?.bidder?.name || 'Bidder'} · Bid ID:{' '}
+            {bid?.bidder?.legal_name || result?.bidder?.legal_name || result?.bidder?.name || 'Bidder'} · Case Ref:{' '}
             <span className="font-mono">{bid?.id || id}</span>
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link to={`/bids/${id}/audit`}>
-            <Button variant="outline" size="sm" className="flex items-center gap-1.5">
-              <History className="h-4 w-4 text-slate-500" />
+            <Button variant="outline" size="sm" className="flex items-center gap-1.5 text-xs">
+              <History className="h-3.5 w-3.5 text-slate-500" />
               <span>Audit Trail</span>
             </Button>
           </Link>
@@ -201,9 +210,10 @@ export const BidVerificationPage: React.FC = () => {
             onClick={() => void runVerification()}
             isLoading={running}
             variant={result ? 'outline' : 'primary'}
-            className="flex items-center space-x-2"
+            size="sm"
+            className="flex items-center space-x-1.5 text-xs"
           >
-            <Sparkles className="h-4 w-4 text-[#14B8A6]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#14B8A6]" />
             <span>{result ? 'Re-run Verification Pipeline' : 'Run Verification Pipeline'}</span>
           </Button>
         </div>
@@ -215,27 +225,41 @@ export const BidVerificationPage: React.FC = () => {
         </div>
       )}
 
-      {/* Visual Pipeline Chain Indicator */}
+      {/* Visual Pipeline Chain Indicator with Tooltips */}
       <Card
         title="BidSure Traceable Evidence Workflow"
         subtitle="Deterministic chain: Requirement → Evidence → Extraction → Rule → Decision"
       >
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs font-semibold">
-          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">
-            1. Tender Requirement
-          </div>
-          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">
-            2. Document OCR
-          </div>
-          <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700">
-            3. Extracted Field
-          </div>
-          <div className="rounded-[6px] border border-[#BFDBFE] bg-[#EFF6FF] p-3 text-[#2563EB]">
-            4. Verification Source
-          </div>
-          <div className="rounded-[6px] border border-[#A7F3D0] bg-[#ECFDF3] p-3 text-[#15803D]">
-            5. Officer Decision
-          </div>
+          <Tooltip content="Rule derived deterministically from published Tender PDF specification">
+            <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700 cursor-help hover:bg-slate-100 transition-colors">
+              1. Tender Requirement
+            </div>
+          </Tooltip>
+          
+          <Tooltip content="Document OCR page text extracted & hashed with SHA-256">
+            <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700 cursor-help hover:bg-slate-100 transition-colors">
+              2. Document OCR
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Key-value pairs extracted with page & bounding-box provenance">
+            <div className="rounded-[6px] border border-slate-200 bg-slate-50 p-3 text-slate-700 cursor-help hover:bg-slate-100 transition-colors">
+              3. Extracted Field
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Matched against statutory GSTIN / PAN / Govt verification registries">
+            <div className="rounded-[6px] border border-[#BFDBFE] bg-[#EFF6FF] p-3 text-[#2563EB] cursor-help hover:bg-blue-100 transition-colors">
+              4. Verification Source
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Final binding determination signed by statutory Procurement Officer">
+            <div className="rounded-[6px] border border-[#A7F3D0] bg-[#ECFDF3] p-3 text-[#15803D] cursor-help hover:bg-emerald-100 transition-colors">
+              5. Officer Decision
+            </div>
+          </Tooltip>
         </div>
       </Card>
 
@@ -259,54 +283,58 @@ export const BidVerificationPage: React.FC = () => {
           {/* Hero KPI Summary Section */}
           <div className="grid gap-4 md:grid-cols-3">
             {/* Compliance Score */}
-            <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Compliance Score
-                </span>
-                <div className="flex items-baseline space-x-1 mt-1">
-                  <span className="text-4xl font-extrabold text-[#0F2747]">
-                    {result.compliance_score ?? '—'}
+            <Tooltip content="Score generated via deterministic rule checking: mandatory 100%, turnover 80-100%, OEM status 75-100%">
+              <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] flex items-center justify-between cursor-help hover:border-slate-300 transition-colors">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                    Compliance Score
                   </span>
-                  <span className="text-lg font-bold text-slate-500">/ 100</span>
+                  <div className="flex items-baseline space-x-1 mt-1">
+                    <span className="text-4xl font-extrabold text-[#0F2747]">
+                      {result.compliance_score ?? '—'}
+                    </span>
+                    <span className="text-lg font-bold text-slate-500">/ 100</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-1">Deterministic rule evaluation</p>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">Deterministic rule evaluation</p>
-              </div>
 
-              {/* Circular Meter Graphic */}
-              <div
-                className={`h-16 w-16 rounded-full border-4 flex items-center justify-center font-bold text-xs ${
-                  (result.compliance_score ?? 0) >= 75
-                    ? 'border-[#15803D] bg-[#ECFDF3] text-[#15803D]'
-                    : (result.compliance_score ?? 0) >= 50
-                    ? 'border-amber-500 bg-amber-50 text-amber-700'
-                    : 'border-red-500 bg-red-50 text-red-700'
-                }`}
-              >
-                {result.compliance_score ?? 0}%
-              </div>
-            </div>
-
-            {/* Risk Level */}
-            <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                Overall Risk Level
-              </span>
-              <div className="mt-2">
-                <span
-                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
-                    result.risk_level === 'HIGH'
-                      ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FCA5A5]'
-                      : result.risk_level === 'MEDIUM'
-                      ? 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]'
-                      : 'bg-[#ECFDF3] text-[#15803D] border border-[#A7F3D0]'
+                {/* Circular Meter Graphic */}
+                <div
+                  className={`h-16 w-16 rounded-full border-4 flex items-center justify-center font-bold text-xs ${
+                    (result.compliance_score ?? 0) >= 75
+                      ? 'border-[#15803D] bg-[#ECFDF3] text-[#15803D]'
+                      : (result.compliance_score ?? 0) >= 50
+                      ? 'border-amber-500 bg-amber-50 text-amber-700'
+                      : 'border-red-500 bg-red-50 text-red-700'
                   }`}
                 >
-                  {result.risk_level || 'LOW RISK'}
-                </span>
+                  {result.compliance_score ?? 0}%
+                </div>
               </div>
-              <p className="text-[11px] text-slate-500 mt-2">Based on mandatory requirement checks</p>
-            </div>
+            </Tooltip>
+
+            {/* Risk Level */}
+            <Tooltip content="Risk level classification based on cross-document consistency and mandatory requirement fulfillment">
+              <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] cursor-help hover:border-slate-300 transition-colors">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  Overall Risk Level
+                </span>
+                <div className="mt-2">
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
+                      result.risk_level === 'HIGH'
+                        ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FCA5A5]'
+                        : result.risk_level === 'MEDIUM'
+                        ? 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]'
+                        : 'bg-[#ECFDF3] text-[#15803D] border border-[#A7F3D0]'
+                    }`}
+                  >
+                    {result.risk_level || 'LOW RISK'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-2">Based on mandatory requirement checks</p>
+              </div>
+            </Tooltip>
 
             {/* Requirements Passed Counter */}
             <div className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]">

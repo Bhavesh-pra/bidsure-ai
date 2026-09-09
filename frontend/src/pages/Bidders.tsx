@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button';
 import { Loading } from '../components/ui/Loading';
 import { ErrorState } from '../components/ui/ErrorState';
 import { EmptyState } from '../components/ui/EmptyState';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { BidderCard } from '../components/bidders/BidderCard';
 import { BidderForm } from '../components/bidders/BidderForm';
 import { bidderService } from '../services/bidderService';
@@ -30,6 +31,8 @@ export default function BiddersPage() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: 'Bidders Directory' }]} />
+
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <div className="flex items-center space-x-2 text-xs font-semibold text-[#0F766E]">

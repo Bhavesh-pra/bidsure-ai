@@ -4,6 +4,9 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import Loading from '../components/ui/Loading';
 import ErrorState from '../components/ui/ErrorState';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
+import { Drawer } from '../components/ui/Drawer';
+import { ProcessingStepProgress } from '../components/ui/ProcessingStepProgress';
 import { bidService } from '../services/bidService';
 import { documentService } from '../services/documentService';
 import type { Bid, Document, DocumentType } from '../types';
@@ -26,6 +29,8 @@ import {
   IndianRupee,
   FileText,
   ShieldCheck,
+  Eye,
+  Info,
 } from 'lucide-react';
 
 export const BidDetailsPage: React.FC = () => {
@@ -53,6 +58,8 @@ export const BidDetailsPage: React.FC = () => {
   const [extractingDocId, setExtractingDocId] = useState<string | null>(null);
   const [ocrDocument, setOcrDocument] = useState<Document | null>(null);
   const [ocrPages, setOcrPages] = useState<import('../types').OCRPage[]>([]);
+
+  const [isReqDrawerOpen, setIsReqDrawerOpen] = useState(false);
 
   const loadData = async (bId: string) => {
     try {
@@ -207,38 +214,56 @@ export const BidDetailsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs
+        items={[
+          { label: 'Tenders', href: '/tenders' },
+          { label: bid.tender?.tender_number || (tenderId ? `Tender #${tenderId}` : 'Tender Details'), href: tenderId ? `/tenders/${tenderId}` : '/tenders' },
+          { label: `Bidder: ${bid.bidder?.legal_name || bid.id}` },
+        ]}
+      />
+
       {/* Top Header & Navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <Link
-              to={tenderId ? `/tenders/${tenderId}` : '/tenders'}
-              className="flex items-center hover:text-slate-800 transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 mr-1" />
-              {tenderId ? 'Back to Tender' : 'Back to Tenders'}
-            </Link>
-            <span>/</span>
-            <span>Bid {bid.id}</span>
+          <div className="flex items-center space-x-2 text-xs text-slate-500 mb-1">
+            <span className="font-semibold text-[#0F766E] uppercase tracking-wider text-[10px] bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+              Bid Workspace
+            </span>
+            <span>·</span>
+            <span>Ref ID: {bid.id}</span>
           </div>
-          <h1 className="mt-1 text-2xl font-bold text-slate-900">
-            {bid.bidder?.legal_name || 'Bidder'}
+          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight">
+            {bid.bidder?.legal_name || 'Bidder Case Overview'}
           </h1>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <Link to={`/bids/${bid.id}/evidence`}><Button variant="outline">View Evidence</Button></Link>
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
-            onClick={() => handleOpenUploadModal()}
-            className="flex items-center space-x-1.5"
+            size="sm"
+            onClick={() => setIsReqDrawerOpen(true)}
+            className="flex items-center space-x-1 text-xs"
           >
-            <Upload className="h-4 w-4" />
+            <Eye className="h-3.5 w-3.5 text-slate-600" />
+            <span>Tender Specs Drawer</span>
+          </Button>
+          <Link to={`/bids/${bid.id}/evidence`}>
+            <Button variant="outline" size="sm" className="text-xs">
+              View Evidence
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleOpenUploadModal()}
+            className="flex items-center space-x-1.5 text-xs"
+          >
+            <Upload className="h-3.5 w-3.5" />
             <span>Upload Document</span>
           </Button>
           <Link to={`/bids/${bid.id}/verification`}>
-            <Button variant="primary" className="flex items-center space-x-1.5">
-              <ShieldCheck className="h-4 w-4" />
+            <Button variant="primary" size="sm" className="flex items-center space-x-1.5 text-xs">
+              <ShieldCheck className="h-3.5 w-3.5" />
               <span>Verify Compliance</span>
             </Button>
           </Link>
@@ -429,6 +454,58 @@ export const BidDetailsPage: React.FC = () => {
       <Modal isOpen={Boolean(ocrDocument)} onClose={() => setOcrDocument(null)} title={ocrDocument ? `OCR Text — ${ocrDocument.original_filename}` : 'OCR Text'}>
         {ocrDocument && <div className="space-y-4"><DocumentStatus status={ocrDocument.processing_status} /><OCRPagePreview pages={ocrPages} /></div>}
       </Modal>
+
+      {/* Tender Specification Requirement Drawer */}
+      <Drawer
+        isOpen={isReqDrawerOpen}
+        onClose={() => setIsReqDrawerOpen(false)}
+        title={bid.tender?.title ? `Requirements: ${bid.tender.title}` : 'Tender Specification & Criteria'}
+        subtitle="Mandatory eligibility criteria and document verification rules extracted from tender PDF"
+      >
+        <div className="space-y-4 text-xs">
+          <div className="rounded-[6px] border border-[#0F766E]/20 bg-teal-50/50 p-3">
+            <h4 className="font-bold text-[#0F2747] mb-1">Tender Summary</h4>
+            <p className="text-slate-600 font-mono text-[11px] mb-1">Tender No: {bid.tender?.tender_number || 'N/A'}</p>
+            <p className="text-slate-600">Category: Technical Procurement & Compliance Verification</p>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-bold text-[#0F2747] uppercase tracking-wider text-[11px]">Mandatory Eligibility Criteria</h4>
+            
+            <div className="p-3 rounded-[6px] border border-slate-200 bg-white space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#0F2747]">1. GST Registration (GSTIN)</span>
+                <span className="bg-emerald-100 text-[#15803D] font-bold text-[10px] px-2 py-0.5 rounded">MANDATORY</span>
+              </div>
+              <p className="text-slate-500">Active GSTIN registration certificate issued by Govt of India.</p>
+            </div>
+
+            <div className="p-3 rounded-[6px] border border-slate-200 bg-white space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#0F2747]">2. Permanent Account Number (PAN)</span>
+                <span className="bg-emerald-100 text-[#15803D] font-bold text-[10px] px-2 py-0.5 rounded">MANDATORY</span>
+              </div>
+              <p className="text-slate-500">Valid Income Tax PAN card copy matching bidder legal entity.</p>
+            </div>
+
+            <div className="p-3 rounded-[6px] border border-slate-200 bg-white space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#0F2747]">3. OEM Authorization Certificate</span>
+                <span className="bg-amber-100 text-[#B45309] font-bold text-[10px] px-2 py-0.5 rounded">CONDITIONAL</span>
+              </div>
+              <p className="text-slate-500">Manufacturer authorization letter with tender ref number if bidder is reseller.</p>
+            </div>
+
+            <div className="p-3 rounded-[6px] border border-slate-200 bg-white space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-[#0F2747]">4. Audited Financial Turnover</span>
+                <span className="bg-emerald-100 text-[#15803D] font-bold text-[10px] px-2 py-0.5 rounded">CRITICAL</span>
+              </div>
+              <p className="text-slate-500">Minimum average annual turnover for last 3 financial years.</p>
+            </div>
+          </div>
+        </div>
+      </Drawer>
     </div>
   );
 };

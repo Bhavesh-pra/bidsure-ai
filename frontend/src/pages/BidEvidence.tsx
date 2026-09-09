@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button';
 import { Link, useParams } from 'react-router-dom';
 import Loading from '../components/ui/Loading';
 import ErrorState from '../components/ui/ErrorState';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { evidenceService } from '../services/evidenceService';
 import { documentService } from '../services/documentService';
 import { EvidenceFieldCard, ExtractionStatus, FieldTable, OCRPagePreview } from '../components/documents';
@@ -49,6 +50,14 @@ export const BidEvidencePage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs
+        items={[
+          { label: 'Tenders', href: '/tenders' },
+          { label: `Bid #${id}`, href: `/bids/${id}` },
+          { label: 'Evidence Traceability' },
+        ]}
+      />
+
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>

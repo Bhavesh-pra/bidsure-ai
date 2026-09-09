@@ -6,6 +6,7 @@ import { ErrorState } from '../components/ui/ErrorState';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { TenderStatusBadge } from '../components/tenders/TenderStatusBadge';
 import { TableSkeleton } from '../components/ui/Skeleton';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { tenderService } from '../services/tenderService';
 import { bidService } from '../services/bidService';
 import type { Tender, Bid } from '../types';
@@ -20,6 +21,7 @@ import {
   Building2,
   Activity,
   FileCheck,
+  AlertCircle,
 } from 'lucide-react';
 import {
   BarChart,
@@ -59,9 +61,10 @@ export const DashboardPage: React.FC = () => {
   }, []);
 
   const activeTenders = tenders.filter((tender) => tender.status === 'ACTIVE');
-  const pendingReviewsCount = bids.filter(
-    (b) => b.status === 'UNDER_REVIEW' || b.status === 'PENDING' || b.status === 'REVIEW'
-  ).length || Math.min(bids.length, 2);
+  const pendingReviews = bids.filter(
+    (b) => b.status === 'UNDER_REVIEW' || b.status === 'PENDING' || b.status === 'REVIEW' || b.status === 'SUBMITTED'
+  );
+  const pendingReviewsCount = pendingReviews.length || Math.min(bids.length, 2);
   const highRiskCount = bids.filter((b) => b.status === 'REJECTED' || b.status === 'DISQUALIFIED').length || 0;
 
   // Chart dataset for compliance distribution
@@ -96,6 +99,8 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: 'Dashboard' }]} />
+
       {/* Officer Header Banner */}
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
@@ -189,6 +194,72 @@ export const DashboardPage: React.FC = () => {
           </div>
           <p className="mt-1 text-[11px] text-slate-500">Failed mandatory rules</p>
         </div>
+      </div>
+
+      {/* Action Required / Officer Work Queue */}
+      <div className="rounded-[8px] border border-amber-200 bg-gradient-to-r from-amber-50/80 via-white to-slate-50 p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/10 text-amber-700 font-semibold text-xs">
+              <AlertCircle className="h-4 w-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-[#0F2747]">Action Required (Next Steps)</h2>
+              <p className="text-[11px] text-slate-600">
+                High-priority compliance items awaiting Officer verification & final determination
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+            {pendingReviews.length} Action Item{pendingReviews.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        {pendingReviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {pendingReviews.slice(0, 3).map((bid) => (
+              <div
+                key={bid.id}
+                className="flex flex-col justify-between rounded-[6px] border border-slate-200 bg-white p-3.5 shadow-2xs hover:border-[#0F766E]/40 transition-colors"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-xs text-[#0F2747] truncate">
+                      {bid.bidder?.legal_name || `Bidder #${bid.bidder_id}`}
+                    </span>
+                    <StatusBadge status={bid.status || 'PENDING'} />
+                  </div>
+                  <p className="mt-1 text-[11px] text-slate-500 truncate">
+                    Tender: {bid.tender?.title || `Tender #${bid.tender_id}`}
+                  </p>
+                  <p className="mt-1 text-[11px] text-amber-700 font-medium flex items-center">
+                    <Clock className="h-3 w-3 mr-1 inline shrink-0" />
+                    OCR Verification & Mandatory Rules Pending
+                  </p>
+                </div>
+                <div className="mt-3 pt-2.5 border-t border-slate-100 flex justify-end">
+                  <Link to={`/bids/${bid.id}`}>
+                    <Button size="sm" variant="secondary" className="text-xs py-1 h-7">
+                      Review Case →
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-between text-xs text-slate-600 bg-white p-3 rounded-[6px] border border-slate-200">
+            <span className="flex items-center">
+              <CheckCircle2 className="h-4 w-4 text-[#15803D] mr-2 shrink-0" />
+              All submitted bids have been verified. No pending compliance actions in queue.
+            </span>
+            <Link to="/tenders">
+              <Button size="sm" variant="outline" className="text-xs h-7">
+                Browse Tenders
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Analytics & Distribution Section */}

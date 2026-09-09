@@ -15,6 +15,8 @@ import { RequirementRuleRow, RuleDetailsCard } from '../components/tenders';
 import type { ComplianceRule } from '../types/rule';
 import { bidService } from '../services/bidService';
 import type { Bid } from '../types';
+import { Breadcrumbs } from '../components/ui/Breadcrumbs';
+import { Drawer } from '../components/ui/Drawer';
 import {
   ArrowLeft,
   Building2,
@@ -24,6 +26,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Sparkles,
+  Eye,
 } from 'lucide-react';
 
 const formatDate = (value?: string) => (value ? new Date(value).toLocaleString('en-IN') : '—');
@@ -43,6 +46,8 @@ export const TenderDetailsPage: React.FC = () => {
   const [ruleError, setRuleError] = useState<string>();
   const [selectedRule, setSelectedRule] = useState<ComplianceRule>();
   const [bids, setBids] = useState<Bid[]>([]);
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const loadExtractionData = () => {
     if (!id) return;
@@ -109,30 +114,40 @@ export const TenderDetailsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs
+        items={[
+          { label: 'Tenders', href: '/tenders' },
+          { label: tender.tender_number },
+        ]}
+      />
+
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <Link to="/tenders" className="hover:text-slate-800 flex items-center transition-colors">
-              <ArrowLeft className="h-3.5 w-3.5 mr-1" />
-              Tenders
-            </Link>
-            <span>/</span>
+          <div className="flex items-center space-x-2 text-xs text-slate-500 mb-1">
+            <span className="font-semibold text-[#0F766E] uppercase tracking-wider text-[10px] bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+              Tender Case Specification
+            </span>
+            <span>·</span>
             <span className="font-mono text-[#0F2747] font-semibold">{tender.tender_number}</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight mt-1">{tender.title}</h1>
+          <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight">{tender.title}</h1>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsDrawerOpen(true)}
+            className="flex items-center space-x-1 text-xs"
+          >
+            <Eye className="h-3.5 w-3.5 text-slate-600" />
+            <span>Quick Specs Drawer</span>
+          </Button>
           <Link to={`/tenders/${tender.id}/bids/new`}>
-            <Button variant="primary" size="sm" className="flex items-center space-x-1">
+            <Button variant="primary" size="sm" className="flex items-center space-x-1 text-xs">
               <Plus className="h-3.5 w-3.5" />
               <span>Create New Bid</span>
-            </Button>
-          </Link>
-          <Link to="/tenders">
-            <Button variant="outline" size="sm">
-              Back to Tenders
             </Button>
           </Link>
         </div>
@@ -294,6 +309,40 @@ export const TenderDetailsPage: React.FC = () => {
           <p className="text-xs text-slate-500 py-4 text-center">No bids submitted yet for this tender.</p>
         )}
       </Card>
+
+      {/* Tender Specification Quick Preview Drawer */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        title={`Specification Summary: ${tender.tender_number}`}
+        subtitle={tender.title}
+      >
+        <div className="space-y-4 text-xs">
+          <div className="rounded-[6px] border border-[#0F766E]/20 bg-teal-50/50 p-3 space-y-1">
+            <span className="font-bold uppercase tracking-wider text-[10px] text-[#0F766E]">Issuing Organization</span>
+            <p className="font-bold text-[#0F2747] text-sm">{tender.organization || tender.entity || 'Government Entity'}</p>
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="font-bold text-[#0F2747] uppercase tracking-wider text-[11px]">Extracted Clause Checklist ({requirements.length})</h4>
+            {requirements.length ? (
+              <div className="space-y-2">
+                {requirements.map((req, index) => (
+                  <div key={req.id || index} className="p-3 rounded-[6px] border border-slate-200 bg-white space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-[#0F2747]">{req.source_clause ? `Clause ${req.source_clause}: ` : ''}{req.title}</span>
+                      <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Page {req.source_page || 1}</span>
+                    </div>
+                    <p className="text-slate-600 line-clamp-2">{req.description || 'No detailed description'}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-500 text-xs italic">No extracted requirements available in this drawer yet.</p>
+            )}
+          </div>
+        </div>
+      </Drawer>
     </div>
   );
 };
