@@ -40,8 +40,9 @@
       })();
     </script>
     <script type="module">
-      await window.__bidsureReady;
-      await import('/src/main.tsx');
+      window.__bidsureReady.then(function () {
+        return import('/src/main.tsx');
+      });
     </script>
   </body>
 </html>
