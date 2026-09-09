@@ -11,6 +11,16 @@
   </head>
   <body class="bg-[#F7F9FC] text-slate-900 antialiased font-sans">
     <div id="root"></div>
+    <script>
+      // Clear any legacy service workers registered on localhost:3000 from previous practice projects
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
