@@ -48,6 +48,7 @@ export const BidDetailsPage: React.FC = () => {
   const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [processingDocId, setProcessingDocId] = useState<string | null>(null);
+  const [classifyingDocId, setClassifyingDocId] = useState<string | null>(null);
   const [ocrDocument, setOcrDocument] = useState<Document | null>(null);
   const [ocrPages, setOcrPages] = useState<import('../types').OCRPage[]>([]);
 
@@ -129,6 +130,20 @@ export const BidDetailsPage: React.FC = () => {
       setOcrPages(response.data.pages || []);
     } catch (err: any) {
       setActionError(err?.message || 'Unable to load OCR text.');
+    }
+  };
+
+  const handleClassifyDocument = async (doc: Document) => {
+    setClassifyingDocId(doc.id);
+    setActionError(null);
+    try {
+      const response = await documentService.classifyDocument(doc.id);
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, ...response.data } : item));
+    } catch (err: any) {
+      setActionError(err?.message || 'Document classification failed.');
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, classification_status: 'FAILED' } : item));
+    } finally {
+      setClassifyingDocId(null);
     }
   };
 
@@ -319,6 +334,8 @@ export const BidDetailsPage: React.FC = () => {
                 onProcess={handleProcessDocument}
                 isProcessing={processingDocId === doc.id}
                 onViewOCR={handleViewOCR}
+                onClassify={handleClassifyDocument}
+                isClassifying={classifyingDocId === doc.id}
               />
             ))}
           </div>

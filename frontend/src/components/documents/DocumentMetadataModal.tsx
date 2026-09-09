@@ -2,6 +2,9 @@ import React from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
+import { DocumentTypeBadge } from './DocumentTypeBadge';
+import { ConfidenceBadge } from './ConfidenceBadge';
+import { ClassificationStatus } from './ClassificationStatus';
 import type { Document, DocumentType } from '../../types/document';
 import { DOCUMENT_TYPE_LABELS } from '../../types/document';
 
@@ -57,6 +60,19 @@ export const DocumentMetadataModal: React.FC<DocumentMetadataModalProps> = ({
           <div className="rounded-md bg-slate-50 p-2.5">
             <dt className="text-xs font-medium text-slate-500">Document ID</dt>
             <dd className="mt-0.5 font-mono text-xs text-slate-800 break-all">{document.id}</dd>
+          </div>
+
+          <div className="rounded-md bg-slate-50 p-2.5">
+            <dt className="text-xs font-medium text-slate-500">Classified Type</dt>
+            <dd className="mt-0.5"><DocumentTypeBadge type={document.classified_document_type || (document.classification_status === 'CLASSIFIED' ? document.document_type : 'UNKNOWN')} /></dd>
+          </div>
+          <div className="rounded-md bg-slate-50 p-2.5">
+            <dt className="text-xs font-medium text-slate-500">Classification Confidence</dt>
+            <dd className="mt-0.5"><ConfidenceBadge confidence={document.classification_confidence} /></dd>
+          </div>
+          <div className="rounded-md bg-slate-50 p-2.5">
+            <dt className="text-xs font-medium text-slate-500">Classification Status</dt>
+            <dd className="mt-0.5"><ClassificationStatus status={document.classification_status} /></dd>
           </div>
 
           <div className="rounded-md bg-slate-50 p-2.5">

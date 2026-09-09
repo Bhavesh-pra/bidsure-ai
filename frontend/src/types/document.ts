@@ -56,6 +56,12 @@ export interface Document {
   processing_error?: string | null;
   ocr_engine?: string | null;
   pages?: OCRPage[];
+  classified_document_type?: string | null;
+  classification_confidence?: number | null;
+  classification_status?: 'CLASSIFIED' | 'UNKNOWN' | 'PROCESSING' | 'FAILED' | 'REVIEW_REQUIRED' | string | null;
+  classification_method?: string | null;
+  classified_at?: string | null;
+  classification_error?: string | null;
 }
 
 export interface OCRPage {
