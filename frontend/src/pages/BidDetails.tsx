@@ -14,7 +14,10 @@ import {
   DocumentMetadataModal,
   DocumentEmptyState,
   DocumentErrorAlert,
+  OCRPagePreview,
+  DocumentStatus,
 } from '../components/documents';
+import { Modal } from '../components/ui/Modal';
 import {
   ArrowLeft,
   Upload,
@@ -44,6 +47,9 @@ export const BidDetailsPage: React.FC = () => {
   // Deletion State
   const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [processingDocId, setProcessingDocId] = useState<string | null>(null);
+  const [ocrDocument, setOcrDocument] = useState<Document | null>(null);
+  const [ocrPages, setOcrPages] = useState<import('../types').OCRPage[]>([]);
 
   const loadData = async (bId: string) => {
     try {
@@ -91,6 +97,39 @@ export const BidDetailsPage: React.FC = () => {
   const handleViewMetadata = (doc: Document) => {
     setSelectedDocument(doc);
     setIsMetadataModalOpen(true);
+  };
+
+  const handleProcessDocument = async (doc: Document) => {
+    setProcessingDocId(doc.id);
+    setActionError(null);
+    try {
+      await documentService.processDocument(doc.id);
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, processing_status: 'PROCESSING' } : item));
+      // Poll briefly so the UI reflects PROCESSING → PROCESSED/FAILED without a refresh.
+      for (let attempt = 0; attempt < 30; attempt += 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 1000));
+        const response = await documentService.getDocument(doc.id);
+        const current = response.data;
+        setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, ...current } : item));
+        if (current.processing_status !== 'PROCESSING') break;
+      }
+    } catch (err: any) {
+      setActionError(err?.message || 'OCR processing failed.');
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, processing_status: 'FAILED' } : item));
+    } finally {
+      setProcessingDocId(null);
+    }
+  };
+
+  const handleViewOCR = async (doc: Document) => {
+    setOcrDocument(doc);
+    setOcrPages([]);
+    try {
+      const response = await documentService.getOCRPages(doc.id);
+      setOcrPages(response.data.pages || []);
+    } catch (err: any) {
+      setActionError(err?.message || 'Unable to load OCR text.');
+    }
   };
 
   const handleDeleteDocument = async (doc: Document) => {
@@ -277,6 +316,9 @@ export const BidDetailsPage: React.FC = () => {
                 onView={handleViewMetadata}
                 onDelete={handleDeleteDocument}
                 isDeleting={deletingDocId === doc.id}
+                onProcess={handleProcessDocument}
+                isProcessing={processingDocId === doc.id}
+                onViewOCR={handleViewOCR}
               />
             ))}
           </div>
@@ -300,6 +342,10 @@ export const BidDetailsPage: React.FC = () => {
           setSelectedDocument(null);
         }}
       />
+
+      <Modal isOpen={Boolean(ocrDocument)} onClose={() => setOcrDocument(null)} title={ocrDocument ? `OCR Text — ${ocrDocument.original_filename}` : 'OCR Text'}>
+        {ocrDocument && <div className="space-y-4"><DocumentStatus status={ocrDocument.processing_status} /><OCRPagePreview pages={ocrPages} /></div>}
+      </Modal>
     </div>
   );
 };

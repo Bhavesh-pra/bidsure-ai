@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import type { ApiResponse, Document } from '../types';
+import type { ApiResponse, Document, OCRPage } from '../types';
 
 export interface UploadDocumentParams {
   bidId: string;
@@ -56,6 +56,16 @@ export const documentService = {
   async getDocument(documentId: string): Promise<ApiResponse<Document>> {
     const response = await apiClient.get(`/documents/${documentId}`);
     return response as unknown as ApiResponse<Document>;
+  },
+
+  async processDocument(documentId: string): Promise<ApiResponse<Pick<Document, 'id' | 'processing_status'>>> {
+    const response = await apiClient.post(`/documents/${documentId}/process`);
+    return response as unknown as ApiResponse<Pick<Document, 'id' | 'processing_status'>>;
+  },
+
+  async getOCRPages(documentId: string): Promise<ApiResponse<{ document_id: string; pages: OCRPage[] }>> {
+    const response = await apiClient.get(`/documents/${documentId}/pages`);
+    return response as unknown as ApiResponse<{ document_id: string; pages: OCRPage[] }>;
   },
 
   /**
