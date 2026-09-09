@@ -68,6 +68,11 @@ export const documentService = {
     return response as unknown as ApiResponse<{ document_id: string; pages: OCRPage[] }>;
   },
 
+  async classifyDocument(documentId: string): Promise<ApiResponse<Document>> {
+    const response = await apiClient.post(`/documents/${documentId}/classify`);
+    return response as unknown as ApiResponse<Document>;
+  },
+
   /**
    * Delete a document (both file storage and database record).
    */

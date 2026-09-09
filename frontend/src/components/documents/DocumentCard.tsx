@@ -5,6 +5,9 @@ import { DOCUMENT_TYPE_LABELS } from '../../types/document';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
 import { Button } from '../ui/Button';
 import { ProcessingSpinner } from './ProcessingSpinner';
+import { DocumentTypeBadge } from './DocumentTypeBadge';
+import { ConfidenceBadge } from './ConfidenceBadge';
+import { ClassificationStatus } from './ClassificationStatus';
 
 export interface DocumentCardProps {
   document: Document;
@@ -14,6 +17,8 @@ export interface DocumentCardProps {
   onProcess?: (document: Document) => void;
   isProcessing?: boolean;
   onViewOCR?: (document: Document) => void;
+  onClassify?: (document: Document) => void;
+  isClassifying?: boolean;
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -24,6 +29,8 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   onProcess,
   isProcessing = false,
   onViewOCR,
+  onClassify,
+  isClassifying = false,
 }) => {
   const typeLabel =
     DOCUMENT_TYPE_LABELS[document.document_type as DocumentType] ||
@@ -85,6 +92,12 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
           </div>
         </div>
 
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+          <DocumentTypeBadge type={document.classified_document_type || (document.classification_status === 'CLASSIFIED' ? document.document_type : 'UNKNOWN')} />
+          <ConfidenceBadge confidence={document.classification_confidence} />
+          <ClassificationStatus status={document.classification_status} />
+        </div>
+
         {document.description && (
           <p className="mt-2.5 text-xs text-slate-500 italic line-clamp-2">
             "{document.description}"
@@ -112,6 +125,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
         )}
         {onViewOCR && document.processing_status === 'PROCESSED' && (
           <Button variant="outline" size="sm" onClick={() => onViewOCR(document)}>View OCR</Button>
+        )}
+        {onClassify && document.processing_status === 'PROCESSED' && (!document.classification_status || document.classification_status === 'UNKNOWN' || document.classification_status === 'FAILED') && (
+          <Button variant="secondary" size="sm" onClick={() => onClassify(document)} disabled={isClassifying}>{isClassifying ? 'Classifying…' : 'Classify'}</Button>
         )}
         {onDelete && (
           <Button

@@ -14,3 +14,8 @@ export * from './ProgressIndicator';
 export * from './DocumentStatus';
 export * from './OCRPagePreview';
 export * from './ErrorMessage';
+export * from './DocumentTypeBadge';
+export * from './ConfidenceBadge';
+export * from './ClassificationStatus';
+export * from './DocumentDetailsCard';
+export * from './DocumentInventoryTable';
