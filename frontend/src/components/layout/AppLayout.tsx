@@ -4,6 +4,7 @@ import { ShieldCheck, FileText, CheckSquare, AlertTriangle, UserCheck, History, 
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
+  const isLogin = location.pathname === '/login';
 
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: ShieldCheck },
@@ -18,7 +19,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-slate-900 text-white border-b border-slate-800">
+      {!isLogin && <header className="bg-slate-900 text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <ShieldCheck className="h-7 w-7 text-indigo-400" />
@@ -32,12 +33,12 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
           </div>
         </div>
-      </header>
+      </header>}
 
       {/* Main Container */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto px-4 py-6 gap-6">
+      <div className={`flex-1 flex w-full mx-auto px-4 py-6 gap-6 ${isLogin ? 'max-w-7xl justify-center' : 'max-w-7xl'}`}>
         {/* Sidebar */}
-        <aside className="w-56 flex-shrink-0">
+        {!isLogin && <aside className="w-56 flex-shrink-0">
           <nav className="bg-white rounded-xl border border-slate-200 p-2 shadow-sm space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -58,10 +59,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               );
             })}
           </nav>
-        </aside>
+        </aside>}
 
         {/* Content Area */}
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className={`min-w-0 ${isLogin ? 'w-full' : 'flex-1'}`}>{children}</main>
       </div>
     </div>
   );
