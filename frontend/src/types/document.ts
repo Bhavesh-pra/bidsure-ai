@@ -53,4 +53,13 @@ export interface Document {
   url?: string;
   storage_key?: string;
   uploadedAt?: string;
+  processing_error?: string | null;
+  ocr_engine?: string | null;
+  pages?: OCRPage[];
+}
+
+export interface OCRPage {
+  page_number: number;
+  text: string;
+  ocr_confidence?: number | null;
 }

@@ -4,12 +4,16 @@ import type { Document, DocumentType } from '../../types/document';
 import { DOCUMENT_TYPE_LABELS } from '../../types/document';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
 import { Button } from '../ui/Button';
+import { ProcessingSpinner } from './ProcessingSpinner';
 
 export interface DocumentCardProps {
   document: Document;
   onView?: (document: Document) => void;
   onDelete?: (document: Document) => void;
   isDeleting?: boolean;
+  onProcess?: (document: Document) => void;
+  isProcessing?: boolean;
+  onViewOCR?: (document: Document) => void;
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -17,6 +21,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   onView,
   onDelete,
   isDeleting = false,
+  onProcess,
+  isProcessing = false,
+  onViewOCR,
 }) => {
   const typeLabel =
     DOCUMENT_TYPE_LABELS[document.document_type as DocumentType] ||
@@ -87,6 +94,11 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
 
       {/* Action Buttons */}
       <div className="mt-4 flex items-center justify-end space-x-2 border-t border-slate-100 pt-3">
+        {onProcess && (document.processing_status === 'UPLOADED' || document.processing_status === 'FAILED' || document.processing_status === 'INVALID') && (
+          <Button variant="secondary" size="sm" onClick={() => onProcess(document)} disabled={isProcessing}>
+            {isProcessing ? <ProcessingSpinner label="Processing…" /> : 'Process OCR'}
+          </Button>
+        )}
         {onView && (
           <Button
             variant="outline"
@@ -97,6 +109,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
             <Eye className="h-3.5 w-3.5" />
             <span>View</span>
           </Button>
+        )}
+        {onViewOCR && document.processing_status === 'PROCESSED' && (
+          <Button variant="outline" size="sm" onClick={() => onViewOCR(document)}>View OCR</Button>
         )}
         {onDelete && (
           <Button

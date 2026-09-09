@@ -72,7 +72,7 @@ export interface Bid {
   tender?: { id: string; tender_number?: string; title?: string };
 }
 
-export type { Document, DocumentType } from './document';
+export type { Document, DocumentType, OCRPage } from './document';
 export { DOCUMENT_TYPE_LABELS, EXPECTED_BID_DOCUMENTS } from './document';
 
 export interface Evidence {
