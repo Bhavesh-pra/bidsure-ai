@@ -197,6 +197,8 @@ class Document(db.Model):
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
     updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
+    pages = db.relationship("DocumentPage", backref="document", lazy=True, cascade="all, delete-orphan", order_by="DocumentPage.page_number")
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -213,4 +215,38 @@ class Document(db.Model):
             "uploaded_by": self.uploaded_by,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "page_count_available": len(self.pages) if self.pages else (self.page_count or 0),
         }
+
+
+class DocumentPage(db.Model):
+    __tablename__ = "document_pages"
+    __table_args__ = (
+        db.UniqueConstraint("document_id", "page_number", name="uq_document_page_number"),
+    )
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    document_id = db.Column(db.String(36), db.ForeignKey("documents.id", ondelete="CASCADE"), nullable=False, index=True)
+    page_number = db.Column(db.Integer, nullable=False)
+    raw_text = db.Column(db.Text, nullable=False, default="")
+    ocr_confidence = db.Column(db.Float, nullable=True, default=1.0)
+    word_count = db.Column(db.Integer, nullable=False, default=0)
+    char_count = db.Column(db.Integer, nullable=False, default=0)
+    extraction_method = db.Column(db.String(50), nullable=False, default="EMBEDDED_TEXT")
+    processing_metadata = db.Column(db.JSON, nullable=True, default=dict)
+    created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "document_id": self.document_id,
+            "page_number": self.page_number,
+            "raw_text": self.raw_text,
+            "ocr_confidence": self.ocr_confidence,
+            "word_count": self.word_count,
+            "char_count": self.char_count,
+            "extraction_method": self.extraction_method,
+            "processing_metadata": self.processing_metadata or {},
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+

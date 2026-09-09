@@ -9,9 +9,10 @@ detection and storage orchestration logic.
 import uuid
 
 from app.domain.document.schemas import DocumentType
-from app.models.models import db, Bid, Document
+from app.models.models import db, Bid, Document, DocumentPage
 from app.services.file_validator import validate_file, FileValidationError
 from app.services.storage import get_storage_service, build_storage_key
+from app.services.ocr import OCRService
 
 
 class DocumentDomainError(Exception):
@@ -187,3 +188,91 @@ def delete_document(document_id: str, org_id: str) -> dict:
         raise DocumentDomainError("Failed to delete document", "INTERNAL_ERROR", 500)
 
     return {"deleted": True, "id": document_id}
+
+
+def process_document_pipeline(document_id: str, org_id: str) -> dict:
+    """
+    Triggers the Cycle 8 OCR pipeline for a document, persists extracted pages,
+    and updates document lifecycle state.
+    """
+    document = _get_document_with_auth(document_id, org_id)
+
+    # Guard against overlapping concurrent processing
+    if document.processing_status == "PROCESSING":
+        return {
+            "document_id": document.id,
+            "processing_status": "PROCESSING",
+            "message": "Document is already being processed",
+        }
+
+    # Set state to PROCESSING
+    document.processing_status = "PROCESSING"
+    db.session.commit()
+
+    storage = get_storage_service()
+    file_path = storage.get_url(document.storage_key)
+
+    ocr_service = OCRService()
+    result = ocr_service.process_document(
+        document_id=document.id,
+        file_path=file_path,
+        bid_id=document.bid_id,
+        document_type=document.document_type,
+    )
+
+    try:
+        # Clean up previously processed pages for idempotency
+        DocumentPage.query.filter_by(document_id=document.id).delete()
+
+        for page in result.pages:
+            doc_page = DocumentPage(
+                document_id=document.id,
+                page_number=page.page_number,
+                raw_text=page.text,
+                ocr_confidence=page.confidence,
+                word_count=page.word_count,
+                char_count=page.char_count,
+                extraction_method=page.extraction_method,
+                processing_metadata=page.metadata,
+            )
+            db.session.add(doc_page)
+
+        document.page_count = result.page_count
+        document.processing_status = result.processing_status
+        db.session.commit()
+    except Exception as exc:
+        db.session.rollback()
+        document.processing_status = "PROCESSING_FAILED"
+        db.session.commit()
+        raise DocumentDomainError(f"Failed to persist OCR results: {str(exc)}", "PERSISTENCE_ERROR", 500)
+
+    return {
+        "document_id": document.id,
+        "processing_status": document.processing_status,
+        "page_count": document.page_count,
+        "ocr_engine": result.ocr_engine,
+        "average_confidence": result.average_confidence,
+        "error_code": result.error_code,
+        "error_message": result.error_message,
+    }
+
+
+def get_document_pages(document_id: str, org_id: str) -> dict:
+    """
+    Retrieves the ordered page-aware raw text and confidence scores for a document.
+    """
+    document = _get_document_with_auth(document_id, org_id)
+    pages = (
+        DocumentPage.query
+        .filter_by(document_id=document_id)
+        .order_by(DocumentPage.page_number.asc())
+        .all()
+    )
+    return {
+        "document_id": document.id,
+        "filename": document.original_filename,
+        "processing_status": document.processing_status,
+        "page_count": document.page_count or len(pages),
+        "pages": [p.to_dict() for p in pages],
+    }
+

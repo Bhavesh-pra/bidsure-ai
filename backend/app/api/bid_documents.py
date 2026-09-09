@@ -13,7 +13,9 @@ from app.services.document_service import (
     DocumentDomainError,
     delete_document,
     get_document,
+    get_document_pages,
     list_bid_documents,
+    process_document_pipeline,
     upload_bid_document,
 )
 from app.services.file_validator import FileValidationError
@@ -84,3 +86,27 @@ def remove_document(document_id):
         return success_response(result)
     except DocumentDomainError as exc:
         return error_response(exc.code, exc.message, exc.status_code)
+
+
+@bid_documents_bp.post("/documents/<string:document_id>/process")
+@jwt_required
+@roles_required("PROCUREMENT_OFFICER", "ADMIN")
+def trigger_process(document_id):
+    """Trigger the Cycle 8 OCR pipeline for a document."""
+    try:
+        result = process_document_pipeline(document_id, g.current_org_id)
+        return success_response(result, 200)
+    except DocumentDomainError as exc:
+        return error_response(exc.code, exc.message, exc.status_code)
+
+
+@bid_documents_bp.get("/documents/<string:document_id>/pages")
+@jwt_required
+def document_pages(document_id):
+    """Get the page-aware extracted raw text for a document."""
+    try:
+        result = get_document_pages(document_id, g.current_org_id)
+        return success_response(result, 200)
+    except DocumentDomainError as exc:
+        return error_response(exc.code, exc.message, exc.status_code)
+
