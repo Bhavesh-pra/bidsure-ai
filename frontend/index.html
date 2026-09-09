@@ -12,15 +12,36 @@
   <body class="bg-[#F7F9FC] text-slate-900 antialiased font-sans">
     <div id="root"></div>
     <script>
-      // Clear any legacy service workers registered on localhost:3000 from previous practice projects
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (var registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
+      // Remove workers/caches left by older localhost practice projects before React boots.
+      window.__bidsureReady = (async function () {
+        if (!('serviceWorker' in navigator)) return;
+
+        var registrations = await navigator.serviceWorker.getRegistrations();
+        var wasControlled = Boolean(navigator.serviceWorker.controller);
+        await Promise.all(registrations.map(function (registration) {
+          return registration.unregister();
+        }));
+
+        if ('caches' in window) {
+          var cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(function (cacheName) {
+            return caches.delete(cacheName);
+          }));
+        }
+
+        // An active worker remains attached to its current page until reload.
+        if (wasControlled && !sessionStorage.getItem('bidsure-worker-cleaned')) {
+          sessionStorage.setItem('bidsure-worker-cleaned', '1');
+          window.location.reload();
+          await new Promise(function () {});
+        }
+
+        sessionStorage.removeItem('bidsure-worker-cleaned');
+      })();
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      await window.__bidsureReady;
+      await import('/src/main.tsx');
+    </script>
   </body>
 </html>
