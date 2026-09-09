@@ -1,12 +1,18 @@
 import React from 'react';
+import { AlertOctagon } from 'lucide-react';
 
-export const ErrorState: React.FC<{ title?: string; message?: string }> = ({
-  title = 'Something went wrong',
-  message = 'An unexpected error occurred. Try again.'
+export const ErrorState: React.FC<{ title?: string; message?: string; action?: React.ReactNode }> = ({
+  title = 'Service Unavailable',
+  message = 'An error occurred while communicating with the verification service.',
+  action,
 }) => (
-  <div className="p-6">
-    <h3 className="text-lg font-semibold text-red-700">{title}</h3>
-    <p className="text-sm text-slate-600">{message}</p>
+  <div className="flex items-start gap-3.5 p-4 rounded-[6px] bg-[#FEF2F2] border border-[#FCA5A5] text-[#B91C1C]">
+    <AlertOctagon className="h-5 w-5 shrink-0 mt-0.5 text-[#B91C1C]" />
+    <div className="flex-1 min-w-0">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      <p className="text-xs text-[#991B1B] mt-0.5">{message}</p>
+      {action && <div className="mt-3">{action}</div>}
+    </div>
   </div>
 );
 
