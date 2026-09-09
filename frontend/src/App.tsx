@@ -9,6 +9,7 @@ import TenderDetailsPage from './pages/TenderDetails';
 import CreateTenderPage from './pages/CreateTender';
 import RequirementDetailsPage from './pages/RequirementDetails';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import BidsPage from './pages/Bids';
 import BidDetailsPage from './pages/BidDetails';
 import BidVerificationPage from './pages/BidVerification';
 import BidEvidencePage from './pages/BidEvidence';
@@ -25,18 +26,40 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+
+          {/* Tenders */}
           <Route path="/tenders" element={<ProtectedRoute><TendersPage /></ProtectedRoute>} />
           <Route path="/tenders/new" element={<ProtectedRoute><CreateTenderPage /></ProtectedRoute>} />
           <Route path="/tenders/:id" element={<ProtectedRoute><TenderDetailsPage /></ProtectedRoute>} />
           <Route path="/tenders/:id/bids/new" element={<ProtectedRoute><CreateBidPage /></ProtectedRoute>} />
-          <Route path="/bidders" element={<ProtectedRoute><BiddersPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/new" element={<ProtectedRoute><CreateBidPage /></ProtectedRoute>} />
           <Route path="/tenders/:id/requirements/:requirementId" element={<ProtectedRoute><RequirementDetailsPage /></ProtectedRoute>} />
-          <Route path="/bids" element={<BidDetailsPage />} />
-          <Route path="/bids/:id" element={<BidDetailsPage />} />
-          <Route path="/bids/:id/verification" element={<BidVerificationPage />} />
-          <Route path="/bids/:id/evidence" element={<BidEvidencePage />} />
-          <Route path="/bids/:id/decision" element={<BidDecisionPage />} />
-          <Route path="/bids/:id/audit" element={<BidAuditPage />} />
+
+          {/* Bidders */}
+          <Route path="/bidders" element={<ProtectedRoute><BiddersPage /></ProtectedRoute>} />
+
+          {/* Bids List (Sidebar 'Bids & Evidence') */}
+          <Route path="/bids" element={<ProtectedRoute><BidsPage /></ProtectedRoute>} />
+
+          {/* Bid Details (Single Bid View & Cycle 7 Document Ingestion) */}
+          <Route path="/bids/:id" element={<ProtectedRoute><BidDetailsPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:bidId" element={<ProtectedRoute><BidDetailsPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:id" element={<ProtectedRoute><BidDetailsPage /></ProtectedRoute>} />
+
+          {/* Bid Sub-workflows */}
+          <Route path="/bids/:id/verification" element={<ProtectedRoute><BidVerificationPage /></ProtectedRoute>} />
+          <Route path="/bids/:id/evidence" element={<ProtectedRoute><BidEvidencePage /></ProtectedRoute>} />
+          <Route path="/bids/:id/decision" element={<ProtectedRoute><BidDecisionPage /></ProtectedRoute>} />
+          <Route path="/bids/:id/audit" element={<ProtectedRoute><BidAuditPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:id/verification" element={<ProtectedRoute><BidVerificationPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:id/evidence" element={<ProtectedRoute><BidEvidencePage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:id/decision" element={<ProtectedRoute><BidDecisionPage /></ProtectedRoute>} />
+          <Route path="/tenders/:tenderId/bids/:id/audit" element={<ProtectedRoute><BidAuditPage /></ProtectedRoute>} />
+
+          {/* Sidebar Top-level Category Fallbacks */}
+          <Route path="/verifications" element={<Navigate to="/bids" replace />} />
+          <Route path="/decision" element={<Navigate to="/bids" replace />} />
+          <Route path="/audit" element={<Navigate to="/bids" replace />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

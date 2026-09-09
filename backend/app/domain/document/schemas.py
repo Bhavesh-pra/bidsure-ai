@@ -1,8 +1,10 @@
 from enum import Enum
 from typing import Optional
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+
 
 class DocumentType(str, Enum):
+    # Cycle 4 — tender document types
     GST_CERTIFICATE = "GST_CERTIFICATE"
     PAN_CARD = "PAN_CARD"
     UDYAM_CERTIFICATE = "UDYAM_CERTIFICATE"
@@ -13,6 +15,12 @@ class DocumentType(str, Enum):
     DELIVERY_SCHEDULE = "DELIVERY_SCHEDULE"
     PAST_EXPERIENCE = "PAST_EXPERIENCE"
     OTHER = "OTHER"
+    # Cycle 7 — bidder document types
+    FINANCIAL_STATEMENT = "FINANCIAL_STATEMENT"
+    TURNOVER_CERTIFICATE = "TURNOVER_CERTIFICATE"
+    MAKE_IN_INDIA_DECLARATION = "MAKE_IN_INDIA_DECLARATION"
+    EXPERIENCE_CERTIFICATE = "EXPERIENCE_CERTIFICATE"
+
 
 class DocumentProcessingStatus(str, Enum):
     UPLOADED = "UPLOADED"
@@ -20,6 +28,8 @@ class DocumentProcessingStatus(str, Enum):
     EXTRACTED = "EXTRACTED"
     PARSED = "PARSED"
     FAILED = "FAILED"
+    INVALID = "INVALID"  # Cycle 7 — file validation failure
+
 
 class DocumentSchema(BaseModel):
     id: str = Field(..., description="Unique document ID, e.g. DOC-001")
@@ -31,8 +41,22 @@ class DocumentSchema(BaseModel):
     size_bytes: int = Field(0, description="File size in bytes")
     sha256: str = Field(..., description="Cryptographic SHA-256 hash of file content")
     page_count: Optional[int] = Field(None, description="Total pages detected")
+    description: Optional[str] = Field(None, description="Optional document description")
     processing_status: DocumentProcessingStatus = Field(
         DocumentProcessingStatus.UPLOADED, description="Current ingestion status"
     )
 
     model_config = ConfigDict(use_enum_values=True)
+
+    @field_validator("document_type")
+    @classmethod
+    def validate_canonical_type(cls, v: str) -> str:
+        if isinstance(v, DocumentType):
+            return v.value
+        try:
+            return DocumentType(v).value
+        except ValueError:
+            valid_types = ", ".join(t.value for t in DocumentType)
+            raise ValueError(
+                f"Invalid document_type '{v}'. Arbitrary strings not allowed. Must be one of: {valid_types}"
+            )

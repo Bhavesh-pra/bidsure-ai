@@ -183,7 +183,7 @@ class Document(db.Model):
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     tender_id = db.Column(db.String(36), db.ForeignKey("tenders.id"), nullable=True, index=True)
-    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id"), nullable=True)
+    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id"), nullable=True, index=True)
     document_type = db.Column(db.String(50), nullable=False)
     original_filename = db.Column(db.String(255), nullable=False)
     storage_key = db.Column(db.String(500), nullable=False)
@@ -191,23 +191,26 @@ class Document(db.Model):
     size_bytes = db.Column(db.BigInteger, nullable=False, default=0)
     sha256 = db.Column(db.String(64), nullable=False)
     page_count = db.Column(db.Integer, nullable=True)
+    description = db.Column(db.String(500), nullable=True)
     processing_status = db.Column(db.String(50), default="UPLOADED", nullable=False)
     uploaded_by = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     def to_dict(self):
         return {
             "id": self.id,
-            "document_id": self.id,
+            "bid_id": self.bid_id,
             "tender_id": self.tender_id,
-            "filename": self.original_filename,
+            "document_type": self.document_type,
             "original_filename": self.original_filename,
             "mime_type": self.mime_type,
             "size_bytes": self.size_bytes,
             "sha256": self.sha256,
-            "storage_key": self.storage_key,
             "page_count": self.page_count,
+            "description": self.description,
             "processing_status": self.processing_status,
             "uploaded_by": self.uploaded_by,
             "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

@@ -66,26 +66,14 @@ export interface Bid {
   proposed_completion_date?: string;
   status: string;
   submission_time?: string;
+  created_at?: string;
+  updated_at?: string;
   bidder?: Bidder;
   tender?: { id: string; tender_number?: string; title?: string };
 }
 
-export interface Document {
-  id: string;
-  document_id?: string;
-  tender_id?: string;
-  bid_id?: string;
-  document_type: string;
-  original_filename: string;
-  storage_key: string;
-  mime_type: string;
-  size_bytes: number;
-  sha256: string;
-  page_count?: number;
-  processing_status: string;
-  uploaded_by?: string;
-  created_at?: string;
-}
+export type { Document, DocumentType } from './document';
+export { DOCUMENT_TYPE_LABELS, EXPECTED_BID_DOCUMENTS } from './document';
 
 export interface Evidence {
   id: string;

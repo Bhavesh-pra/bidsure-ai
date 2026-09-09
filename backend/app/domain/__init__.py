@@ -24,6 +24,16 @@ from app.domain.document.schemas import (
     DocumentType,
     DocumentProcessingStatus,
 )
+from app.domain.document.contracts import (
+    DocumentProcessingStage,
+    DocumentLifecycleState,
+    DocumentValidationContract,
+    DocumentIngestionInput,
+    DocumentIngestionResult,
+    ExtractedPageText,
+    DocumentProcessingResult,
+    DocumentProcessingProtocol,
+)
 from app.domain.evidence.schemas import EvidenceSchema, ExtractionMethod
 from app.domain.verification.schemas import (
     VerificationSchema,
@@ -67,6 +77,14 @@ __all__ = [
     "DocumentSchema",
     "DocumentType",
     "DocumentProcessingStatus",
+    "DocumentProcessingStage",
+    "DocumentLifecycleState",
+    "DocumentValidationContract",
+    "DocumentIngestionInput",
+    "DocumentIngestionResult",
+    "ExtractedPageText",
+    "DocumentProcessingResult",
+    "DocumentProcessingProtocol",
     "EvidenceSchema",
     "ExtractionMethod",
     "VerificationSchema",

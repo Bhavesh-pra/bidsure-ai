@@ -89,3 +89,14 @@ def get_bid(bid_id, org_id):
     if not bid: raise BidDomainError("Bid not found", "NOT_FOUND", 404)
     if not bid.tender or bid.tender.organization_id != org_id: raise BidDomainError("Access denied to bid", "FORBIDDEN", 403)
     return bid_dict(bid)
+
+
+def list_all_bids(org_id):
+    """List all bids across all tenders for the given organization."""
+    bids = (
+        Bid.query.join(Tender)
+        .filter(Tender.organization_id == org_id)
+        .order_by(Bid.created_at.desc())
+        .all()
+    )
+    return [bid_dict(b) for b in bids]

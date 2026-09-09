@@ -1,0 +1,166 @@
+{
+  "version": "1.0.0",
+  "cycle": 7,
+  "description": "BidSure AI Cycle 7 Synthetic Bidder Documents and Test Matrix Dataset",
+  "synthetic_documents": {
+    "GST.pdf": {
+      "filename": "GST.pdf",
+      "path": "mock-data/documents/synthetic/GST.pdf",
+      "size_bytes": 6920,
+      "sha256": "8ac7bfe4468ea7d2414844ef70557924e10e3d0413e0c86c2f75d8f0b9a144ca",
+      "document_type": "GST_CERTIFICATE",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "GST_CERTIFICATE",
+        "entity_legal_name": "Apex Infotech Systems Private Limited",
+        "gstin": "27AABCA1234F1Z8",
+        "state": "Maharashtra"
+      }
+    },
+    "PAN.pdf": {
+      "filename": "PAN.pdf",
+      "path": "mock-data/documents/synthetic/PAN.pdf",
+      "size_bytes": 5236,
+      "sha256": "a051f8457cc32d9dc5dfdb0637b12c35f41b1f473278ac77fc858f39b7573b01",
+      "document_type": "PAN_CARD",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "PAN_CARD",
+        "entity_legal_name": "APEX INFOTECH SYSTEMS PRIVATE LIMITED",
+        "pan": "AABCA1234F",
+        "incorporation_date": "15/03/2015"
+      }
+    },
+    "Udyam.pdf": {
+      "filename": "Udyam.pdf",
+      "path": "mock-data/documents/synthetic/Udyam.pdf",
+      "size_bytes": 6377,
+      "sha256": "77a0c1bf595a0d123e4f270a26a39c1ecfc8e2fb86190b6351a336cb41ff7114",
+      "document_type": "UDYAM_CERTIFICATE",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "UDYAM_CERTIFICATE",
+        "entity_legal_name": "M/S APEX INFOTECH SYSTEMS PRIVATE LIMITED",
+        "udyam_number": "UDYAM-MH-01-0098765",
+        "enterprise_type": "MEDIUM"
+      }
+    },
+    "OEM.pdf": {
+      "filename": "OEM.pdf",
+      "path": "mock-data/documents/synthetic/OEM.pdf",
+      "size_bytes": 6571,
+      "sha256": "744c781ad2232f8ef33be91d36adffb828e9b905bb250b810e032933b499696d",
+      "document_type": "OEM_AUTHORIZATION",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "OEM_AUTHORIZATION",
+        "oem_name": "Global Silicon & Network Technologies Inc.",
+        "authorized_partner": "Apex Infotech Systems Private Limited",
+        "valid_until": "2027-12-31"
+      }
+    },
+    "Financial.pdf": {
+      "filename": "Financial.pdf",
+      "path": "mock-data/documents/synthetic/Financial.pdf",
+      "size_bytes": 7061,
+      "sha256": "5e8642d64586d8249232872321e0e9dbb169a02d4960c85f8ff3ec9caf4f53a8",
+      "document_type": "FINANCIAL_STATEMENT",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "FINANCIAL_STATEMENT",
+        "entity_legal_name": "Apex Infotech Systems Private Limited",
+        "avg_annual_turnover_inr": 124333333,
+        "net_worth_inr": 82000000,
+        "udin": "25104523BGHTY8821"
+      }
+    },
+    "Technical.pdf": {
+      "filename": "Technical.pdf",
+      "path": "mock-data/documents/synthetic/Technical.pdf",
+      "size_bytes": 6504,
+      "sha256": "e6be559de1a771947b0352d509f17299cc59f498729b1e49a94dbce17d3f4e4f",
+      "document_type": "TECHNICAL_SPECIFICATION",
+      "expected_status": "UPLOADED",
+      "metadata": {
+        "document_type": "TECHNICAL_SPECIFICATION",
+        "entity_legal_name": "Apex Infotech Systems Private Limited",
+        "contract_value_inr": 95000000,
+        "completion_date": "2025-01-31"
+      }
+    }
+  },
+  "test_matrix": {
+    "valid_pdf.pdf": {
+      "filename": "valid_pdf.pdf",
+      "path": "mock-data/documents/test-matrix/valid_pdf.pdf",
+      "size_bytes": 797,
+      "sha256": "5711ac3f22cc00581e2c8d437dfe8b871d860a5d2f0ba0af2ec1e529fcd6f91f",
+      "expected_result": "PASS",
+      "expected_error_code": null,
+      "note": "Standard valid PDF document"
+    },
+    "valid_jpg.jpg": {
+      "filename": "valid_jpg.jpg",
+      "path": "mock-data/documents/test-matrix/valid_jpg.jpg",
+      "size_bytes": 322,
+      "sha256": "0b30af1fb7a4aadfd9995657a4b8f286369e985b9b92dca0d6f98ff863061004",
+      "expected_result": "PASS",
+      "expected_error_code": null,
+      "note": "Standard valid JPEG image with valid SOI and EOI markers"
+    },
+    "valid_png.png": {
+      "filename": "valid_png.png",
+      "path": "mock-data/documents/test-matrix/valid_png.png",
+      "size_bytes": 67,
+      "sha256": "bf6e855b67618763d38f0cd8c2ab5ea9aed7b28f4475939f040e4e3ac016bedc",
+      "expected_result": "PASS",
+      "expected_error_code": null,
+      "note": "Standard valid PNG image with standard PNG signature and IEND"
+    },
+    "empty_pdf.pdf": {
+      "filename": "empty_pdf.pdf",
+      "path": "mock-data/documents/test-matrix/empty_pdf.pdf",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_result": "FAIL",
+      "expected_error_code": "EMPTY_FILE",
+      "note": "Zero-byte file rejected on ingestion"
+    },
+    "large_pdf.pdf": {
+      "filename": "large_pdf.pdf",
+      "path": "mock-data/documents/test-matrix/large_pdf.pdf",
+      "size_bytes": 11534336,
+      "sha256": "3373cb0ee6cb71434926713e583de99daad57f8fdb52657c046c89efcecae207",
+      "expected_result": "FAIL",
+      "expected_error_code": "FILE_TOO_LARGE",
+      "note": "11 MB file exceeds 10 MB limit"
+    },
+    "duplicate_pdf.pdf": {
+      "filename": "duplicate_pdf.pdf",
+      "path": "mock-data/documents/test-matrix/duplicate_pdf.pdf",
+      "size_bytes": 797,
+      "sha256": "5711ac3f22cc00581e2c8d437dfe8b871d860a5d2f0ba0af2ec1e529fcd6f91f",
+      "expected_result": "FAIL_ON_SECOND_UPLOAD",
+      "expected_error_code": "DOCUMENT_DUPLICATE",
+      "note": "Exact byte clone of valid_pdf.pdf, produces matching SHA-256 hash"
+    },
+    "wrong_extension.pdf": {
+      "filename": "wrong_extension.pdf",
+      "path": "mock-data/documents/test-matrix/wrong_extension.pdf",
+      "size_bytes": 55,
+      "sha256": "3d014fb5485c446c18ff66f12f2e478b9cd20125a3dc4393b3cf4456e16b68e7",
+      "expected_result": "FAIL",
+      "expected_error_code": "INVALID_FILE_SIGNATURE",
+      "note": "Extension .pdf with non-PDF content rejected via magic byte check"
+    },
+    "corrupted_file.pdf": {
+      "filename": "corrupted_file.pdf",
+      "path": "mock-data/documents/test-matrix/corrupted_file.pdf",
+      "size_bytes": 50,
+      "sha256": "48eb6de188ec85e8e82b3b0bc8715006de981ebb027a4c1f906829d00ee92590",
+      "expected_result": "FAIL",
+      "expected_error_code": "INVALID_FILE_SIGNATURE",
+      "note": "Corrupted header rejected via file signature check"
+    }
+  }
+}

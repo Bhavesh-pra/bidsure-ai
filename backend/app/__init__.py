@@ -36,6 +36,7 @@ def create_app(config_name=None):
     from app.api.rules import rules_bp
     from app.api.bids import bids_bp
     from app.api.bidders import bidders_bp
+    from app.api.bid_documents import bid_documents_bp
 
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
@@ -44,6 +45,7 @@ def create_app(config_name=None):
     app.register_blueprint(rules_bp, url_prefix="/api/v1")
     app.register_blueprint(bids_bp, url_prefix="/api/v1")
     app.register_blueprint(bidders_bp, url_prefix="/api/v1")
+    app.register_blueprint(bid_documents_bp, url_prefix="/api/v1")
 
     # Create tables in development mode if database exists
     with app.app_context():
