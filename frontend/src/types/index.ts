@@ -54,6 +54,7 @@ export interface Bidder {
   gstin?: string;
   udyam_number?: string;
   organization_type?: string;
+  address?: string;
 }
 
 export interface Bid {
@@ -65,6 +66,8 @@ export interface Bid {
   proposed_completion_date?: string;
   status: string;
   submission_time?: string;
+  bidder?: Bidder;
+  tender?: { id: string; tender_number?: string; title?: string };
 }
 
 export interface Document {

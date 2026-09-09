@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShieldCheck, FileText, CheckSquare, AlertTriangle, UserCheck, History } from 'lucide-react';
+import { ShieldCheck, FileText, CheckSquare, AlertTriangle, UserCheck, History, Users } from 'lucide-react';
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -8,6 +8,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: ShieldCheck },
     { label: 'Tenders', path: '/tenders', icon: FileText },
+    { label: 'Bidders', path: '/bidders', icon: Users },
     { label: 'Bids & Evidence', path: '/bids', icon: CheckSquare },
     { label: 'Verifications', path: '/verifications', icon: AlertTriangle },
     { label: 'Officer Decision', path: '/decision', icon: UserCheck },

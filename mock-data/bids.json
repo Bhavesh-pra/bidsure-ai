@@ -1,0 +1,4 @@
+[
+  {"id":"BIDDER-001-BID-001","tender_id":"TND-001","bidder_id":"BIDDER-001","quoted_amount":5200000,"proposed_completion_date":"2027-01-30","status":"DRAFT"},
+  {"id":"BIDDER-002-BID-001","tender_id":"TND-001","bidder_id":"BIDDER-002","quoted_amount":5450000,"proposed_completion_date":"2027-02-15","status":"SUBMITTED"}
+]

@@ -21,6 +21,7 @@ class Organization(db.Model):
 
     users = db.relationship("User", backref="organization", lazy=True)
     tenders = db.relationship("Tender", backref="organization", lazy=True)
+    bidders = db.relationship("Bidder", backref="organization", lazy=True)
 
 class User(db.Model):
     __tablename__ = "users"
@@ -150,12 +151,15 @@ class Bidder(db.Model):
     __tablename__ = "bidders"
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    organization_id = db.Column(db.String(36), db.ForeignKey("organizations.id"), nullable=True, index=True)
     legal_name = db.Column(db.String(255), nullable=False)
     pan = db.Column(db.String(10), nullable=True)
     gstin = db.Column(db.String(15), nullable=True)
     udyam_number = db.Column(db.String(50), nullable=True)
     organization_type = db.Column(db.String(50), nullable=True)
+    address = db.Column(db.String(1000), nullable=True)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     bids = db.relationship("Bid", backref="bidder", lazy=True)
 
@@ -168,8 +172,9 @@ class Bid(db.Model):
     submission_time = db.Column(db.DateTime, default=get_utc_now, nullable=False)
     quoted_amount = db.Column(db.Numeric(15, 2), nullable=False)
     proposed_completion_date = db.Column(db.Date, nullable=True)
-    status = db.Column(db.String(50), default="SUBMITTED", nullable=False)
+    status = db.Column(db.String(50), default="DRAFT", nullable=False)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     documents = db.relationship("Document", backref="bid", lazy=True)
 

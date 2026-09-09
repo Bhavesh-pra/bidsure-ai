@@ -12,6 +12,8 @@ import type { Document, Requirement } from '../types';
 import { TenderDocumentUpload, ProcessingStatus, RequirementTable } from '../components/tenders';
 import { RequirementRuleRow, RuleDetailsCard } from '../components/tenders';
 import type { ComplianceRule } from '../types/rule';
+import { bidService } from '../services/bidService';
+import type { Bid } from '../types';
 
 const formatDate = (value?: string) => value ? new Date(value).toLocaleString() : '—';
 const errorMessage = (error: unknown) => error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Failed to load tender details.';
@@ -28,7 +30,8 @@ export const TenderDetailsPage: React.FC = () => {
   const [rulesLoading, setRulesLoading] = useState(false);
   const [ruleError, setRuleError] = useState<string>();
   const [selectedRule, setSelectedRule] = useState<ComplianceRule>();
-  const loadExtractionData = () => { if (!id) return; setDataLoading(true); Promise.all([tenderService.getDocuments(id), tenderService.getRequirements(id), tenderService.getRules(id)]).then(([documentsResponse, requirementsResponse, rulesResponse]) => { setDocuments(documentsResponse.data); setRequirements(requirementsResponse.data.requirements); setRules(rulesResponse.data.rules); }).catch(() => undefined).finally(() => setDataLoading(false)); };
+  const [bids, setBids] = useState<Bid[]>([]);
+  const loadExtractionData = () => { if (!id) return; setDataLoading(true); Promise.all([tenderService.getDocuments(id), tenderService.getRequirements(id), tenderService.getRules(id), bidService.list(id)]).then(([documentsResponse, requirementsResponse, rulesResponse, bidsResponse]) => { setDocuments(documentsResponse.data); setRequirements(requirementsResponse.data.requirements); setRules(rulesResponse.data.rules); setBids(bidsResponse.data.bids); }).catch(() => undefined).finally(() => setDataLoading(false)); };
   const generateRules = async () => { if (!id) return; setRulesLoading(true); setRuleError(undefined); try { const response = await tenderService.generateRules(id); setRules(response.data.rules); } catch (requestError) { setRuleError(requestError && typeof requestError === 'object' && 'message' in requestError ? String(requestError.message) : 'Unable to generate rules.'); } finally { setRulesLoading(false); } };
   useEffect(() => { if (!id) return; setLoading(true); void tenderService.getTender(id).then((response) => { setTender(response.data); loadExtractionData(); }).catch((requestError) => setError(errorMessage(requestError))).finally(() => setLoading(false)); }, [id]);
   if (loading) return <Card title="Tender details"><Loading message="Loading tender..." /></Card>;
@@ -53,7 +56,7 @@ export const TenderDetailsPage: React.FC = () => {
       {!rules.length ? <p className="text-sm text-slate-600">No rules configured yet.</p> : <div className="space-y-2">{requirements.map((requirement) => <RequirementRuleRow key={requirement.id} requirement={requirement} rule={rules.find((rule) => rule.requirement_id === requirement.id)} onSelect={() => { const rule = rules.find((item) => item.requirement_id === requirement.id); if (rule) setSelectedRule(rule); }} />)}</div>}
       {selectedRule && <div className="mt-4"><RuleDetailsCard rule={selectedRule} /></div>}
     </Card>
-    <div className="grid gap-6 md:grid-cols-2"><Card title="Bids"><p className="text-sm text-slate-500">Available in a later cycle.</p></Card><Card title="Verification"><p className="text-sm text-slate-500">Available in a later cycle.</p></Card></div>
+    <div className="grid gap-6 md:grid-cols-2"><Card title="Bids" action={<Link to={`/tenders/${tender.id}/bids/new`}><Button>Create Bid</Button></Link>}>{bids.length ? <div className="space-y-2">{bids.map((bid) => <Link className="block rounded border p-3 hover:bg-slate-50" key={bid.id} to={`/bids/${bid.id}`}><div className="flex justify-between"><span className="font-medium">{bid.bidder?.legal_name || bid.bidder_name || bid.bidder_id}</span><span>{bid.status}</span></div><p className="text-sm text-slate-600">₹{Number(bid.quoted_amount).toLocaleString('en-IN')}</p></Link>)}</div> : <p className="text-sm text-slate-500">No bids submitted yet.</p>}</Card><Card title="Verification"><p className="text-sm text-slate-500">Available in a later cycle.</p></Card></div>
   </div>;
 };
 
