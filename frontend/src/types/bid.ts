@@ -6,8 +6,11 @@ export interface Bid {
   tenderId: string;
   bidderId: string;
   amount?: number;
+  quoted_amount?: number;
   currency?: string;
   submittedAt?: string;
   bidder?: Bidder;
+  status?: string;
+  proposed_completion_date?: string;
   documents?: Document[];
 }

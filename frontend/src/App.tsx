@@ -14,6 +14,8 @@ import BidVerificationPage from './pages/BidVerification';
 import BidEvidencePage from './pages/BidEvidence';
 import BidDecisionPage from './pages/BidDecision';
 import BidAuditPage from './pages/BidAudit';
+import BiddersPage from './pages/Bidders';
+import CreateBidPage from './pages/CreateBid';
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
           <Route path="/tenders" element={<ProtectedRoute><TendersPage /></ProtectedRoute>} />
           <Route path="/tenders/new" element={<ProtectedRoute><CreateTenderPage /></ProtectedRoute>} />
           <Route path="/tenders/:id" element={<ProtectedRoute><TenderDetailsPage /></ProtectedRoute>} />
+          <Route path="/tenders/:id/bids/new" element={<ProtectedRoute><CreateBidPage /></ProtectedRoute>} />
+          <Route path="/bidders" element={<ProtectedRoute><BiddersPage /></ProtectedRoute>} />
           <Route path="/tenders/:id/requirements/:requirementId" element={<ProtectedRoute><RequirementDetailsPage /></ProtectedRoute>} />
           <Route path="/bids" element={<BidDetailsPage />} />
           <Route path="/bids/:id" element={<BidDetailsPage />} />

@@ -1,41 +1,30 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, g
 from app.utils.response import success_response, error_response
+from app.security.decorators import jwt_required
+from app.services.bid_service import create_bid, list_bids, get_bid, BidDomainError
 
 bids_bp = Blueprint("bids", __name__)
 
 @bids_bp.route("/tenders/<string:tender_id>/bids", methods=["GET"])
+@jwt_required
 def get_bids_for_tender(tender_id):
-    return success_response({
-        "tender_id": tender_id,
-        "bids": [
-            {
-                "id": "BID-2026-001",
-                "bidder_name": "ABC Technologies Pvt Ltd",
-                "quoted_amount": 45000000.00,
-                "status": "SUBMITTED"
-            }
-        ]
-    })
+    try:
+        return success_response({"tender_id": tender_id, "bids": list_bids(tender_id, g.current_org_id)})
+    except BidDomainError as e:
+        return error_response(e.code, e.message, e.status_code)
 
 @bids_bp.route("/tenders/<string:tender_id>/bids", methods=["POST"])
+@jwt_required
 def submit_bid(tender_id):
-    data = request.get_json() or {}
-    if not data.get("quoted_amount"):
-        return error_response("INVALID_REQUEST", "quoted_amount is required", 400)
-
-    return success_response({
-        "id": "BID-2026-002",
-        "tender_id": tender_id,
-        "quoted_amount": data.get("quoted_amount"),
-        "status": "SUBMITTED"
-    }, 201)
+    try:
+        return success_response(create_bid(tender_id, g.current_org_id, request.get_json() or {}), 201)
+    except BidDomainError as e:
+        return error_response(e.code, e.message, e.status_code)
 
 @bids_bp.route("/bids/<string:bid_id>", methods=["GET"])
+@jwt_required
 def get_bid_detail(bid_id):
-    return success_response({
-        "id": bid_id,
-        "tender_id": "TND-GEM-2026-001",
-        "bidder_name": "ABC Technologies Pvt Ltd",
-        "quoted_amount": 45000000.00,
-        "status": "SUBMITTED"
-    })
+    try:
+        return success_response(get_bid(bid_id, g.current_org_id))
+    except BidDomainError as e:
+        return error_response(e.code, e.message, e.status_code)
