@@ -25,6 +25,7 @@ import {
   Calendar,
   IndianRupee,
   FileText,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const BidDetailsPage: React.FC = () => {
@@ -228,13 +229,19 @@ export const BidDetailsPage: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Link to={`/bids/${bid.id}/evidence`}><Button variant="outline">View Evidence</Button></Link>
           <Button
-            variant="primary"
+            variant="outline"
             onClick={() => handleOpenUploadModal()}
             className="flex items-center space-x-1.5"
           >
             <Upload className="h-4 w-4" />
             <span>Upload Document</span>
           </Button>
+          <Link to={`/bids/${bid.id}/verification`}>
+            <Button variant="primary" className="flex items-center space-x-1.5">
+              <ShieldCheck className="h-4 w-4" />
+              <span>Verify Compliance</span>
+            </Button>
+          </Link>
         </div>
       </div>
 

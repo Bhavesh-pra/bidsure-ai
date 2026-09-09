@@ -166,6 +166,7 @@ def calculate_risk_assessment(
         "risk_level": risk_level,
         "risk_score": float(risk_score),
         "factors": factors,
+        "risk_factors": [f["description"] for f in factors if "description" in f],
         "explanation": explanation,
         "methodology_version": "1.0-deterministic",
     }

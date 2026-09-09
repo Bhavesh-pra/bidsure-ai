@@ -1,7 +1,7 @@
 import { apiClient } from './api';
 import type { ApiResponse, Evidence } from '../types';
 
-export type RequirementResultStatus = 'PASS' | 'FAIL' | 'REVIEW' | 'UNKNOWN';
+export type RequirementResultStatus = 'PASS' | 'FAIL' | 'REVIEW' | 'UNKNOWN' | 'VERIFIED';
 export type CrossVerificationStatus = 'MATCH' | 'MISMATCH' | 'REVIEW' | 'UNKNOWN';
 
 export interface VerificationRequirement {
@@ -21,10 +21,11 @@ export interface CrossVerificationResult {
 
 export interface VerificationResult {
   bid_id: string;
-  bidder: { name: string; id?: string };
+  bidder: { name: string; id?: string; legal_name?: string };
   compliance_score?: number;
   risk_level?: string;
   risk_factors?: string[];
+  risk_assessment?: { risk_level: string; risk_factors: string[]; explanation?: string };
   requirements_passed?: number;
   requirements_total?: number;
   requirements: VerificationRequirement[];
@@ -33,6 +34,20 @@ export interface VerificationResult {
   recommendation?: { status: string; summary?: string; reasons?: string[] };
   verification_status?: string;
 }
+
+const normalizeVerificationResult = (raw: any): VerificationResult => {
+  if (!raw) return raw;
+  const requirements = (raw.requirements || []).map((r: any) => ({
+    ...r,
+    status: (r.status === 'VERIFIED' ? 'PASS' : r.status) as RequirementResultStatus,
+  }));
+  const riskFactors = raw.risk_factors || raw.risk_assessment?.risk_factors || [];
+  return {
+    ...raw,
+    requirements,
+    risk_factors: riskFactors,
+  };
+};
 
 const mockVerification = (bidId: string): VerificationResult => ({
   bid_id: bidId,
@@ -61,9 +76,28 @@ export const verificationService = {
   async verifyBid(bidId: string): Promise<ApiResponse<VerificationResult>> {
     try {
       const response = await apiClient.post(`/bids/${bidId}/verify`);
-      return response as unknown as ApiResponse<VerificationResult>;
+      const payload = response as unknown as ApiResponse<VerificationResult>;
+      if (payload && payload.data) {
+        payload.data = normalizeVerificationResult(payload.data);
+      }
+      return payload;
     } catch (error: any) {
-      // Keep the interface demoable until the orchestration endpoint is available.
+      if (error?.code === 'NETWORK_ERROR' || error?.code === 'NOT_FOUND' || error?.code === 'NOT_IMPLEMENTED') {
+        return { success: true, data: mockVerification(bidId), request_id: 'MOCK-VERIFICATION' };
+      }
+      throw error;
+    }
+  },
+
+  async getVerification(bidId: string): Promise<ApiResponse<VerificationResult>> {
+    try {
+      const response = await apiClient.get(`/bids/${bidId}/verification`);
+      const payload = response as unknown as ApiResponse<VerificationResult>;
+      if (payload && payload.data) {
+        payload.data = normalizeVerificationResult(payload.data);
+      }
+      return payload;
+    } catch (error: any) {
       if (error?.code === 'NETWORK_ERROR' || error?.code === 'NOT_FOUND' || error?.code === 'NOT_IMPLEMENTED') {
         return { success: true, data: mockVerification(bidId), request_id: 'MOCK-VERIFICATION' };
       }

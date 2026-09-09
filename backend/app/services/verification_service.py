@@ -386,12 +386,46 @@ def verify_bid(bid_id: str, org_id: str) -> Dict[str, Any]:
         "compliance_score": deterministic_score,
         "risk_level": risk_assessment["risk_level"],
         "risk_assessment": risk_assessment,
+        "risk_factors": risk_assessment.get("risk_factors", []),
         "requirements_passed": passed_count,
         "requirements_total": len(results_requirements),
         "requirements": results_requirements,
         "cross_verification": cross_checks,
         "recommendation": recommendation,
     }
+
+    # Record AuditEvent for verification run
+    try:
+        from datetime import datetime, timezone
+        import uuid
+        from app.models.models import AuditEvent
+        audit_id = f"AUD-{uuid.uuid4().hex[:8].upper()}"
+        audit_row = AuditEvent(
+            id=audit_id,
+            entity_type="BID",
+            entity_id=bid.id,
+            bid_id=bid.id,
+            user_id=None,
+            action="BID_VERIFICATION_COMPLETED",
+            previous_state={"status": bid.status},
+            new_state={
+                "status": bid.status,
+                "compliance_score": deterministic_score,
+                "risk_level": risk_assessment["risk_level"],
+            },
+            metadata_payload={
+                "compliance_score": deterministic_score,
+                "risk_level": risk_assessment["risk_level"],
+                "requirements_passed": passed_count,
+                "requirements_total": len(results_requirements),
+            },
+            timestamp=datetime.now(timezone.utc),
+        )
+        db.session.add(audit_row)
+        db.session.commit()
+    except Exception as exc:
+        logger.warning("Could not persist AuditEvent for verification: %s", exc)
+        db.session.rollback()
 
     # Cache result for GET /bids/{id}/verification
     _VERIFICATION_CACHE[bid.id] = final_payload
