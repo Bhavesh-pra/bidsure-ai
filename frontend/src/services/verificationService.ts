@@ -31,7 +31,13 @@ export interface VerificationResult {
   requirements: VerificationRequirement[];
   evidence?: Evidence[];
   cross_verification: CrossVerificationResult[];
-  recommendation?: { status: string; summary?: string; reasons?: string[] };
+  recommendation?: {
+    status: string;
+    summary?: string;
+    reasons?: string[];
+    model_name?: string;
+    generated_by?: string;
+  };
   verification_status?: string;
 }
 

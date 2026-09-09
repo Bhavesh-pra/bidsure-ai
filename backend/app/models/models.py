@@ -16,12 +16,23 @@ class Organization(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     name = db.Column(db.String(255), nullable=False)
     code = db.Column(db.String(50), unique=True, nullable=False)
+    type = db.Column(db.String(30), nullable=False, default="GOVERNMENT")
     status = db.Column(db.String(20), default="ACTIVE", nullable=False)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
 
     users = db.relationship("User", backref="organization", lazy=True)
     tenders = db.relationship("Tender", backref="organization", lazy=True)
     bidders = db.relationship("Bidder", backref="organization", lazy=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "code": self.code,
+            "type": self.type,
+            "status": self.status,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
 
 class User(db.Model):
     __tablename__ = "users"
@@ -31,9 +42,22 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    actor_type = db.Column(db.String(30), nullable=False, default="GOVERNMENT")
     role = db.Column(db.String(50), nullable=False, default="PROCUREMENT_OFFICER")
     status = db.Column(db.String(20), default="ACTIVE", nullable=False)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "organization_id": self.organization_id,
+            "email": self.email,
+            "name": self.name,
+            "actor_type": self.actor_type,
+            "role": self.role,
+            "status": self.status,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
 
 class Tender(db.Model):
     __tablename__ = "tenders"

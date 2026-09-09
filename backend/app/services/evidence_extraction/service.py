@@ -45,8 +45,8 @@ def _add(fields: list[EvidenceField], field: str, value: str, normalized: str, p
     fields.append(EvidenceField(field=field, value=value.strip(), normalized_value=normalized, page=page, confidence=confidence))
 
 
-def extract_structured_evidence(document_id: str, document_type: str, pages: list[dict]) -> StructuredEvidence:
-    """Extract only fields belonging to the classified document type."""
+def _regex_extract(document_id: str, document_type: str, pages: list[dict]) -> StructuredEvidence:
+    """Deterministic regex-based extraction (original implementation, preserved as fallback)."""
     fields: list[EvidenceField] = []
     canonical = document_type.upper().strip()
     for page_data in pages:
@@ -103,3 +103,60 @@ def extract_structured_evidence(document_id: str, document_type: str, pages: lis
     return StructuredEvidence(document_id=document_id, document_type=canonical, fields=fields,
                                extraction_method=ExtractionMethod.REGEX, extracted_at=datetime.now(timezone.utc),
                                extraction_status="EXTRACTED" if fields else "REVIEW_REQUIRED")
+
+
+def extract_structured_evidence(document_id: str, document_type: str, pages: list[dict]) -> StructuredEvidence:
+    """
+    Extract structured fields from OCR pages.
+
+    Strategy: Try LLM extraction first. If LLM is unavailable or fails,
+    fall back to the deterministic regex pipeline (zero-downtime guarantee).
+    """
+    import logging
+    _logger = logging.getLogger(__name__)
+
+    canonical = document_type.upper().strip()
+
+    # --- Attempt LLM extraction ---
+    try:
+        from app.services.llm_service import extract_fields_with_llm
+
+        # Concatenate page text for LLM
+        full_text = "\n\n".join(
+            str(p.get("raw_text", p.get("text", "")) or "")
+            for p in pages
+        )
+
+        if full_text.strip():
+            llm_result = extract_fields_with_llm(full_text, canonical, document_id)
+            if llm_result and llm_result.get("fields"):
+                llm_fields = [
+                    EvidenceField(
+                        field=f["field"],
+                        value=f["value"],
+                        normalized_value=f.get("normalized_value"),
+                        page=f.get("page", 1),
+                        confidence=f.get("confidence", 0.85),
+                        source=f.get("source", "BIDDER_DOCUMENT"),
+                    )
+                    for f in llm_result["fields"]
+                ]
+                _logger.info(
+                    "Using LLM extraction for doc=%s type=%s (%d fields)",
+                    document_id, canonical, len(llm_fields),
+                )
+                return StructuredEvidence(
+                    document_id=document_id,
+                    document_type=canonical,
+                    fields=llm_fields,
+                    extraction_method=ExtractionMethod.OCR_LLM,
+                    extracted_at=datetime.now(timezone.utc),
+                    extraction_status="EXTRACTED" if llm_fields else "REVIEW_REQUIRED",
+                )
+    except Exception as e:
+        _logger.warning("LLM extraction attempt failed for doc=%s, falling back to regex: %s", document_id, e)
+
+    # --- Fallback: deterministic regex extraction ---
+    _logger.info("Using regex extraction for doc=%s type=%s", document_id, canonical)
+    return _regex_extract(document_id, canonical, pages)
+

@@ -493,9 +493,16 @@ export const BidVerificationPage: React.FC = () => {
                 <Bot className="h-5 w-5" />
                 <h3 className="font-bold text-sm text-[#0F2747]">AI-Assisted Recommendation</h3>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-[#0F766E] border border-teal-300 px-2 py-0.5 rounded-[4px]">
-                Advisory Only
-              </span>
+              <div className="flex items-center space-x-2">
+                {result.recommendation?.model_name && (
+                  <span className="text-[10px] font-semibold text-slate-600 bg-white border border-teal-200 px-2 py-0.5 rounded-[4px]">
+                    {result.recommendation.model_name}
+                  </span>
+                )}
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-[#0F766E] border border-teal-300 px-2 py-0.5 rounded-[4px]">
+                  Advisory Only
+                </span>
+              </div>
             </div>
 
             <div className="bg-white rounded-[6px] border border-teal-100 p-3.5 space-y-2">

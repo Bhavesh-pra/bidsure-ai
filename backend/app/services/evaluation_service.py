@@ -184,6 +184,21 @@ def generate_ai_recommendation(
     Architectural rule: AI recommendation is purely advisory and NEVER modifies
     the officer's final decision.
     """
+    # 1. Attempt Real LLM Recommendation
+    try:
+        from app.services.llm_recommendation_service import generate_llm_recommendation
+        llm_rec = generate_llm_recommendation(
+            compliance_score=compliance_score,
+            risk_assessment=risk_assessment,
+            requirements_results=requirements_results,
+            cross_checks=cross_checks,
+        )
+        if llm_rec:
+            return llm_rec
+    except Exception as e:
+        logger.warning("LLM recommendation fallback triggered: %s", e)
+
+    # 2. Deterministic Template Fallback (Guaranteed reliability)
     total = len(requirements_results)
     passed = sum(1 for r in requirements_results if r.get("status") in ("VERIFIED", "PASS", "VERIFIED_PASS"))
     risk_level = risk_assessment.get("risk_level", "LOW")
@@ -191,7 +206,7 @@ def generate_ai_recommendation(
 
     reasons: List[str] = []
 
-    # 1. Summary statement
+    # Summary statement
     if risk_level == "LOW" and compliance_score >= 75:
         status = "PASS"
         summary = f"Bidder appears substantially compliant. {passed}/{total} statutory and technical requirements verified."
@@ -216,4 +231,6 @@ def generate_ai_recommendation(
         "summary": summary,
         "reasons": reasons,
         "authority_disclaimer": "AI recommendations are strictly decision support. The human Procurement Officer retains exclusive final decision authority.",
+        "generated_by": "DETERMINISTIC",
     }
+

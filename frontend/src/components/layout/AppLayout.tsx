@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   ShieldCheck,
   FileText,
@@ -12,13 +13,17 @@ import {
   Bell,
   User,
   LayoutDashboard,
+  LogOut,
+  Upload,
+  Briefcase,
 } from 'lucide-react';
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const isLogin = location.pathname === '/login';
+  const { user, isAuthenticated, isBidder, logout } = useAuth();
 
-  const navItems = [
+  const officerNavItems = [
     { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Tenders', path: '/tenders', icon: FileText },
     { label: 'Bidders', path: '/bidders', icon: Users },
@@ -27,6 +32,15 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     { label: 'Officer Decision', path: '/decision', icon: UserCheck },
     { label: 'Audit Trail', path: '/audit', icon: History },
   ];
+
+  const bidderNavItems = [
+    { label: 'Dashboard', path: '/bidder/dashboard', icon: LayoutDashboard },
+    { label: 'Active Tenders', path: '/tenders', icon: FileText },
+    { label: 'My Bids', path: '/bids', icon: Briefcase },
+    { label: 'Upload Documents', path: '/bids', icon: Upload },
+  ];
+
+  const navItems = isBidder ? bidderNavItems : officerNavItems;
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] text-slate-900 flex flex-col font-sans">
@@ -73,15 +87,24 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
               <div className="h-5 w-[1px] bg-slate-200" />
 
-              {/* Officer Profile */}
+              {/* User Profile */}
               <div className="flex items-center space-x-2.5">
                 <div className="h-8 w-8 rounded-full bg-[#0F2747] flex items-center justify-center text-white font-semibold text-xs border border-[#183B63]">
                   <User className="h-4 w-4 text-[#14B8A6]" />
                 </div>
                 <div className="hidden lg:block text-left">
-                  <p className="text-xs font-semibold text-slate-900 leading-tight">Procurement Officer</p>
-                  <p className="text-[11px] text-slate-500">L3 Decision Authority</p>
+                  <p className="text-xs font-semibold text-slate-900 leading-tight">{user?.name || 'User'}</p>
+                  <p className="text-[11px] text-slate-500">
+                    {user?.actor_type === 'BIDDER' ? 'Vendor / Bidder' : user?.role === 'ADMIN' ? 'System Admin' : 'Procurement Officer'}
+                  </p>
                 </div>
+                <button
+                  onClick={logout}
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-[6px] transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -120,14 +143,18 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 })}
               </nav>
 
-              {/* Officer Role Card */}
+              {/* Role Card */}
               <div className="bg-[#0F2747] rounded-[8px] p-3.5 text-white shadow-xs border border-[#183B63]">
                 <div className="flex items-center space-x-2">
                   <span className="h-2 w-2 rounded-full bg-[#14B8A6] animate-pulse" />
                   <span className="text-[11px] font-semibold text-slate-200">System Connected</span>
                 </div>
-                <p className="mt-2 text-xs font-bold text-white">Government Procurement</p>
-                <p className="text-[11px] text-slate-300 mt-0.5">Evidence Chain Verified</p>
+                <p className="mt-2 text-xs font-bold text-white">
+                  {isBidder ? 'Vendor Portal' : 'Government Procurement'}
+                </p>
+                <p className="text-[11px] text-slate-300 mt-0.5">
+                  {isBidder ? 'Bid Submission & Tracking' : 'Evidence Chain Verified'}
+                </p>
               </div>
             </div>
           </aside>

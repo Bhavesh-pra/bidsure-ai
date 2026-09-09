@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import { AppLayout } from './components/layout/AppLayout';
 
 import DashboardPage from './pages/Dashboard';
@@ -17,15 +18,20 @@ import BidDecisionPage from './pages/BidDecision';
 import BidAuditPage from './pages/BidAudit';
 import BiddersPage from './pages/Bidders';
 import CreateBidPage from './pages/CreateBid';
+import BidderDashboard from './pages/BidderDashboard';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <AuthProvider>
       <AppLayout>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+
+          {/* Bidder Dashboard */}
+          <Route path="/bidder/dashboard" element={<ProtectedRoute allowedActorTypes={['BIDDER', 'ADMIN']}><BidderDashboard /></ProtectedRoute>} />
 
           {/* Tenders */}
           <Route path="/tenders" element={<ProtectedRoute><TendersPage /></ProtectedRoute>} />
@@ -62,6 +68,7 @@ export default function App() {
           <Route path="/audit" element={<Navigate to="/bids" replace />} />
         </Routes>
       </AppLayout>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

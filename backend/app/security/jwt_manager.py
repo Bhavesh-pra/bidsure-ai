@@ -7,6 +7,7 @@ def create_access_token(
     organization_id: str,
     role: str = "PROCUREMENT_OFFICER",
     name: str = "",
+    actor_type: str = "GOVERNMENT",
     expires_in_minutes: int = None,
 ) -> str:
     """Generate a signed JWT token with standard subject and tenant claims."""
@@ -25,6 +26,7 @@ def create_access_token(
         "sub": str(user_id),
         "org_id": str(organization_id),
         "role": str(role),
+        "actor_type": str(actor_type),
         "name": name or "",
         "iat": datetime.now(timezone.utc),
         "exp": exp,

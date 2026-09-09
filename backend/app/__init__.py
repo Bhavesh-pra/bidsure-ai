@@ -57,14 +57,27 @@ def create_app(config_name=None):
     from app.api.auth import login as auth_login
     app.add_url_rule("/auth/login", endpoint="auth_login_root", view_func=auth_login, methods=["POST"])
 
-    # Create tables in development mode if database exists and seed baseline demo data
+    # Create tables in development mode if database exists, auto-patch schema columns, and seed baseline demo data
     with app.app_context():
         try:
+            from sqlalchemy import inspect as _inspect, text as _text
+            inspector = _inspect(db.engine)
+            tables = inspector.get_table_names()
+            if "users" in tables:
+                cols = [c["name"] for c in inspector.get_columns("users")]
+                if "actor_type" not in cols:
+                    db.session.execute(_text("ALTER TABLE users ADD COLUMN actor_type VARCHAR(30) NOT NULL DEFAULT 'GOVERNMENT';"))
+                    db.session.commit()
+            if "organizations" in tables:
+                cols = [c["name"] for c in inspector.get_columns("organizations")]
+                if "type" not in cols:
+                    db.session.execute(_text("ALTER TABLE organizations ADD COLUMN type VARCHAR(30) NOT NULL DEFAULT 'GOVERNMENT';"))
+                    db.session.commit()
             db.create_all()
             if config_name == "development":
                 from app.services.seed_service import seed_demo_data
                 seed_demo_data()
         except Exception:
-            pass  # Will handle via migrations / active DB connection later
+            pass
 
     return app

@@ -68,7 +68,10 @@ def login():
         organization_id=user.organization_id,
         role=user.role,
         name=user.name,
+        actor_type=getattr(user, "actor_type", "GOVERNMENT"),
     )
+
+    org = Organization.query.filter_by(id=user.organization_id).first()
 
     return success_response({
         "access_token": token,
@@ -78,6 +81,50 @@ def login():
             "email": user.email,
             "name": user.name,
             "role": user.role,
+            "actor_type": getattr(user, "actor_type", "GOVERNMENT"),
             "organization_id": user.organization_id,
+            "organization_name": org.name if org else None,
+            "organization_type": org.type if org else None,
         }
+    })
+
+
+@auth_bp.route("/auth/me", methods=["GET"])
+def auth_me():
+    """Return the authenticated user's profile from the JWT token."""
+    from app.security.jwt_manager import decode_token
+    import jwt as _jwt
+
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        return error_response("UNAUTHORIZED", "Missing authorization header", 401)
+
+    parts = auth_header.split(" ")
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        return error_response("UNAUTHORIZED", "Invalid authorization header format", 401)
+
+    try:
+        payload = decode_token(parts[1])
+    except _jwt.ExpiredSignatureError:
+        return error_response("UNAUTHORIZED", "Token has expired", 401)
+    except _jwt.InvalidTokenError:
+        return error_response("UNAUTHORIZED", "Invalid token", 401)
+
+    user_id = payload.get("sub")
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return error_response("NOT_FOUND", "User not found", 404)
+
+    org = Organization.query.filter_by(id=user.organization_id).first()
+
+    return success_response({
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+        "role": user.role,
+        "actor_type": getattr(user, "actor_type", "GOVERNMENT"),
+        "organization_id": user.organization_id,
+        "organization_name": org.name if org else None,
+        "organization_type": getattr(org, "type", "GOVERNMENT") if org else None,
+        "status": user.status,
     })

@@ -65,6 +65,8 @@ export interface Bid {
   quoted_amount: number;
   proposed_completion_date?: string;
   status: string;
+  compliance_score?: number;
+  risk_level?: string;
   submission_time?: string;
   created_at?: string;
   updated_at?: string;

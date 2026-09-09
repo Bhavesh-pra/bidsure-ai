@@ -42,11 +42,11 @@ def seed_demo_data() -> dict:
     """
     stats = {"orgs": 0, "users": 0, "tenders": 0, "requirements": 0, "bidders": 0, "bids": 0}
 
-    # 1. Organization
+    # 1. Government Organization
     org = Organization.query.filter_by(id="ORG-001").first()
     if not org:
         org_file = get_mock_data_path("organizations.json")
-        org_name = "Demo Procurement Department"
+        org_name = "Department of Heavy Industries"
         org_code = "DPD-001"
         if os.path.exists(org_file):
             try:
@@ -62,13 +62,28 @@ def seed_demo_data() -> dict:
             id="ORG-001",
             name=org_name,
             code=org_code,
+            type="GOVERNMENT",
             status="ACTIVE",
         )
         db.session.add(org)
         db.session.flush()
         stats["orgs"] += 1
 
-    # 2. Demo Officer User
+    # 1b. Bidder Organization
+    bidder_org = Organization.query.filter_by(id="ORG-BID-001").first()
+    if not bidder_org:
+        bidder_org = Organization(
+            id="ORG-BID-001",
+            name="ABC Technologies Pvt Ltd",
+            code="ABCTECH-001",
+            type="BIDDER",
+            status="ACTIVE",
+        )
+        db.session.add(bidder_org)
+        db.session.flush()
+        stats["orgs"] += 1
+
+    # 2. Demo Officer User (legacy email — preserves existing tests)
     officer = User.query.filter_by(email="officer@bidsure.gov.in").first()
     if not officer:
         salt = bcrypt.gensalt()
@@ -79,10 +94,65 @@ def seed_demo_data() -> dict:
             email="officer@bidsure.gov.in",
             password_hash=pw_hash,
             name="Procurement Officer",
+            actor_type="GOVERNMENT",
             role="PROCUREMENT_OFFICER",
             status="ACTIVE",
         )
         db.session.add(officer)
+        stats["users"] += 1
+
+    # 2b. Demo Officer User (new demo email)
+    demo_officer = User.query.filter_by(email="officer@bidsure.demo").first()
+    if not demo_officer:
+        salt = bcrypt.gensalt()
+        pw_hash = bcrypt.hashpw(b"officer123", salt).decode("utf-8")
+        demo_officer = User(
+            id="USR-OFFICER-002",
+            organization_id=org.id,
+            email="officer@bidsure.demo",
+            password_hash=pw_hash,
+            name="Procurement Officer",
+            actor_type="GOVERNMENT",
+            role="PROCUREMENT_OFFICER",
+            status="ACTIVE",
+        )
+        db.session.add(demo_officer)
+        stats["users"] += 1
+
+    # 2c. Demo Bidder User
+    bidder_user = User.query.filter_by(email="bidder@abctech.demo").first()
+    if not bidder_user:
+        salt = bcrypt.gensalt()
+        pw_hash = bcrypt.hashpw(b"bidder123", salt).decode("utf-8")
+        bidder_user = User(
+            id="USR-BIDDER-001",
+            organization_id=bidder_org.id,
+            email="bidder@abctech.demo",
+            password_hash=pw_hash,
+            name="ABC Bid Manager",
+            actor_type="BIDDER",
+            role="BIDDER",
+            status="ACTIVE",
+        )
+        db.session.add(bidder_user)
+        stats["users"] += 1
+
+    # 2d. Demo Admin User
+    admin_user = User.query.filter_by(email="admin@bidsure.demo").first()
+    if not admin_user:
+        salt = bcrypt.gensalt()
+        pw_hash = bcrypt.hashpw(b"admin123", salt).decode("utf-8")
+        admin_user = User(
+            id="USR-ADMIN-001",
+            organization_id=org.id,
+            email="admin@bidsure.demo",
+            password_hash=pw_hash,
+            name="System Administrator",
+            actor_type="ADMIN",
+            role="ADMIN",
+            status="ACTIVE",
+        )
+        db.session.add(admin_user)
         stats["users"] += 1
 
     # 3. Tender & Requirements

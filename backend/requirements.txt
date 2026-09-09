@@ -12,4 +12,5 @@ gunicorn==21.2.0
 python-dotenv==1.0.1
 Flask-Migrate==4.0.7
 pytest==8.1.1
+google-generativeai==0.8.5
 

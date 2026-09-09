@@ -3,14 +3,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { authService } from '../services/authService';
-import { ShieldCheck, Lock, Mail, AlertCircle, Building2, KeyRound } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { ShieldCheck, Lock, Mail, AlertCircle, Building2, KeyRound, UserCheck, Briefcase } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const returnTo = searchParams.get('returnTo') || '/dashboard';
+  const returnTo = searchParams.get('returnTo');
+  const { login: authLogin } = useAuth();
 
-  const [email, setEmail] = useState('officer@bidsure.gov.in');
+  const [email, setEmail] = useState('officer@bidsure.demo');
   const [password, setPassword] = useState('officer123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,13 +28,41 @@ export const LoginPage: React.FC = () => {
     try {
       const response = await authService.login(email, password);
       const token = response.data.access_token;
-      localStorage.setItem('access_token', token);
-      localStorage.setItem('token', token);
-      navigate(returnTo, { replace: true });
+      const userData = response.data.user;
+
+      authLogin(token, {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        role: userData.role,
+        actor_type: userData.actor_type || 'GOVERNMENT',
+        organization_id: userData.organization_id,
+        organization_name: userData.organization_name,
+        organization_type: userData.organization_type,
+      });
+
+      // Role-based redirect
+      if (returnTo) {
+        navigate(returnTo, { replace: true });
+      } else if (userData.actor_type === 'BIDDER') {
+        navigate('/bidder/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err: any) {
-      setError(err?.message || 'Login failed. Please verify your officer credentials.');
+      setError(err?.message || 'Login failed. Please verify your credentials.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const quickLogin = (preset: 'officer' | 'bidder') => {
+    if (preset === 'officer') {
+      setEmail('officer@bidsure.demo');
+      setPassword('officer123');
+    } else {
+      setEmail('bidder@abctech.demo');
+      setPassword('bidder123');
     }
   };
 
@@ -102,13 +132,43 @@ export const LoginPage: React.FC = () => {
             </Button>
           </form>
 
-          <div className="mt-6 rounded-[6px] bg-slate-50 border border-slate-200 p-3.5 text-xs text-slate-600 space-y-1">
+          <div className="mt-6 rounded-[6px] bg-slate-50 border border-slate-200 p-3.5 text-xs text-slate-600 space-y-2.5">
             <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-700 mb-1">
               <KeyRound className="h-3.5 w-3.5 text-[#0F766E]" />
-              <span>SIH Demo Officer Credentials:</span>
+              <span>SIH Demo — Quick Login:</span>
             </div>
-            <p className="font-mono text-[11px]"><strong>Email:</strong> officer@bidsure.gov.in</p>
-            <p className="font-mono text-[11px]"><strong>Password:</strong> officer123</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => quickLogin('officer')}
+                className={`flex items-center space-x-2 rounded-[6px] border p-2.5 text-left transition-all ${
+                  email === 'officer@bidsure.demo'
+                    ? 'border-[#0F766E] bg-[#ECFDF3] ring-1 ring-[#0F766E]'
+                    : 'border-slate-200 hover:border-slate-400 hover:bg-white'
+                }`}
+              >
+                <UserCheck className="h-4 w-4 text-[#0F766E] shrink-0" />
+                <div>
+                  <p className="font-semibold text-[11px] text-slate-800">Procurement Officer</p>
+                  <p className="font-mono text-[10px] text-slate-500">officer@bidsure.demo</p>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => quickLogin('bidder')}
+                className={`flex items-center space-x-2 rounded-[6px] border p-2.5 text-left transition-all ${
+                  email === 'bidder@abctech.demo'
+                    ? 'border-[#0F766E] bg-[#ECFDF3] ring-1 ring-[#0F766E]'
+                    : 'border-slate-200 hover:border-slate-400 hover:bg-white'
+                }`}
+              >
+                <Briefcase className="h-4 w-4 text-[#2563EB] shrink-0" />
+                <div>
+                  <p className="font-semibold text-[11px] text-slate-800">Vendor / Bidder</p>
+                  <p className="font-mono text-[10px] text-slate-500">bidder@abctech.demo</p>
+                </div>
+              </button>
+            </div>
           </div>
         </Card>
       </div>

@@ -10,6 +10,7 @@ import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { tenderService } from '../services/tenderService';
 import { bidService } from '../services/bidService';
 import type { Tender, Bid } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 import {
   FileText,
   Clock,
@@ -22,6 +23,9 @@ import {
   Activity,
   FileCheck,
   AlertCircle,
+  Filter,
+  Sparkles,
+  ExternalLink,
 } from 'lucide-react';
 import {
   BarChart,
@@ -34,10 +38,12 @@ import {
 } from 'recharts';
 
 export const DashboardPage: React.FC = () => {
+  const { user } = useAuth();
   const [tenders, setTenders] = React.useState<Tender[]>([]);
   const [bids, setBids] = React.useState<Bid[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
+  const [filterTab, setFilterTab] = React.useState<'ALL' | 'PENDING' | 'CRITICAL' | 'VERIFIED'>('ALL');
 
   React.useEffect(() => {
     void (async () => {
@@ -65,14 +71,23 @@ export const DashboardPage: React.FC = () => {
     (b) => b.status === 'UNDER_REVIEW' || b.status === 'PENDING' || b.status === 'REVIEW' || b.status === 'SUBMITTED'
   );
   const pendingReviewsCount = pendingReviews.length || Math.min(bids.length, 2);
-  const highRiskCount = bids.filter((b) => b.status === 'REJECTED' || b.status === 'DISQUALIFIED').length || 0;
+  const highRiskBids = bids.filter((b) => b.status === 'REJECTED' || b.status === 'DISQUALIFIED');
+  const highRiskCount = highRiskBids.length || 0;
+  const verifiedBids = bids.filter((b) => b.status === 'QUALIFIED' || b.status === 'APPROVED');
 
   // Chart dataset for compliance distribution
   const chartData = [
-    { name: 'Low Risk', count: Math.max(1, bids.length - highRiskCount - pendingReviewsCount), color: '#15803D' },
-    { name: 'Medium Risk', count: pendingReviewsCount, color: '#B45309' },
-    { name: 'High Risk', count: highRiskCount, color: '#B91C1C' },
+    { name: 'Low Risk / Passed', count: Math.max(1, bids.length - highRiskCount - pendingReviewsCount), color: '#15803D' },
+    { name: 'Under Review', count: pendingReviewsCount, color: '#B45309' },
+    { name: 'High Risk / Failed', count: highRiskCount, color: '#B91C1C' },
   ];
+
+  const filteredBids = React.useMemo(() => {
+    if (filterTab === 'PENDING') return pendingReviews;
+    if (filterTab === 'CRITICAL') return highRiskBids;
+    if (filterTab === 'VERIFIED') return verifiedBids;
+    return bids;
+  }, [bids, filterTab, pendingReviews, highRiskBids, verifiedBids]);
 
   if (loading) {
     return (
@@ -106,25 +121,30 @@ export const DashboardPage: React.FC = () => {
         <div>
           <div className="flex items-center space-x-2 text-xs font-semibold text-[#0F766E]">
             <ShieldCheck className="h-4 w-4" />
-            <span>Procurement Officer Command Center</span>
+            <span>Procurement Officer Command Center · {user?.organization_name || 'Department of Heavy Industries'}</span>
           </div>
           <h1 className="text-2xl font-bold text-[#0F2747] tracking-tight mt-1">
-            Good morning, Officer
+            Good morning, {user?.name || 'Officer'}
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Monitor active tender evaluations, verification progress, and outstanding compliance reviews.
+            Monitor active tender evaluations, AI-assisted evidence verifications, and statutory determinations.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           <Link to="/tenders/new">
-            <Button variant="secondary" size="sm" className="flex items-center space-x-1.5">
+            <Button variant="secondary" size="sm" className="flex items-center space-x-1.5 shadow-2xs font-semibold">
               <span>+ Create Tender</span>
             </Button>
           </Link>
-          <Link to="/tenders">
-            <Button variant="outline" size="sm">
-              View All Tenders
+          <Link to="/bids">
+            <Button variant="outline" size="sm" className="font-medium">
+              View All Bids
+            </Button>
+          </Link>
+          <Link to="/audit">
+            <Button variant="ghost" size="sm" className="text-slate-600 font-medium">
+              Audit Trail
             </Button>
           </Link>
         </div>
@@ -380,34 +400,93 @@ export const DashboardPage: React.FC = () => {
         )}
       </Card>
 
-      {/* Recent Submissions Feed */}
-      <Card title="Recent Bidder Submissions" subtitle="Open a bid to inspect OCR evidence and officer decision options">
-        {bids.length ? (
+      {/* Filterable Bidder Compliance Registry */}
+      <Card
+        title="Bidder Compliance Registry"
+        subtitle="Filter submissions by verification state and launch compliance evaluation cockpit directly"
+        action={
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              onClick={() => setFilterTab('ALL')}
+              className={`px-2.5 py-1 rounded-[4px] text-xs font-semibold transition-colors ${
+                filterTab === 'ALL'
+                  ? 'bg-[#0F2747] text-white shadow-2xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              All ({bids.length})
+            </button>
+            <button
+              onClick={() => setFilterTab('PENDING')}
+              className={`px-2.5 py-1 rounded-[4px] text-xs font-semibold transition-colors ${
+                filterTab === 'PENDING'
+                  ? 'bg-amber-600 text-white shadow-2xs'
+                  : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
+              }`}
+            >
+              Pending ({pendingReviews.length})
+            </button>
+            <button
+              onClick={() => setFilterTab('CRITICAL')}
+              className={`px-2.5 py-1 rounded-[4px] text-xs font-semibold transition-colors ${
+                filterTab === 'CRITICAL'
+                  ? 'bg-red-600 text-white shadow-2xs'
+                  : 'bg-red-50 text-red-700 hover:bg-red-100'
+              }`}
+            >
+              Critical Flags ({highRiskCount})
+            </button>
+            <button
+              onClick={() => setFilterTab('VERIFIED')}
+              className={`px-2.5 py-1 rounded-[4px] text-xs font-semibold transition-colors ${
+                filterTab === 'VERIFIED'
+                  ? 'bg-[#15803D] text-white shadow-2xs'
+                  : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+              }`}
+            >
+              Qualified ({verifiedBids.length})
+            </button>
+          </div>
+        }
+      >
+        {filteredBids.length ? (
           <div className="divide-y divide-slate-100">
-            {bids.slice(0, 5).map((bid) => (
+            {filteredBids.slice(0, 8).map((bid) => (
               <div
                 key={bid.id}
-                className="flex flex-wrap items-center justify-between gap-4 py-3 hover:bg-slate-50/60 transition-colors px-1"
+                className="flex flex-wrap items-center justify-between gap-4 py-3 hover:bg-slate-50/80 transition-colors px-2 rounded-[4px]"
               >
                 <div className="flex items-center space-x-3 min-w-0">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#0F2747]">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#0F2747] shrink-0">
                     <Building2 className="h-4.5 w-4.5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-xs text-slate-900 truncate">
-                      {bid.bidder?.legal_name || `Bidder ID: ${bid.bidder_id}`}
-                    </p>
-                    <p className="text-[11px] text-slate-500 truncate">
+                    <div className="flex items-center space-x-2">
+                      <p className="font-semibold text-xs text-slate-900 truncate">
+                        {bid.bidder?.legal_name || `Bidder ID: ${bid.bidder_id}`}
+                      </p>
+                      {bid.compliance_score !== undefined && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                          {bid.compliance_score}% Score
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 truncate mt-0.5">
                       Quoted: ₹{Number(bid.quoted_amount || 0).toLocaleString('en-IN')} · Tender: {bid.tender?.title || bid.tender_id}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <StatusBadge status={bid.status || 'PENDING'} />
+                  <Link to={`/bids/${bid.id}/verification`}>
+                    <Button size="sm" variant="secondary" className="text-xs py-1 h-7 font-semibold">
+                      Verify Bid →
+                    </Button>
+                  </Link>
                   <Link to={`/bids/${bid.id}`}>
-                    <Button size="sm" variant="ghost" className="text-xs">
-                      Open Bid →
+                    <Button size="sm" variant="outline" className="text-xs py-1 h-7">
+                      Details
                     </Button>
                   </Link>
                 </div>
@@ -415,7 +494,7 @@ export const DashboardPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-slate-500 py-4 text-center">No submitted bids recorded yet.</p>
+          <p className="text-xs text-slate-500 py-6 text-center">No bids matching the selected filter.</p>
         )}
       </Card>
     </div>

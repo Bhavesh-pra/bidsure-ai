@@ -30,6 +30,7 @@ def jwt_required(f):
             "id": payload.get("sub"),
             "organization_id": payload.get("org_id"),
             "role": payload.get("role"),
+            "actor_type": payload.get("actor_type", "GOVERNMENT"),
             "name": payload.get("name"),
         }
         g.current_org_id = payload.get("org_id")
