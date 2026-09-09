@@ -18,7 +18,15 @@ export const DocumentStatusBadge: React.FC<DocumentStatusBadgeProps> = ({ status
     case 'INVALID':
       return <Badge variant="danger">✕ Invalid</Badge>;
     case 'FAILED':
+    case 'PROCESSING_FAILED':
+    case 'CLASSIFICATION_FAILED':
+    case 'EXTRACTION_FAILED':
       return <Badge variant="danger">✕ Failed</Badge>;
+    case 'CLASSIFICATION_PROCESSING':
+    case 'EXTRACTING':
+      return <Badge variant="info">⏳ Processing</Badge>;
+    case 'EXTRACTED':
+      return <Badge variant="success">✓ Extracted</Badge>;
     case 'MISSING':
       return <Badge variant="neutral">○ Missing</Badge>;
     default:
