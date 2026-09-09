@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "cycle": "Cycle 9",
+  "description": "BidSure AI Controlled Document Classification Rules & Reference Taxonomy",
+  "document_types": {
+    "GST_CERTIFICATE": {
+      "display_name": "GST Registration Certificate",
+      "canonical_enum": "GST_CERTIFICATE",
+      "exact_phrases": [
+        "goods and services tax",
+        "registration certificate",
+        "form gst reg-06",
+        "government of india - goods and services tax",
+        "central goods and services tax act",
+        "tax registration certificate",
+        "details of additional places of business"
+      ],
+      "strong_keywords": [
+        "gstin",
+        "taxpayer",
+        "principal place of business",
+        "date of liability",
+        "period of validity",
+        "constitution of business",
+        "state jurisdiction",
+        "centre jurisdiction"
+      ],
+      "supporting_keywords": [
+        "taxable person",
+        "proprietorship",
+        "private limited company",
+        "legal name",
+        "trade name",
+        "arn",
+        "registration number"
+      ],
+      "regex_patterns": [
+        "\\b[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}\\b",
+        "\\bFORM\\s+GST\\s+REG-06\\b"
+      ]
+    },
+    "PAN_DOCUMENT": {
+      "display_name": "Permanent Account Number (PAN) Document",
+      "canonical_enum": "PAN_DOCUMENT",
+      "exact_phrases": [
+        "income tax department",
+        "permanent account number",
+        "permanent account number card",
+        "govt. of india income tax department",
+        "government of india income tax department",
+        "form no. 49a",
+        "nsdl e-governance infrastructure",
+        "uti infrastructure technology and services"
+      ],
+      "strong_keywords": [
+        "father's name",
+        "fathers name",
+        "date of birth",
+        "permanent account",
+        "taxpayer identification",
+        "pan card"
+      ],
+      "supporting_keywords": [
+        "incometax",
+        "signature",
+        "allotment letter",
+        "deputy commissioner of income-tax",
+        "income tax pan"
+      ],
+      "regex_patterns": [
+        "\\b[A-Z]{5}[0-9]{4}[A-Z]{1}\\b"
+      ]
+    },
+    "UDYAM_CERTIFICATE": {
+      "display_name": "MSME Udyam Registration Certificate",
+      "canonical_enum": "UDYAM_CERTIFICATE",
+      "exact_phrases": [
+        "udyam registration certificate",
+        "ministry of micro, small and medium enterprises",
+        "udyam registration number",
+        "uam no",
+        "msme development act",
+        "micro, small and medium enterprises"
+      ],
+      "strong_keywords": [
+        "udyam",
+        "msme",
+        "micro enterprise",
+        "small enterprise",
+        "medium enterprise",
+        "major activity",
+        "enterprise type",
+        "services/manufacturing"
+      ],
+      "supporting_keywords": [
+        "date of incorporation",
+        "national industry classification",
+        "nic 2 digit",
+        "dic",
+        "social category",
+        "dic name"
+      ],
+      "regex_patterns": [
+        "\\bUDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}\\b"
+      ]
+    },
+    "OEM_AUTHORIZATION": {
+      "display_name": "Original Equipment Manufacturer (OEM) Authorization Letter",
+      "canonical_enum": "OEM_AUTHORIZATION",
+      "exact_phrases": [
+        "manufacturers authorization form",
+        "manufacturer authorization form",
+        "manufacturer's authorization",
+        "oem authorization certificate",
+        "oem authorization letter",
+        "authorized distributor",
+        "we hereby authorize",
+        "authorization letter",
+        "original equipment manufacturer authorization"
+      ],
+      "strong_keywords": [
+        "original equipment manufacturer",
+        "oem",
+        "authorized partner",
+        "authorized reseller",
+        "validity of authorization",
+        "tender reference no",
+        "tender ref",
+        "tender no",
+        "bidder name"
+      ],
+      "supporting_keywords": [
+        "warranty support",
+        "letter of authority",
+        "supply and maintain",
+        "back to back warranty",
+        "distributor agreement",
+        "comprehensive warranty"
+      ],
+      "regex_patterns": []
+    },
+    "INCOME_TAX_DOCUMENT": {
+      "display_name": "Income Tax Return Verification / Acknowledgment",
+      "canonical_enum": "INCOME_TAX_DOCUMENT",
+      "exact_phrases": [
+        "indian income tax return acknowledgement",
+        "income tax return verification form",
+        "acknowledgement number",
+        "assessment year",
+        "directorate of income tax (systems)",
+        "centralized processing center",
+        "income tax return"
+      ],
+      "strong_keywords": [
+        "gross total income",
+        "total income",
+        "tax payable",
+        "e-filing",
+        "current year loss",
+        "form 26as",
+        "self assessment tax",
+        "itr-v",
+        "itr 1",
+        "itr 2",
+        "itr 3",
+        "itr 4",
+        "itr 5",
+        "itr 6",
+        "itr 7"
+      ],
+      "supporting_keywords": [
+        "filing section",
+        "due date",
+        "e-verification",
+        "computation of income",
+        "verified by",
+        "advance tax",
+        "refund"
+      ],
+      "regex_patterns": [
+        "\\bITR-[1-7V]\\b",
+        "\\b[0-9]{15}\\b"
+      ]
+    },
+    "FINANCIAL_STATEMENT": {
+      "display_name": "Audited Financial Statement / Balance Sheet",
+      "canonical_enum": "FINANCIAL_STATEMENT",
+      "exact_phrases": [
+        "independent auditor's report",
+        "independent auditors report",
+        "balance sheet as at",
+        "statement of profit and loss",
+        "profit & loss account",
+        "profit and loss statement",
+        "cash flow statement",
+        "chartered accountants",
+        "notes forming part of the financial statements",
+        "to the members of"
+      ],
+      "strong_keywords": [
+        "auditor's report",
+        "balance sheet",
+        "equity and liabilities",
+        "current assets",
+        "non-current assets",
+        "revenue from operations",
+        "net profit",
+        "udin",
+        "statutory audit"
+      ],
+      "supporting_keywords": [
+        "depreciation",
+        "contingent liabilities",
+        "accounting policies",
+        "financial year",
+        "turnover",
+        "share capital",
+        "reserves and surplus",
+        "tangible assets"
+      ],
+      "regex_patterns": [
+        "\\bUDIN\\s*[:\\-]?\\s*[0-9]{2}[0-9]{6}[A-Z0-9]{10}\\b"
+      ]
+    },
+    "TECHNICAL_SPECIFICATION": {
+      "display_name": "Technical Specification & Compliance Statement",
+      "canonical_enum": "TECHNICAL_SPECIFICATION",
+      "exact_phrases": [
+        "technical specification",
+        "technical specifications",
+        "technical compliance statement",
+        "bill of quantities",
+        "datasheet",
+        "specification sheet",
+        "scope of work and technical specifications",
+        "technical compliance matrix",
+        "compliance to technical specifications"
+      ],
+      "strong_keywords": [
+        "compliance sheet",
+        "model number",
+        "operating temperature",
+        "input voltage",
+        "power consumption",
+        "form factor",
+        "datasheet",
+        "technical parameters"
+      ],
+      "supporting_keywords": [
+        "conformance",
+        "test standards",
+        "iso standard",
+        "features",
+        "specifications",
+        "parameter",
+        "offered specification",
+        "compliance status"
+      ],
+      "regex_patterns": []
+    },
+    "MAKE_IN_INDIA_DECLARATION": {
+      "display_name": "Class-I / Class-II Make in India Local Content Declaration",
+      "canonical_enum": "MAKE_IN_INDIA_DECLARATION",
+      "exact_phrases": [
+        "make in india",
+        "local content declaration",
+        "local content certificate",
+        "class-i local supplier",
+        "class-ii local supplier",
+        "public procurement preference to make in india",
+        "ppp-mii order",
+        "declaration of local content"
+      ],
+      "strong_keywords": [
+        "percentage of local content",
+        "local value addition",
+        "location of value addition",
+        "local supplier",
+        "self-certification under make in india",
+        "minimum local content"
+      ],
+      "supporting_keywords": [
+        "self-certification",
+        "indigenous content",
+        "order no. p-45021",
+        "procurement policy division",
+        "domestic content"
+      ],
+      "regex_patterns": []
+    },
+    "STARTUP_CERTIFICATE": {
+      "display_name": "DPIIT Startup India Recognition Certificate",
+      "canonical_enum": "STARTUP_CERTIFICATE",
+      "exact_phrases": [
+        "certificate of recognition",
+        "startup india",
+        "department for promotion of industry and internal trade",
+        "dpiit",
+        "department of industrial policy and promotion",
+        "dipp",
+        "startup recognition certificate"
+      ],
+      "strong_keywords": [
+        "startup recognition",
+        "dpiit recognition",
+        "innovative product",
+        "inter-ministerial board",
+        "entity type",
+        "startup entity"
+      ],
+      "supporting_keywords": [
+        "incorporation date",
+        "startup",
+        "private limited",
+        "scale of innovation",
+        "ten years from date of incorporation"
+      ],
+      "regex_patterns": [
+        "\\bDPIIT\\d{4,8}\\b",
+        "\\bDIPP\\d{4,8}\\b"
+      ]
+    },
+    "NSIC_CERTIFICATE": {
+      "display_name": "NSIC Single Point Registration Scheme Certificate",
+      "canonical_enum": "NSIC_CERTIFICATE",
+      "exact_phrases": [
+        "national small industries corporation",
+        "government purchases enlisting scheme",
+        "single point registration scheme",
+        "nsic - crs",
+        "nsic certificate",
+        "sprs certificate"
+      ],
+      "strong_keywords": [
+        "nsic",
+        "monetary limit",
+        "store details",
+        "registration under sprs",
+        "enterprise category",
+        "store specification"
+      ],
+      "supporting_keywords": [
+        "inspection report",
+        "branch office",
+        "valid up to",
+        "commercial category",
+        "qualitative capacity"
+      ],
+      "regex_patterns": []
+    }
+  }
+}

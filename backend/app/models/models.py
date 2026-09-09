@@ -193,6 +193,7 @@ class Document(db.Model):
     page_count = db.Column(db.Integer, nullable=True)
     description = db.Column(db.String(500), nullable=True)
     processing_status = db.Column(db.String(50), default="UPLOADED", nullable=False)
+    classification_confidence = db.Column(db.Float, nullable=True)
     uploaded_by = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
     updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
@@ -212,6 +213,7 @@ class Document(db.Model):
             "page_count": self.page_count,
             "description": self.description,
             "processing_status": self.processing_status,
+            "classification_confidence": round(self.classification_confidence, 4) if self.classification_confidence is not None else None,
             "uploaded_by": self.uploaded_by,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,

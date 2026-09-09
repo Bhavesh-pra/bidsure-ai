@@ -1,0 +1,162 @@
+[
+  {
+    "id": "SAMPLE-GST-01",
+    "category": "gst",
+    "text_file": "documents/gst/gst_reg06_clean.txt",
+    "pdf_file": "documents/gst/gst_reg06_clean.pdf",
+    "expected_type": "GST_CERTIFICATE",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Clean Form GST REG-06 Registration Certificate"
+  },
+  {
+    "id": "SAMPLE-GST-02",
+    "category": "gst",
+    "text_file": "documents/gst/gst_multipage_annexure.txt",
+    "pdf_file": "documents/gst/gst_multipage_annexure.pdf",
+    "expected_type": "GST_CERTIFICATE",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Multi-page GST Certificate with partner details"
+  },
+  {
+    "id": "SAMPLE-PAN-01",
+    "category": "pan",
+    "text_file": "documents/pan/pan_card_clean.txt",
+    "pdf_file": "documents/pan/pan_card_clean.pdf",
+    "expected_type": "PAN_DOCUMENT",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Income Tax Department Permanent Account Number Card"
+  },
+  {
+    "id": "SAMPLE-PAN-02",
+    "category": "pan",
+    "text_file": "documents/pan/pan_allotment_letter.txt",
+    "pdf_file": "documents/pan/pan_allotment_letter.pdf",
+    "expected_type": "PAN_DOCUMENT",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.8,
+    "description": "Income Tax PAN Allotment Letter under Form 49A"
+  },
+  {
+    "id": "SAMPLE-UDYAM-01",
+    "category": "udyam",
+    "text_file": "documents/udyam/udyam_registration_clean.txt",
+    "pdf_file": "documents/udyam/udyam_registration_clean.pdf",
+    "expected_type": "UDYAM_CERTIFICATE",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Official Udyam Registration Certificate"
+  },
+  {
+    "id": "SAMPLE-OEM-01",
+    "category": "oem",
+    "text_file": "documents/oem/oem_maf_clean.txt",
+    "pdf_file": "documents/oem/oem_maf_clean.pdf",
+    "expected_type": "OEM_AUTHORIZATION",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Manufacturer's Authorization Form (MAF)"
+  },
+  {
+    "id": "SAMPLE-ITR-01",
+    "category": "financial",
+    "text_file": "documents/financial/itr_v_acknowledgement.txt",
+    "pdf_file": "documents/financial/itr_v_acknowledgement.pdf",
+    "expected_type": "INCOME_TAX_DOCUMENT",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Indian Income Tax Return Verification Form (ITR-V)"
+  },
+  {
+    "id": "SAMPLE-FIN-01",
+    "category": "financial",
+    "text_file": "documents/financial/balance_sheet_audited.txt",
+    "pdf_file": "documents/financial/balance_sheet_audited.pdf",
+    "expected_type": "FINANCIAL_STATEMENT",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.85,
+    "description": "Audited Balance Sheet and Auditor's Report with UDIN"
+  },
+  {
+    "id": "SAMPLE-TECH-01",
+    "category": "technical",
+    "text_file": "documents/technical/technical_compliance_sheet.txt",
+    "pdf_file": "documents/technical/technical_compliance_sheet.pdf",
+    "expected_type": "TECHNICAL_SPECIFICATION",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.8,
+    "description": "Technical Specification Compliance Sheet and Datasheet"
+  },
+  {
+    "id": "SAMPLE-MII-01",
+    "category": "make_in_india",
+    "text_file": "documents/make_in_india/mii_local_content_cert.txt",
+    "pdf_file": "documents/make_in_india/mii_local_content_cert.pdf",
+    "expected_type": "MAKE_IN_INDIA_DECLARATION",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.8,
+    "description": "Make in India Local Content Self-Declaration"
+  },
+  {
+    "id": "SAMPLE-STARTUP-01",
+    "category": "startup",
+    "text_file": "documents/startup/dpiit_startup_recognition.txt",
+    "pdf_file": "documents/startup/dpiit_startup_recognition.pdf",
+    "expected_type": "STARTUP_CERTIFICATE",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.8,
+    "description": "DPIIT Startup India Recognition Certificate"
+  },
+  {
+    "id": "SAMPLE-NSIC-01",
+    "category": "nsic",
+    "text_file": "documents/nsic/nsic_sprs_clean.txt",
+    "pdf_file": "documents/nsic/nsic_sprs_clean.pdf",
+    "expected_type": "NSIC_CERTIFICATE",
+    "expected_status": "CLASSIFIED",
+    "min_confidence": 0.8,
+    "description": "NSIC Single Point Registration Scheme Certificate"
+  },
+  {
+    "id": "SAMPLE-EDGE-EMPTY",
+    "category": "unknown",
+    "text_file": "documents/unknown/empty_document.txt",
+    "pdf_file": "documents/unknown/empty_document.pdf",
+    "expected_type": "UNKNOWN",
+    "expected_status": "REVIEW_REQUIRED",
+    "min_confidence": 0.0,
+    "description": "Completely empty 0-word document"
+  },
+  {
+    "id": "SAMPLE-EDGE-RECIPE",
+    "category": "unknown",
+    "text_file": "documents/unknown/chocolate_cake_recipe.txt",
+    "pdf_file": "documents/unknown/chocolate_cake_recipe.pdf",
+    "expected_type": "UNKNOWN",
+    "expected_status": "REVIEW_REQUIRED",
+    "min_confidence": 0.0,
+    "description": "Irrelevant random text (baking recipe)"
+  },
+  {
+    "id": "SAMPLE-EDGE-NOISY",
+    "category": "unknown",
+    "text_file": "documents/unknown/corrupted_noisy_ocr.txt",
+    "pdf_file": "documents/unknown/corrupted_noisy_ocr.pdf",
+    "expected_type": "UNKNOWN",
+    "expected_status": "REVIEW_REQUIRED",
+    "min_confidence": 0.0,
+    "description": "Heavily degraded OCR with dropped characters and noise"
+  },
+  {
+    "id": "SAMPLE-EDGE-AMBIGUOUS",
+    "category": "unknown",
+    "text_file": "documents/unknown/ambiguous_oem_spec.txt",
+    "pdf_file": "documents/unknown/ambiguous_oem_spec.pdf",
+    "expected_type": "UNKNOWN",
+    "expected_status": "REVIEW_REQUIRED",
+    "min_confidence": 0.0,
+    "description": "Mixed ambiguous document with equal OEM and Technical Spec signals"
+  }
+]

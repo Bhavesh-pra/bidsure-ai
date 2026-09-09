@@ -11,6 +11,7 @@ from flask import Blueprint, g, request
 from app.security.decorators import jwt_required, roles_required
 from app.services.document_service import (
     DocumentDomainError,
+    classify_document_pipeline,
     delete_document,
     get_document,
     get_document_pages,
@@ -106,6 +107,27 @@ def document_pages(document_id):
     """Get the page-aware extracted raw text for a document."""
     try:
         result = get_document_pages(document_id, g.current_org_id)
+        return success_response(result, 200)
+    except DocumentDomainError as exc:
+        return error_response(exc.code, exc.message, exc.status_code)
+
+
+@bid_documents_bp.post("/documents/<string:document_id>/classify")
+@jwt_required
+@roles_required("PROCUREMENT_OFFICER", "ADMIN")
+def classify_document(document_id):
+    """Trigger the Cycle 9 Document Classification pipeline for a document."""
+    payload = request.get_json(silent=True) or {}
+    force_ocr = payload.get("force_ocr", False)
+    threshold = payload.get("confidence_threshold")
+
+    try:
+        result = classify_document_pipeline(
+            document_id=document_id,
+            org_id=g.current_org_id,
+            force_ocr=force_ocr,
+            confidence_threshold=threshold,
+        )
         return success_response(result, 200)
     except DocumentDomainError as exc:
         return error_response(exc.code, exc.message, exc.status_code)

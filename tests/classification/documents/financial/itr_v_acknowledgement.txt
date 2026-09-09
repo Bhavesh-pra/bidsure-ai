@@ -1,0 +1,10 @@
+INDIAN INCOME TAX RETURN ACKNOWLEDGEMENT
+Income Tax Return Verification Form (ITR-V)
+Assessment Year: 2025-26
+Acknowledgement Number: 123456789012345
+PAN: AABCA1234F
+Name: APEX INFOTECH SYSTEMS PRIVATE LIMITED
+Filing Section: 139(1)
+Gross Total Income: Rs. 5,20,00,000
+Total Tax Payable: Rs. 1,30,00,000
+Directorate of Income Tax (Systems), Centralized Processing Center, Bengaluru

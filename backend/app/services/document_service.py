@@ -13,6 +13,7 @@ from app.models.models import db, Bid, Document, DocumentPage
 from app.services.file_validator import validate_file, FileValidationError
 from app.services.storage import get_storage_service, build_storage_key
 from app.services.ocr import OCRService
+from app.services.classification import DocumentClassifier, ClassifierConfig, get_classifier
 
 
 class DocumentDomainError(Exception):
@@ -275,4 +276,86 @@ def get_document_pages(document_id: str, org_id: str) -> dict:
         "page_count": document.page_count or len(pages),
         "pages": [p.to_dict() for p in pages],
     }
+
+
+def classify_document_pipeline(
+    document_id: str,
+    org_id: str,
+    force_ocr: bool = False,
+    confidence_threshold: float | None = None,
+) -> dict:
+    """
+    Executes Cycle 9 Document Classification on an ingested document.
+
+    If OCR has not yet been executed (or if force_ocr=True), automatically
+    triggers the Cycle 8 OCR pipeline first to populate DocumentPage records.
+    Then executes the deterministic DocumentClassifier, persists document_type,
+    classification_confidence, and updates processing_status.
+    """
+    document = _get_document_with_auth(document_id, org_id)
+
+    # 1. Automatic OCR Chaining: Ensure OCR text pages exist
+    pages = (
+        DocumentPage.query
+        .filter_by(document_id=document.id)
+        .order_by(DocumentPage.page_number.asc())
+        .all()
+    )
+
+    if not pages or force_ocr:
+        # Auto-chain Cycle 8 OCR
+        process_document_pipeline(document_id, org_id)
+        pages = (
+            DocumentPage.query
+            .filter_by(document_id=document.id)
+            .order_by(DocumentPage.page_number.asc())
+            .all()
+        )
+
+    # 2. State Transition to CLASSIFICATION_PROCESSING
+    document.processing_status = "CLASSIFICATION_PROCESSING"
+    db.session.commit()
+
+    # 3. Setup Classifier and Extract Texts
+    classifier = get_classifier()
+    if confidence_threshold is not None:
+        classifier = DocumentClassifier(config=ClassifierConfig(confidence_threshold=confidence_threshold))
+
+    page_texts = [p.raw_text for p in pages] if pages else []
+    combined_text = "\n\n--- PAGE BREAK ---\n\n".join(page_texts) if page_texts else ""
+
+    # 4. Execute Classification
+    try:
+        result = classifier.classify(combined_text, document_id=document.id, pages=page_texts)
+
+        doc_type_val = (
+            result.document_type.value if hasattr(result.document_type, "value") else str(result.document_type)
+        )
+        status_val = (
+            result.status.value if hasattr(result.status, "value") else str(result.status)
+        )
+
+        # 5. Persist Classification Result in Database
+        document.document_type = doc_type_val
+        document.classification_confidence = round(result.confidence, 4)
+        document.processing_status = status_val  # "CLASSIFIED" or "REVIEW_REQUIRED"
+        db.session.commit()
+
+        return {
+            "document_id": document.id,
+            "bid_id": document.bid_id,
+            "document_type": document.document_type,
+            "classification_confidence": document.classification_confidence,
+            "status": document.processing_status,
+            "method": result.method.value if hasattr(result.method, "value") else str(result.method),
+            "matched_signals": result.matched_signals,
+            "scores_by_type": {k: round(v, 4) for k, v in result.scores_by_type.items()},
+            "review_reason": result.review_reason,
+            "classified_at": result.classified_at,
+        }
+    except Exception as exc:
+        db.session.rollback()
+        document.processing_status = "CLASSIFICATION_FAILED"
+        db.session.commit()
+        raise DocumentDomainError(f"Document classification failed: {str(exc)}", "CLASSIFICATION_FAILED", 500)
 

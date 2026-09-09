@@ -1,0 +1,11 @@
+TECHNICAL SPECIFICATION AND COMPLIANCE STATEMENT
+Tender Reference: TND/2026/001 - Supply of Enterprise Core Switches
+Product Datasheet & Specification Sheet
+
+Item 1: Layer-3 Enterprise Switch
+Model Number: CS-9300-48P
+Operating Temperature: 0 to 45 deg C
+Input Voltage: 100-240 VAC, 50/60 Hz
+Power Consumption: 450W Maximum
+Form Factor: 1RU Rack Mountable
+Compliance Status: Compliant with IEEE 802.3 standards, ISO 9001 quality assurance
