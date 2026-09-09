@@ -1,0 +1,8 @@
+{
+  "document": "GST-001",
+  "expected": {
+    "gstin": "27ABCDE1234F1Z5",
+    "legal_name": "ABC TECHNOLOGIES PVT LTD",
+    "status": "ACTIVE"
+  }
+}

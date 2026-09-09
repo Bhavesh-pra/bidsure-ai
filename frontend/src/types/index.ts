@@ -77,6 +77,8 @@ export { DOCUMENT_TYPE_LABELS, EXPECTED_BID_DOCUMENTS } from './document';
 
 export interface Evidence {
   id: string;
+  evidence_id?: string;
+  bid_id?: string;
   document_id: string;
   requirement_id?: string;
   field: string;
@@ -85,6 +87,10 @@ export interface Evidence {
   page?: number;
   extraction_method: 'OCR_LLM' | 'OCR_TESSERACT' | 'REGEX' | 'MANUAL_ENTRY' | 'BARCODE_QR' | string;
   confidence: number;
+  confidence_level?: 'HIGH' | 'MEDIUM' | 'LOW' | string;
+  source_type?: string;
+  status?: string;
+  captured_at?: string;
 }
 
 export type VerificationStatus =

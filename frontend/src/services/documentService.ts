@@ -73,6 +73,11 @@ export const documentService = {
     return response as unknown as ApiResponse<Document>;
   },
 
+  async extractDocument(documentId: string) {
+    const response = await apiClient.post(`/documents/${documentId}/extract`);
+    return response as unknown as ApiResponse<{ document_id: string; fields: import('../types').Evidence[]; extraction_status: string }>;
+  },
+
   /**
    * Delete a document (both file storage and database record).
    */

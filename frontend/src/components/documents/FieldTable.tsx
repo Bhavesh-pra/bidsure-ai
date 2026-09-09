@@ -1,0 +1,5 @@
+import React from 'react';
+import type { Evidence } from '../../types';
+import { ConfidenceLevelBadge } from './ConfidenceLevelBadge';
+export const FieldTable: React.FC<{ fields: Evidence[] }> = ({ fields }) => <div className="overflow-x-auto rounded-lg border border-slate-200"><table className="min-w-full divide-y divide-slate-200 text-sm"><thead className="bg-slate-50"><tr><th className="px-4 py-3 text-left">Field</th><th className="px-4 py-3 text-left">Value</th><th className="px-4 py-3 text-left">Confidence</th><th className="px-4 py-3 text-left">Page</th></tr></thead><tbody className="divide-y divide-slate-100 bg-white">{fields.map((field) => <tr key={field.id}><td className="px-4 py-3 font-medium">{field.field.replace(/_/g, ' ')}</td><td className="px-4 py-3">{String(field.normalized_value ?? field.value)}</td><td className="px-4 py-3"><ConfidenceLevelBadge confidence={field.confidence} /></td><td className="px-4 py-3">{field.page ?? '—'}</td></tr>)}</tbody></table></div>;
+export default FieldTable;

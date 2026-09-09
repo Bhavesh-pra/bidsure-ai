@@ -49,6 +49,7 @@ export const BidDetailsPage: React.FC = () => {
   const [actionError, setActionError] = useState<string | null>(null);
   const [processingDocId, setProcessingDocId] = useState<string | null>(null);
   const [classifyingDocId, setClassifyingDocId] = useState<string | null>(null);
+  const [extractingDocId, setExtractingDocId] = useState<string | null>(null);
   const [ocrDocument, setOcrDocument] = useState<Document | null>(null);
   const [ocrPages, setOcrPages] = useState<import('../types').OCRPage[]>([]);
 
@@ -147,6 +148,20 @@ export const BidDetailsPage: React.FC = () => {
     }
   };
 
+  const handleExtractDocument = async (doc: Document) => {
+    setExtractingDocId(doc.id);
+    setActionError(null);
+    try {
+      const response = await documentService.extractDocument(doc.id);
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, processing_status: response.data.extraction_status } : item));
+    } catch (err: any) {
+      setActionError(err?.message || 'Evidence extraction failed.');
+      setDocuments((prev) => prev.map((item) => item.id === doc.id ? { ...item, processing_status: 'EXTRACTION_FAILED' } : item));
+    } finally {
+      setExtractingDocId(null);
+    }
+  };
+
   const handleDeleteDocument = async (doc: Document) => {
     const confirmDelete = window.confirm(
       `Are you sure you want to delete "${doc.original_filename}"? This action cannot be undone.`
@@ -211,6 +226,7 @@ export const BidDetailsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-3">
+          <Link to={`/bids/${bid.id}/evidence`}><Button variant="outline">View Evidence</Button></Link>
           <Button
             variant="primary"
             onClick={() => handleOpenUploadModal()}
@@ -336,6 +352,8 @@ export const BidDetailsPage: React.FC = () => {
                 onViewOCR={handleViewOCR}
                 onClassify={handleClassifyDocument}
                 isClassifying={classifyingDocId === doc.id}
+                onExtract={handleExtractDocument}
+                isExtracting={extractingDocId === doc.id}
               />
             ))}
           </div>

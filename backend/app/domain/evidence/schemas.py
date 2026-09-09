@@ -1,6 +1,7 @@
 import uuid
 from enum import Enum
-from typing import Optional, Union
+from datetime import datetime
+from typing import List, Optional, Union
 from pydantic import BaseModel, Field, ConfigDict
 
 def generate_evidence_id() -> str:
@@ -28,5 +29,35 @@ class EvidenceSchema(BaseModel):
         ExtractionMethod.OCR_LLM, description="Extraction mechanism utilized"
     )
     source_type: Optional[str] = Field("BIDDER_DOCUMENT", description="Source classification")
+
+    model_config = ConfigDict(use_enum_values=True)
+
+
+class EvidenceField(BaseModel):
+    """One page-aware, normalized field extracted from an untrusted document."""
+    field: str = Field(..., min_length=1, max_length=100)
+    value: Union[str, float, int, bool] = Field(...)
+    normalized_value: Optional[Union[str, float, int, bool]] = None
+    page: int = Field(..., ge=1)
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    source: str = "BIDDER_DOCUMENT"
+
+    @property
+    def confidence_level(self) -> str:
+        if self.confidence >= 0.9:
+            return "HIGH"
+        if self.confidence >= 0.7:
+            return "MEDIUM"
+        return "LOW"
+
+
+class StructuredEvidence(BaseModel):
+    document_id: str
+    document_type: str
+    fields: List[EvidenceField] = Field(default_factory=list)
+    extraction_method: ExtractionMethod = ExtractionMethod.REGEX
+    processing_version: str = "cycle-10-v1"
+    extraction_status: str = "EXTRACTED"
+    extracted_at: Optional[datetime] = None
 
     model_config = ConfigDict(use_enum_values=True)

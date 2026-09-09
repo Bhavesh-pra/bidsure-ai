@@ -19,3 +19,8 @@ export * from './ConfidenceBadge';
 export * from './ClassificationStatus';
 export * from './DocumentDetailsCard';
 export * from './DocumentInventoryTable';
+export * from './ConfidenceLevelBadge';
+export * from './EvidenceFieldCard';
+export * from './ExtractionStatus';
+export * from './DocumentSourceButton';
+export * from './FieldTable';

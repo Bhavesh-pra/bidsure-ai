@@ -1,0 +1,8 @@
+{
+  "document": "UDYAM-001",
+  "expected": {
+    "udyam_registration_number": "UDYAMMH000000000",
+    "enterprise_name": "ABC TECHNOLOGIES PVT LTD",
+    "organization_type": "PRIVATE LIMITED"
+  }
+}

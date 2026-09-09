@@ -1,0 +1,8 @@
+{
+  "document": "PAN-001",
+  "expected": {
+    "pan": "ABCDE1234F",
+    "name": "ABC TECHNOLOGIES PVT LTD",
+    "date_of_birth_or_incorporation": "2018-04-12"
+  }
+}

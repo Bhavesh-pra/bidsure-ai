@@ -19,6 +19,8 @@ export interface DocumentCardProps {
   onViewOCR?: (document: Document) => void;
   onClassify?: (document: Document) => void;
   isClassifying?: boolean;
+  onExtract?: (document: Document) => void;
+  isExtracting?: boolean;
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -31,6 +33,8 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   onViewOCR,
   onClassify,
   isClassifying = false,
+  onExtract,
+  isExtracting = false,
 }) => {
   const typeLabel =
     DOCUMENT_TYPE_LABELS[document.document_type as DocumentType] ||
@@ -128,6 +132,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
         )}
         {onClassify && document.processing_status === 'PROCESSED' && (!document.classification_status || document.classification_status === 'UNKNOWN' || document.classification_status === 'FAILED') && (
           <Button variant="secondary" size="sm" onClick={() => onClassify(document)} disabled={isClassifying}>{isClassifying ? 'Classifying…' : 'Classify'}</Button>
+        )}
+        {onExtract && document.processing_status === 'CLASSIFIED' && (
+          <Button variant="primary" size="sm" onClick={() => onExtract(document)} disabled={isExtracting}>{isExtracting ? 'Extracting…' : 'Extract Evidence'}</Button>
         )}
         {onDelete && (
           <Button

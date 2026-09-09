@@ -177,6 +177,44 @@ class Bid(db.Model):
     updated_at = db.Column(db.DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     documents = db.relationship("Document", backref="bid", lazy=True)
+    evidence = db.relationship("Evidence", backref="bid", lazy=True, cascade="all, delete-orphan")
+
+
+class Evidence(db.Model):
+    __tablename__ = "evidence"
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    bid_id = db.Column(db.String(36), db.ForeignKey("bids.id", ondelete="CASCADE"), nullable=False, index=True)
+    document_id = db.Column(db.String(36), db.ForeignKey("documents.id", ondelete="CASCADE"), nullable=False, index=True)
+    requirement_id = db.Column(db.String(36), db.ForeignKey("requirements.id"), nullable=True, index=True)
+    field = db.Column(db.String(100), nullable=False)
+    value = db.Column(db.JSON, nullable=False)
+    normalized_value = db.Column(db.JSON, nullable=True)
+    page = db.Column(db.Integer, nullable=False)
+    source_type = db.Column(db.String(50), nullable=False, default="BIDDER_DOCUMENT")
+    extraction_method = db.Column(db.String(50), nullable=False, default="REGEX")
+    confidence = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(30), nullable=False, default="EXTRACTED")
+    captured_at = db.Column(db.DateTime, default=get_utc_now, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "evidence_id": self.id,
+            "bid_id": self.bid_id,
+            "document_id": self.document_id,
+            "requirement_id": self.requirement_id,
+            "field": self.field,
+            "value": self.value,
+            "normalized_value": self.normalized_value,
+            "page": self.page,
+            "source_type": self.source_type,
+            "extraction_method": self.extraction_method,
+            "confidence": self.confidence,
+            "confidence_level": "HIGH" if self.confidence >= 0.9 else "MEDIUM" if self.confidence >= 0.7 else "LOW",
+            "status": self.status,
+            "captured_at": self.captured_at.isoformat() if self.captured_at else None,
+        }
 
 class Document(db.Model):
     __tablename__ = "documents"
@@ -206,6 +244,7 @@ class Document(db.Model):
             "bid_id": self.bid_id,
             "tender_id": self.tender_id,
             "document_type": self.document_type,
+            "classified_document_type": self.document_type if self.processing_status in ("CLASSIFIED", "REVIEW_REQUIRED", "EXTRACTING", "EXTRACTED") else None,
             "original_filename": self.original_filename,
             "mime_type": self.mime_type,
             "size_bytes": self.size_bytes,
@@ -214,6 +253,7 @@ class Document(db.Model):
             "description": self.description,
             "processing_status": self.processing_status,
             "classification_confidence": round(self.classification_confidence, 4) if self.classification_confidence is not None else None,
+            "classification_status": self.processing_status if self.processing_status in ("CLASSIFIED", "REVIEW_REQUIRED", "CLASSIFICATION_PROCESSING", "CLASSIFICATION_FAILED", "EXTRACTING", "EXTRACTED", "EXTRACTION_FAILED") else None,
             "uploaded_by": self.uploaded_by,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -251,4 +291,3 @@ class DocumentPage(db.Model):
             "processing_metadata": self.processing_metadata or {},
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
-
