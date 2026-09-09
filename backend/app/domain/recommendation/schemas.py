@@ -1,16 +1,26 @@
+from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from app.domain.verification.schemas import VerificationStatus
+
+class RecommendationStatus(str, Enum):
+    ACCEPT = "ACCEPT"
+    REJECT = "REJECT"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
 
 class RecommendationSchema(BaseModel):
-    id: str = Field(..., description="Unique recommendation ID")
-    bid_id: str = Field(..., description="Target Bid ID")
-    status: VerificationStatus = Field(..., description="Recommended qualification status")
-    rationale: str = Field(..., description="Explainable rationale backing the AI recommendation")
-    supporting_findings: List[str] = Field(default_factory=list, description="IDs of supporting findings")
-    generated_by: str = Field("LLM_SERVICE", description="Generator system indicator")
-    model: Optional[str] = Field("gpt-4o-mini", description="LLM model used")
-    model_version: Optional[str] = Field("1.0", description="Model version")
+    status: RecommendationStatus = Field(..., description="AI Recommendation status")
+    rationale: str = Field(..., description="Justification and explanation of recommendation")
+    supporting_findings: List[str] = Field(default_factory=list, description="IDs or keys of findings supporting recommendation")
+    officer_override_note: Optional[str] = Field(None, description="Space reserved for Human Procurement Officer decision notes")
 
-    class Config:
-        use_enum_values = True
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "status": "REVIEW_REQUIRED",
+                "rationale": "OEM authorization requires manual review.",
+                "supporting_findings": [
+                    "FIND-001"
+                ]
+            }
+        }
+    }

@@ -1,37 +1,44 @@
 from enum import Enum
-from typing import Optional, Union
+from typing import List, Optional
+from datetime import datetime
 from pydantic import BaseModel, Field
+from app.domain.requirement.schemas import RequirementSchema
 
-class RequirementCategory(str, Enum):
-    STATUTORY = "STATUTORY"
-    FINANCIAL = "FINANCIAL"
-    TECHNICAL = "TECHNICAL"
-    REGISTRATION = "REGISTRATION"
-    DOCUMENT = "DOCUMENT"
-    ELIGIBILITY = "ELIGIBILITY"
+class TenderStatus(str, Enum):
+    DRAFT = "DRAFT"
+    PUBLISHED = "PUBLISHED"
+    EVALUATION = "EVALUATION"
+    AWARDED = "AWARDED"
+    CLOSED = "CLOSED"
 
-class ComparisonOperator(str, Enum):
-    EQUALS = "=="
-    NOT_EQUALS = "!="
-    GREATER_THAN_OR_EQUAL = ">="
-    LESS_THAN_OR_EQUAL = "<="
-    CONTAINS = "CONTAINS"
-    EXISTS = "EXISTS"
+class TenderVersionSchema(BaseModel):
+    version_id: str
+    version_number: int = 1
+    published_at: datetime = Field(default_factory=datetime.utcnow)
+    requirements: List[RequirementSchema] = Field(default_factory=list)
 
-class RequirementSchema(BaseModel):
-    id: str = Field(..., description="Unique requirement identifier, e.g. REQ-001")
-    title: str = Field(..., description="Short title of the requirement")
-    description: Optional[str] = Field(None, description="Detailed description or clause text")
-    category: RequirementCategory = Field(..., description="Domain category")
-    mandatory: bool = Field(True, description="Whether requirement is compulsory for qualification")
-    applicability: str = Field("ALL_BIDDERS", description="Applicability scope or exception rule")
-    operator: Optional[ComparisonOperator] = Field(None, description="Deterministic rule comparison operator")
-    expected_value: Optional[Union[str, float, int, bool]] = Field(None, description="Target value for evaluation")
-    unit: Optional[str] = Field(None, description="Unit of measurement, e.g. INR, Years, Days")
-    evaluation_period: Optional[str] = Field(None, description="Evaluation period reference, e.g. FY 2024-25")
-    source_clause: Optional[str] = Field(None, description="Tender document clause reference")
-    source_page: Optional[int] = Field(None, description="Page number in tender PDF")
-    confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="LLM extraction confidence score")
+class TenderSchema(BaseModel):
+    id: str = Field(..., description="Tender ID e.g. TND-2026-001")
+    title: str = Field(..., description="Title of the procurement tender")
+    organization_id: str = Field(..., description="Issuing organization ID")
+    category: str = Field(..., description="Tender domain category e.g. IT_INFRASTRUCTURE")
+    estimated_value: float = Field(..., description="Estimated budget/value in INR")
+    currency: str = Field("INR", description="Currency code")
+    closing_date: datetime = Field(..., description="Tender submission deadline")
+    status: TenderStatus = Field(TenderStatus.PUBLISHED, description="Current tender lifecycle status")
+    current_version: Optional[TenderVersionSchema] = Field(None, description="Active tender version and requirement specifications")
 
-    class Config:
-        use_enum_values = True
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "id": "TND-2026-001",
+                "title": "Supply and Installation of Server Infrastructure",
+                "organization_id": "ORG-001",
+                "category": "IT_INFRASTRUCTURE",
+                "estimated_value": 50000000.0,
+                "currency": "INR",
+                "closing_date": "2026-10-31T17:00:00Z",
+                "status": "PUBLISHED"
+            }
+        }
+    }

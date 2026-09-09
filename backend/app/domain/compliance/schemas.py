@@ -1,21 +1,28 @@
-from typing import List, Optional, Any
+from enum import Enum
+from typing import Optional
 from pydantic import BaseModel, Field
-from app.domain.tender.schemas import RequirementSchema
-from app.domain.evidence.schemas import EvidenceSchema
-from app.domain.verification.schemas import VerificationSchema, VerificationStatus
 
-class RuleInput(BaseModel):
-    requirement: RequirementSchema
-    evidence: List[EvidenceSchema] = []
-    verifications: List[VerificationSchema] = []
+class ComplianceStatus(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
+    NOT_APPLICABLE = "NOT_APPLICABLE"
+    EVIDENCE_MISSING = "EVIDENCE_MISSING"
+    UNABLE_TO_VERIFY = "UNABLE_TO_VERIFY"
 
-class RuleOutput(BaseModel):
-    requirement_id: str
-    status: VerificationStatus
-    score: float = Field(..., ge=0.0, le=1.0, description="Normalized compliance score 0.0 to 1.0")
-    reason: str = Field(..., description="Explainable justification of compliance determination")
-    supporting_evidence_ids: List[str] = []
-    requires_manual_review: bool = False
+class ComplianceResultSchema(BaseModel):
+    requirement_id: str = Field(..., description="ID of requirement evaluated e.g. REQ-001")
+    status: ComplianceStatus = Field(..., description="Deterministic compliance status")
+    score: float = Field(0.0, description="Compliance score for this requirement")
+    finding: Optional[str] = Field(None, description="Detailed explanation or finding if non-compliant")
 
-    class Config:
-        use_enum_values = True
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "requirement_id": "REQ-001",
+                "status": "PASS",
+                "score": 15,
+                "finding": None
+            }
+        }
+    }
