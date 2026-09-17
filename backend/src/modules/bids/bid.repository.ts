@@ -19,6 +19,10 @@ export class BidRepository {
     if (tenderId) {
       where.tenderId = tenderId;
     }
+    // Bidder isolation: Bidder only sees their own bids
+    if (tenant?.role === "BIDDER" && tenant.bidderId) {
+      where.bidderId = tenant.bidderId;
+    }
 
     const [total, items] = await Promise.all([
       prisma.bid.count({ where }),
@@ -59,9 +63,14 @@ export class BidRepository {
 
   /** Find single bid by ID with full relations */
   async findById(id: string, tenant?: TenantContext) {
-    const where = tenant?.organizationId
+    const where: Prisma.BidWhereInput = tenant?.organizationId
       ? { id, organizationId: tenant.organizationId }
       : { id };
+
+    // Bidder isolation: Bidder only accesses their own bids
+    if (tenant?.role === "BIDDER" && tenant.bidderId) {
+      where.bidderId = tenant.bidderId;
+    }
 
     return prisma.bid.findFirst({
       where,

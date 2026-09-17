@@ -1,4 +1,4 @@
-﻿import type { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { bidService, BidService } from "./bid.service.js";
 import { getBidsQuerySchema, bidIdParamSchema } from "./bid.schemas.js";
 import { ValidationError } from "../../shared/errors/app-error.js";
@@ -23,7 +23,7 @@ export class BidController {
       }
 
       const { page, pageSize, tenderId } = queryParse.data;
-      const result = await this.service.listBids({ page, pageSize, tenderId });
+      const result = await this.service.listBids({ page, pageSize, tenderId }, req.tenant);
 
       const response: PaginatedResponse<BidDTO> = {
         success: true,
@@ -52,7 +52,7 @@ export class BidController {
         );
       }
 
-      const bid = await this.service.getBidById(paramParse.data.id);
+      const bid = await this.service.getBidById(paramParse.data.id, req.tenant);
 
       const response: ApiResponse<BidDTO> = {
         success: true,

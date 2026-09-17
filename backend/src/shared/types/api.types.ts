@@ -1,6 +1,7 @@
 export interface ApiResponse<T = unknown> {
   success: true;
   data: T;
+  meta?: Record<string, unknown>;
   requestId: string;
 }
 
@@ -27,11 +28,20 @@ export interface PaginationMeta {
   pageSize: number;
   total: number;
   totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  hasNext?: boolean;
+  hasPrev?: boolean;
+}
+
+export interface CollectionMeta extends PaginationMeta {
+  pagination: PaginationMeta;
+  [key: string]: unknown;
 }
 
 export interface PaginatedResponse<T = unknown> {
   success: true;
   data: T[];
-  meta: PaginationMeta;
+  meta: CollectionMeta;
   requestId: string;
 }

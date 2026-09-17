@@ -1,6 +1,7 @@
 import { bidRepository, BidRepository } from "./bid.repository.js";
 import { NotFoundError } from "../../shared/errors/app-error.js";
 import type { PaginationParams, TenantContext, BidDTO } from "./bid.types.js";
+import { buildCollectionMeta } from "../../shared/pagination/pagination.helper.js";
 
 export class BidService {
   constructor(private readonly repository: BidRepository = bidRepository) {}
@@ -11,7 +12,6 @@ export class BidService {
     tenant?: TenantContext | undefined
   ) {
     const { total, items } = await this.repository.findMany(params, tenant);
-    const totalPages = Math.ceil(total / params.pageSize) || 0;
 
     const formatted: BidDTO[] = items.map((b) => ({
       id: b.id,
@@ -33,12 +33,7 @@ export class BidService {
 
     return {
       items: formatted,
-      meta: {
-        page: params.page,
-        pageSize: params.pageSize,
-        total,
-        totalPages,
-      },
+      meta: buildCollectionMeta(total, params.page, params.pageSize),
     };
   }
 

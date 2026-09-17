@@ -3,6 +3,8 @@ import { OfficerLayout, BidderLayout, AuthLayout } from "@/components/layout";
 import { LoginPage } from "@/features/auth/login-page";
 import { RegisterPage } from "@/features/auth/register-page";
 import { ProfilePage } from "@/features/auth/profile-page";
+import { ProtectedRoute } from "@/features/auth/protected-route";
+import { ForbiddenPage } from "@/features/error/forbidden-page";
 
 import { OfficerDashboardPage } from "@/features/dashboard/officer-dashboard-page";
 import { BidderDashboardPage } from "@/features/dashboard/bidder-dashboard-page";
@@ -41,6 +43,11 @@ export const router = createBrowserRouter([
     path: "/error-test",
     element: <ErrorTestPage />,
   },
+  // Phase 04 — Access Forbidden page
+  {
+    path: "/403",
+    element: <ForbiddenPage />,
+  },
   {
     path: "/",
     element: <LandingPage />,
@@ -56,7 +63,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/officer",
-    element: <OfficerLayout />,
+    element: (
+      <ProtectedRoute allowedRoles={["PROCUREMENT_OFFICER", "REVIEWER", "AUDITOR", "ADMIN"]}>
+        <OfficerLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { path: "dashboard", element: <OfficerDashboardPage /> },
       { path: "tenders", element: <OfficerTendersPage /> },
@@ -77,7 +88,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/bidder",
-    element: <BidderLayout />,
+    element: (
+      <ProtectedRoute allowedRoles={["BIDDER"]}>
+        <BidderLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { path: "dashboard", element: <BidderDashboardPage /> },
       { path: "tenders", element: <BidderTendersPage /> },

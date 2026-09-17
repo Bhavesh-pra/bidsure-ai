@@ -1,4 +1,4 @@
-﻿import type { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { tenderService, TenderService } from "./tender.service.js";
 import {
   getTendersQuerySchema,
@@ -27,7 +27,7 @@ export class TenderController {
       }
 
       const { page, pageSize } = queryParse.data;
-      const result = await this.service.listTenders({ page, pageSize });
+      const result = await this.service.listTenders({ page, pageSize }, req.tenant);
 
       const response: PaginatedResponse<TenderDTO> = {
         success: true,
@@ -56,7 +56,7 @@ export class TenderController {
         );
       }
 
-      const tender = await this.service.getTenderById(paramParse.data.id);
+      const tender = await this.service.getTenderById(paramParse.data.id, req.tenant);
 
       const response: ApiResponse<TenderDTO> = {
         success: true,
@@ -84,7 +84,7 @@ export class TenderController {
         );
       }
 
-      const created = await this.service.createTender(bodyParse.data);
+      const created = await this.service.createTender(bodyParse.data, req.tenant);
 
       const response: ApiResponse<TenderDTO> = {
         success: true,

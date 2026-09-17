@@ -1,6 +1,4 @@
-export interface TenantContext {
-  organizationId: string;
-}
+export type { TenantContext } from "../../shared/auth/tenant-context.js";
 
 export interface PaginationParams {
   page: number;

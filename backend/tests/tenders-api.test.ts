@@ -1,4 +1,4 @@
-﻿import { describe, it, before, after } from "node:test";
+import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
@@ -9,6 +9,7 @@ import type { TenderDTO } from "../src/modules/tenders/tender.types.js";
 describe("Phase 03 — Persistent Tender API", () => {
   let server: Server;
   let baseUrl: string;
+  let authCookie: string;
 
   before(async () => {
     const app = createApp();
@@ -19,6 +20,18 @@ describe("Phase 03 — Persistent Tender API", () => {
         resolve();
       });
     });
+
+    // Authenticate as Officer to obtain HttpOnly session cookie
+    const loginRes = await fetch(`${baseUrl}/api/v1/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "officer@nhai.bidsure.test",
+        password: "Officer@123",
+      }),
+    });
+    const setCookie = loginRes.headers.get("set-cookie");
+    authCookie = setCookie ? setCookie.split(";")[0]! : "";
   });
 
   after(async () => {
@@ -28,7 +41,9 @@ describe("Phase 03 — Persistent Tender API", () => {
   });
 
   it("GET /api/v1/tenders should return paginated list of tenders with standard envelope", async () => {
-    const res = await fetch(`${baseUrl}/api/v1/tenders?page=1&pageSize=5`);
+    const res = await fetch(`${baseUrl}/api/v1/tenders?page=1&pageSize=5`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 200);
 
     const body = (await res.json()) as PaginatedResponse<TenderDTO>;
@@ -57,7 +72,10 @@ describe("Phase 03 — Persistent Tender API", () => {
 
     const res = await fetch(`${baseUrl}/api/v1/tenders`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: authCookie,
+      },
       body: JSON.stringify(payload),
     });
     assert.equal(res.status, 201);
@@ -71,7 +89,9 @@ describe("Phase 03 — Persistent Tender API", () => {
     assert.ok(body.requestId.startsWith("req_"));
 
     // Verify it is retrievable by ID
-    const getRes = await fetch(`${baseUrl}/api/v1/tenders/${body.data.id}`);
+    const getRes = await fetch(`${baseUrl}/api/v1/tenders/${body.data.id}`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(getRes.status, 200);
     const getBody = (await getRes.json()) as ApiResponse<TenderDTO>;
     assert.equal(getBody.data.id, body.data.id);
@@ -83,7 +103,10 @@ describe("Phase 03 — Persistent Tender API", () => {
   it("POST /api/v1/tenders should reject invalid payload with VALIDATION_ERROR (400)", async () => {
     const res = await fetch(`${baseUrl}/api/v1/tenders`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: authCookie,
+      },
       body: JSON.stringify({
         title: "X", // too short
         referenceNumber: "invalid spaces ref#",
@@ -100,7 +123,10 @@ describe("Phase 03 — Persistent Tender API", () => {
   it("POST /api/v1/tenders should reject duplicate reference number with CONFLICT (409)", async () => {
     const res = await fetch(`${baseUrl}/api/v1/tenders`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: authCookie,
+      },
       body: JSON.stringify({
         title: "Duplicate Reference Test",
         referenceNumber: "TDR-2026-DEL-001", // already in seed
@@ -115,7 +141,9 @@ describe("Phase 03 — Persistent Tender API", () => {
 
   it("GET /api/v1/tenders/:id should return 404 for nonexistent UUID", async () => {
     const nonExistentUuid = "99999999-9999-4999-a999-999999999999";
-    const res = await fetch(`${baseUrl}/api/v1/tenders/${nonExistentUuid}`);
+    const res = await fetch(`${baseUrl}/api/v1/tenders/${nonExistentUuid}`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 404);
 
     const body = (await res.json()) as ApiErrorResponse;
@@ -124,7 +152,9 @@ describe("Phase 03 — Persistent Tender API", () => {
   });
 
   it("GET /api/v1/tenders/:id should return 400 for malformed non-UUID ID", async () => {
-    const res = await fetch(`${baseUrl}/api/v1/tenders/invalid-not-uuid`);
+    const res = await fetch(`${baseUrl}/api/v1/tenders/invalid-not-uuid`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 400);
 
     const body = (await res.json()) as ApiErrorResponse;

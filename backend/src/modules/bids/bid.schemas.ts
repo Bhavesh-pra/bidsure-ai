@@ -1,16 +1,17 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
 export const getBidsQuerySchema = z.object({
-  page: z
-    .string()
-    .optional()
-    .default("1")
-    .transform((v) => Math.max(1, parseInt(v, 10) || 1)),
-  pageSize: z
-    .string()
-    .optional()
-    .default("10")
-    .transform((v) => Math.min(50, Math.max(1, parseInt(v, 10) || 10))),
+  page: z.coerce
+    .number()
+    .int("Page must be an integer")
+    .min(1, "Page must be at least 1")
+    .default(1),
+  pageSize: z.coerce
+    .number()
+    .int("Page size must be an integer")
+    .min(1, "Page size must be at least 1")
+    .max(100, "Page size cannot exceed 100")
+    .default(10),
   tenderId: z.string().uuid("tenderId must be a valid UUID").optional(),
 });
 

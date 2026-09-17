@@ -1,8 +1,9 @@
 import { prisma } from "../../infrastructure/database/prisma.js";
 import type { TenderStatus, TenderVersionStatus, Prisma } from "@prisma/client";
 import type { PaginationParams, TenantContext, CreateTenderInput } from "./tender.types.js";
+import { BaseRepository } from "../../shared/database/base.repository.js";
 
-export class TenderRepository {
+export class TenderRepository extends BaseRepository {
   /** List tenders with bounded pagination and tenant awareness */
   async findMany(params: PaginationParams, tenant?: TenantContext | undefined) {
     const { page, pageSize } = params;
@@ -16,7 +17,7 @@ export class TenderRepository {
         where,
         skip,
         take: pageSize,
-        orderBy: { updatedAt: "desc" },
+        orderBy: [{ updatedAt: "desc" }, { id: "asc" }],
         include: {
           versions: {
             orderBy: { versionNumber: "desc" },
@@ -134,6 +135,9 @@ export class TenderRepository {
       });
 
       return updatedTender;
+    }, {
+      timeout: 20000,
+      maxWait: 10000,
     });
   }
 }

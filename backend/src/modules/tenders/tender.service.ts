@@ -1,6 +1,9 @@
-﻿import { tenderRepository, TenderRepository } from "./tender.repository.js";
-import { NotFoundError, ConflictError } from "../../shared/errors/app-error.js";
+import { tenderRepository, TenderRepository } from "./tender.repository.js";
+import { NotFoundError, ConflictError, ForbiddenError } from "../../shared/errors/app-error.js";
+import { can } from "../../shared/auth/permissions.js";
 import type { PaginationParams, TenantContext, CreateTenderInput, TenderDTO } from "./tender.types.js";
+
+import { buildCollectionMeta } from "../../shared/pagination/pagination.helper.js";
 
 export class TenderService {
   constructor(private readonly repository: TenderRepository = tenderRepository) {}
@@ -8,7 +11,6 @@ export class TenderService {
   /** Retrieve paginated list of tenders */
   async listTenders(params: PaginationParams, tenant?: TenantContext) {
     const { total, items } = await this.repository.findMany(params, tenant);
-    const totalPages = Math.ceil(total / params.pageSize) || 0;
 
     const formatted: TenderDTO[] = items.map((t) => {
       const latestVersion = t.versions[0];
@@ -39,12 +41,7 @@ export class TenderService {
 
     return {
       items: formatted,
-      meta: {
-        page: params.page,
-        pageSize: params.pageSize,
-        total,
-        totalPages,
-      },
+      meta: buildCollectionMeta(total, params.page, params.pageSize),
     };
   }
 
@@ -100,9 +97,14 @@ export class TenderService {
 
   /** Create new tender with initial version */
   async createTender(input: CreateTenderInput, tenant?: TenantContext): Promise<TenderDTO> {
-    // Resolve organization ID: use tenant context if present, input, or default demo org
-    const orgId =
-      tenant?.organizationId || input.organizationId || (await this.repository.getDefaultOrganizationId());
+    // Check centralized authorization policy if tenant context is available
+    if (tenant && !can({ id: tenant.userId, ...tenant, name: "", status: "ACTIVE", organization: { id: tenant.organizationId, name: "", status: "ACTIVE" } }, "create", "tender")) {
+      throw new ForbiddenError("You do not have permission to create tenders");
+    }
+
+    // Resolve organization ID: authenticated tenant context is the sole authority.
+    // Client-supplied organizationId is NEVER trusted.
+    const orgId = tenant?.organizationId || (await this.repository.getDefaultOrganizationId());
 
     // Check for reference duplicate within organization
     const existing = await this.repository.findByReference(input.referenceNumber, orgId);

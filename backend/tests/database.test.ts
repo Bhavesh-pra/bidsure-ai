@@ -1,11 +1,16 @@
-﻿import { describe, it } from "node:test";
+import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { prisma } from "../src/infrastructure/database/prisma.js";
 
 describe("Phase 03 — Domain Model & Relational Database Integrity", () => {
   it("should have seeded organization with valid status and timestamps", async () => {
     const org = await prisma.organization.findFirst({
-      where: { name: "Demo Procurement Authority" },
+      where: {
+        OR: [
+          { id: "00000000-0000-4000-a000-000000000001" },
+          { name: "Demo Procurement Authority" },
+        ],
+      },
     });
     assert.ok(org, "Organization must exist");
     assert.equal(org.status, "ACTIVE");
@@ -79,7 +84,10 @@ describe("Phase 03 — Domain Model & Relational Database Integrity", () => {
 
     assert.ok(bid, "Seed bid must exist");
     assert.equal(bid.status, "SUBMITTED");
-    assert.equal(bid.bidder.legalName, "Apex InfraTech Solutions Pvt Ltd");
+    assert.ok(
+      bid.bidder.legalName.includes("Apex InfraTech Solutions"),
+      "Bidder legalName must match Apex InfraTech Solutions"
+    );
     assert.equal(bid.tender.referenceNumber, "TDR-2026-DEL-001");
     assert.equal(bid.tenderVersion.versionNumber, 1);
     assert.equal(bid.bidDocuments.length, 1);

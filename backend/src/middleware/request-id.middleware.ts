@@ -9,6 +9,7 @@ import type { Request, Response, NextFunction } from "express";
 // ---------------------------------------------------------------------------
 
 const REQ_ID_REGEX = /^req_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // Augment Express.Request so all downstream code can rely on req.requestId: string
 declare global {
@@ -25,8 +26,15 @@ export const requestIdMiddleware = (req: Request, res: Response, next: NextFunct
   const incomingRequestId = req.headers["x-request-id"];
   let requestId: string;
 
-  if (typeof incomingRequestId === "string" && REQ_ID_REGEX.test(incomingRequestId)) {
-    requestId = incomingRequestId;
+  if (typeof incomingRequestId === "string") {
+    const trimmed = incomingRequestId.trim();
+    if (REQ_ID_REGEX.test(trimmed)) {
+      requestId = trimmed;
+    } else if (UUID_REGEX.test(trimmed)) {
+      requestId = `req_${trimmed}`;
+    } else {
+      requestId = `req_${randomUUID()}`;
+    }
   } else {
     requestId = `req_${randomUUID()}`;
   }

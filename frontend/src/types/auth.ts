@@ -1,15 +1,32 @@
-﻿export type UserRole = "OFFICER" | "BIDDER" | "ADMIN" | "AUDITOR";
+export type UserRole =
+  | "PROCUREMENT_OFFICER"
+  | "BIDDER"
+  | "REVIEWER"
+  | "AUDITOR"
+  | "ADMIN";
 
-export interface User {
+export type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
+
+export interface AuthUser {
   id: string;
   email: string;
-  name: string;
+  fullName: string;
   role: UserRole;
-  organization_id?: string;
+  organizationId: string;
+  organizationName?: string;
+  bidderId?: string | null;
+  status: UserStatus;
+  lastLoginAt?: string | null;
+  createdAt: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
 
 export interface AuthState {
-  user: User | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
-  token: string | null;
+  isLoading: boolean;
 }

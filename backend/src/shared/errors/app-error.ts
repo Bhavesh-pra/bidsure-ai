@@ -7,6 +7,7 @@
 
 export interface ValidationErrorDetail {
   field: string;
+  path?: string;
   message: string;
 }
 
@@ -94,6 +95,26 @@ export class ConflictError extends AppError {
   constructor(message = "The request conflicts with existing data", details?: unknown) {
     super(409, "CONFLICT", message, details);
     this.name = "ConflictError";
+  }
+}
+
+export class IdempotencyConflictError extends AppError {
+  constructor(
+    message = "Idempotency key was previously used with a different request payload",
+    details?: unknown
+  ) {
+    super(409, "IDEMPOTENCY_CONFLICT", message, details);
+    this.name = "IdempotencyConflictError";
+  }
+}
+
+export class ConcurrentRequestError extends AppError {
+  constructor(
+    message = "A request with this idempotency key is currently processing. Please retry shortly.",
+    details?: unknown
+  ) {
+    super(409, "CONCURRENT_REQUEST", message, details);
+    this.name = "ConcurrentRequestError";
   }
 }
 

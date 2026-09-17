@@ -14,7 +14,12 @@ export const tenderService = {
     return await httpClient.get<never, TenderDetailResponse>(`/tenders/${encodeURIComponent(id)}`);
   },
 
-  createTender: async (input: CreateTenderInput): Promise<TenderDetailResponse> => {
-    return await httpClient.post<never, TenderDetailResponse>("/tenders", input);
+  createTender: async (
+    input: CreateTenderInput,
+    idempotencyKey?: string
+  ): Promise<TenderDetailResponse> => {
+    return await httpClient.post<never, TenderDetailResponse>("/tenders", input, {
+      headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
+    });
   },
 };

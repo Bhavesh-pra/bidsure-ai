@@ -25,8 +25,10 @@ export const OfficerTendersPage: React.FC = () => {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [description, setDescription] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  const { data: tendersResponse, isLoading, isError, error, refetch } = useTenders();
+  const { data: tendersResponse, isLoading, isError, error, refetch } = useTenders({ page, pageSize });
   const createMutation = useCreateTender();
 
   const handleOpenModal = () => {
@@ -51,11 +53,15 @@ export const OfficerTendersPage: React.FC = () => {
     }
 
     setValidationError(null);
+    const idempotencyKey = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined;
     createMutation.mutate(
       {
-        title: title.trim(),
-        referenceNumber: referenceNumber.trim(),
-        description: description.trim() || undefined,
+        input: {
+          title: title.trim(),
+          referenceNumber: referenceNumber.trim(),
+          description: description.trim() || undefined,
+        },
+        idempotencyKey,
       },
       {
         onSuccess: () => {
@@ -187,6 +193,34 @@ export const OfficerTendersPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
+            {tendersResponse?.meta && tendersResponse.meta.totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50/50">
+                <div className="text-xs text-slate-500">
+                  Page <span className="font-medium text-slate-700">{tendersResponse.meta.page}</span> of{" "}
+                  <span className="font-medium text-slate-700">{tendersResponse.meta.totalPages}</span> ({tendersResponse.meta.total} tenders)
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={tendersResponse.meta.page <= 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className="text-xs h-8"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={tendersResponse.meta.page >= tendersResponse.meta.totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="text-xs h-8"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

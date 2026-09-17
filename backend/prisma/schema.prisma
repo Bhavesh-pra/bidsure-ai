@@ -27,6 +27,7 @@ enum OrganizationStatus {
 enum UserStatus {
   ACTIVE
   INACTIVE
+  SUSPENDED
 }
 
 enum TenderStatus {
@@ -57,41 +58,68 @@ enum DocumentProcessingStatus {
   FAILED
 }
 
+enum IdempotencyStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
 // ---------------------------------------------------------------------------
 // MODELS
 // ---------------------------------------------------------------------------
 
 model Organization {
-  id        String             @id @default(uuid()) @db.Uuid
-  name      String
-  status    OrganizationStatus @default(ACTIVE)
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+  id                 String              @id @default(uuid()) @db.Uuid
+  name               String
+  status             OrganizationStatus  @default(ACTIVE)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
-  users     User[]
-  tenders   Tender[]
-  bids      Bid[]
-  bidders   Bidder[]
-  documents Document[]
+  users              User[]
+  tenders            Tender[]
+  bids               Bid[]
+  bidders            Bidder[]
+  documents          Document[]
+  idempotencyRecords IdempotencyRecord[]
 
   @@map("organizations")
 }
 
 model User {
-  id             String       @id @default(uuid()) @db.Uuid
-  organizationId String       @db.Uuid
-  name           String
-  email          String       @unique
-  role           Role         @default(PROCUREMENT_OFFICER)
-  passwordHash   String?
-  status         UserStatus   @default(ACTIVE)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id                 String              @id @default(uuid()) @db.Uuid
+  organizationId     String              @db.Uuid
+  bidderId           String?             @db.Uuid
+  name               String
+  email              String              @unique
+  role               Role                @default(PROCUREMENT_OFFICER)
+  passwordHash       String?
+  status             UserStatus          @default(ACTIVE)
+  lastLoginAt        DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  bidder             Bidder?             @relation(fields: [bidderId], references: [id], onDelete: SetNull)
+  sessions           Session[]
+  idempotencyRecords IdempotencyRecord[]
 
   @@index([organizationId])
+  @@index([bidderId])
   @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("sessions")
 }
 
 model Tender {
@@ -176,6 +204,7 @@ model Bidder {
 
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   bids           Bid[]
+  users          User[]
 
   @@index([organizationId])
   @@map("bidders")
@@ -245,3 +274,30 @@ model BidDocument {
   @@index([documentId])
   @@map("bid_documents")
 }
+
+model IdempotencyRecord {
+  id             String            @id @default(uuid()) @db.Uuid
+  key            String
+  organizationId String            @db.Uuid
+  userId         String            @db.Uuid
+  method         String
+  endpoint       String
+  requestHash    String
+  status         IdempotencyStatus @default(IN_PROGRESS)
+  statusCode     Int?
+  responseBody   Json?
+  lockedAt       DateTime          @default(now())
+  completedAt    DateTime?
+  expiresAt      DateTime
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+

@@ -4,9 +4,18 @@ import React from "react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { router } from "@/app/router";
-import { tenderService, bidService, healthService } from "@/services/api";
+import { tenderService, bidService, healthService, authService } from "@/services/api";
+import { AuthProvider } from "@/features/auth/auth-context";
 
 // Mock API services
+vi.mock("@/services/api/auth.service", () => ({
+  authService: {
+    login: vi.fn(),
+    getMe: vi.fn(),
+    logout: vi.fn(),
+  },
+}));
+
 vi.mock("@/services/api/tender.service", () => ({
   tenderService: {
     getTenders: vi.fn(),
@@ -31,13 +40,27 @@ vi.mock("@/services/api/health.service", () => ({
 const createTestClient = () =>
   new QueryClient({
     defaultOptions: {
-      queries: { retry: false },
+      queries: { retry: false, gcTime: 0 },
     },
   });
 
 describe("Route Integration & Entry Verification (Phase 03.2)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    vi.mocked(authService.getMe).mockResolvedValue({
+      success: true,
+      data: {
+        id: "mock-officer-id",
+        email: "officer@nhai.bidsure.test",
+        fullName: "NHAI Officer",
+        role: "PROCUREMENT_OFFICER",
+        organizationId: "mock-org-id",
+        status: "ACTIVE",
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+      requestId: "req_mock",
+    });
 
     vi.mocked(tenderService.getTenders).mockResolvedValue({
       success: true,
@@ -61,6 +84,22 @@ describe("Route Integration & Entry Verification (Phase 03.2)", () => {
   });
 
   const renderRoute = (initialPath: string) => {
+    if (initialPath.startsWith("/bidder")) {
+      vi.mocked(authService.getMe).mockResolvedValue({
+        success: true,
+        data: {
+          id: "mock-bidder-id",
+          email: "bidder@apexinfra.bidsure.test",
+          fullName: "Apex Bidder",
+          role: "BIDDER",
+          organizationId: "mock-org-id",
+          status: "ACTIVE",
+          createdAt: "2026-01-01T00:00:00.000Z",
+        },
+        requestId: "req_mock",
+      });
+    }
+
     const memoryRouter = createMemoryRouter(router.routes, {
       initialEntries: [initialPath],
     });
@@ -68,7 +107,9 @@ describe("Route Integration & Entry Verification (Phase 03.2)", () => {
 
     return render(
       <QueryClientProvider client={client}>
-        <RouterProvider router={memoryRouter} />
+        <AuthProvider>
+          <RouterProvider router={memoryRouter} />
+        </AuthProvider>
       </QueryClientProvider>
     );
   };

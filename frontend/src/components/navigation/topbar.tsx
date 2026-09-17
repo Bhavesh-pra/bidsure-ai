@@ -1,21 +1,51 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Shield, Activity, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Activity, User, LogOut } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { healthService } from "@/services/api";
+import { useAuth } from "@/features/auth/use-auth";
 
 interface TopbarProps {
-  currentRole: "OFFICER" | "BIDDER";
+  currentRole?: "OFFICER" | "BIDDER";
   onRoleToggle?: () => void;
 }
 
-export const Topbar: React.FC<TopbarProps> = ({ currentRole, onRoleToggle }) => {
+export const Topbar: React.FC<TopbarProps> = ({ currentRole }) => {
+  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
+
   const { data: health, isSuccess, isError, isLoading } = useQuery({
     queryKey: ["backend-health"],
     queryFn: healthService.getHealth,
     refetchInterval: 30000,
     retry: 1,
   });
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/auth/login", { replace: true });
+    } catch {
+      navigate("/auth/login", { replace: true });
+    }
+  };
+
+  const roleDisplay = (role?: string | null) => {
+    switch (role) {
+      case "PROCUREMENT_OFFICER":
+        return "Procurement Officer";
+      case "BIDDER":
+        return "Authorized Bidder";
+      case "REVIEWER":
+        return "Evaluation Reviewer";
+      case "AUDITOR":
+        return "Independent Auditor";
+      case "ADMIN":
+        return "System Administrator";
+      default:
+        return currentRole === "OFFICER" ? "Procurement Officer" : "Authorized Bidder";
+    }
+  };
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
@@ -24,11 +54,16 @@ export const Topbar: React.FC<TopbarProps> = ({ currentRole, onRoleToggle }) => 
           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-sm">
             B
           </div>
-          <span>BidSure <span className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">AI</span></span>
+          <span>
+            BidSure{" "}
+            <span className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+              AI
+            </span>
+          </span>
         </Link>
         <span className="text-slate-300">|</span>
         <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-          {currentRole === "OFFICER" ? "Tender Evaluation Portal" : "Bidder Submission Portal"}
+          {user?.role === "BIDDER" ? "Bidder Submission Portal" : "Tender Evaluation Portal"}
         </span>
       </div>
 
@@ -36,7 +71,11 @@ export const Topbar: React.FC<TopbarProps> = ({ currentRole, onRoleToggle }) => 
         {/* Live Backend Connection Indicator */}
         <div
           className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border border-slate-200 bg-slate-50"
-          title={isSuccess ? `Connected to ${health?.data?.service} (Status: ${health?.data?.status})` : "Connecting to backend..."}
+          title={
+            isSuccess
+              ? `Connected to ${health?.data?.service} (Status: ${health?.data?.status})`
+              : "Connecting to backend..."
+          }
         >
           <Activity className="w-3.5 h-3.5 text-slate-500" />
           <span className="text-slate-600">Backend API:</span>
@@ -48,31 +87,47 @@ export const Topbar: React.FC<TopbarProps> = ({ currentRole, onRoleToggle }) => 
             </span>
           )}
           {isError && (
-            <span className="flex items-center gap-1 text-amber-700 font-semibold" title="Backend not reached on port 3000">
+            <span className="flex items-center gap-1 text-amber-700 font-semibold" title="Backend not reached">
               <span className="w-2 h-2 rounded-full bg-amber-400"></span>
               Offline
             </span>
           )}
         </div>
 
-        {/* Role Switcher for Development / Multi-Role Shell */}
-        {onRoleToggle && (
-          <button
-            onClick={onRoleToggle}
-            className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-md font-medium border border-slate-300 transition-colors flex items-center gap-1.5"
-            aria-label="Switch between Officer and Bidder views"
-          >
-            <Shield className="w-3.5 h-3.5 text-slate-500" />
-            Switch to {currentRole === "OFFICER" ? "Bidder" : "Officer"}
-          </button>
-        )}
+        {/* User Identity Display */}
+        {isAuthenticated && user ? (
+          <div className="flex items-center gap-3 border-l border-slate-200 pl-4">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 font-semibold">
+                <User className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="font-semibold text-slate-900 leading-tight truncate max-w-[140px]">
+                  {user.fullName || user.email}
+                </span>
+                <span className="text-[11px] text-slate-500 leading-tight">
+                  {roleDisplay(user.role)}
+                </span>
+              </div>
+            </div>
 
-        <div className="flex items-center gap-2 border-l border-slate-200 pl-4 text-xs text-slate-600 font-medium">
-          <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
-            <User className="w-4 h-4" />
+            <button
+              onClick={handleLogout}
+              className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
-          <span>{currentRole === "OFFICER" ? "Procurement Officer" : "Authorized Bidder"}</span>
-        </div>
+        ) : (
+          <Link
+            to="/auth/login"
+            className="text-xs font-semibold text-blue-600 hover:underline border-l border-slate-200 pl-4"
+          >
+            Sign In
+          </Link>
+        )}
       </div>
     </header>
   );

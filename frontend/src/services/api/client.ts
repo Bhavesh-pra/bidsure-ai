@@ -1,29 +1,24 @@
 import axios, { type AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@/lib/env";
-import type { ApiError, ApiErrorResponse } from "@/types";
+import type { ApiErrorResponse } from "./api.types";
+import { ApiError } from "./api.errors";
 
 export const httpClient: AxiosInstance = axios.create({
   baseURL: env.apiBaseUrl,
   timeout: 15000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request Interceptor: Optional Tracing & Auth
+// Request Interceptor: Optional Tracing
 // Backend is the authoritative source for request IDs (req_<uuid>); browser only provides correlation
 httpClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (!config.headers["x-correlation-id"] && typeof crypto !== "undefined" && crypto.randomUUID) {
       config.headers["x-correlation-id"] = `corr_${crypto.randomUUID()}`;
     }
-
-    // Inject token if available
-    const token = localStorage.getItem("bidsure_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
     return config;
   },
   (error) => Promise.reject(error)
@@ -42,7 +37,7 @@ httpClient.interceptors.response.use(
       error.response?.data?.requestId ||
       (typeof headerRequestId === "string" ? headerRequestId : undefined);
 
-    const apiError: ApiError = {
+    const apiError = new ApiError({
       code: errorData?.code || (status ? `HTTP_${status}` : "NETWORK_ERROR"),
       message:
         errorData?.message ||
@@ -52,7 +47,7 @@ httpClient.interceptors.response.use(
       status,
       details: errorData?.details || error.response?.data,
       requestId,
-    };
+    });
 
     return Promise.reject(apiError);
   }

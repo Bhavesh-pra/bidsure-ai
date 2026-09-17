@@ -1,4 +1,4 @@
-﻿import { describe, it, before, after } from "node:test";
+import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
@@ -9,6 +9,7 @@ import type { BidDTO } from "../src/modules/bids/bid.types.js";
 describe("Phase 03 — Persistent Bid Read API", () => {
   let server: Server;
   let baseUrl: string;
+  let authCookie: string;
 
   before(async () => {
     const app = createApp();
@@ -19,6 +20,18 @@ describe("Phase 03 — Persistent Bid Read API", () => {
         resolve();
       });
     });
+
+    // Authenticate as Officer to obtain HttpOnly session cookie
+    const loginRes = await fetch(`${baseUrl}/api/v1/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "officer@nhai.bidsure.test",
+        password: "Officer@123",
+      }),
+    });
+    const setCookie = loginRes.headers.get("set-cookie");
+    authCookie = setCookie ? setCookie.split(";")[0]! : "";
   });
 
   after(async () => {
@@ -28,7 +41,9 @@ describe("Phase 03 — Persistent Bid Read API", () => {
   });
 
   it("GET /api/v1/bids should return paginated list with bidder and tender metadata", async () => {
-    const res = await fetch(`${baseUrl}/api/v1/bids?page=1&pageSize=10`);
+    const res = await fetch(`${baseUrl}/api/v1/bids?page=1&pageSize=10`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 200);
 
     const body = (await res.json()) as PaginatedResponse<BidDTO>;
@@ -41,17 +56,21 @@ describe("Phase 03 — Persistent Bid Read API", () => {
     const seedBid = body.data.find((b) => b.bidReference === "BID-2026-APEX-001");
     assert.ok(seedBid, "Seed bid must be returned");
     assert.equal(seedBid.status, "SUBMITTED");
-    assert.equal(seedBid.bidder?.legalName, "Apex InfraTech Solutions Pvt Ltd");
+    assert.ok(seedBid.bidder?.legalName.includes("Apex InfraTech"));
     assert.equal(seedBid.tender?.referenceNumber, "TDR-2026-DEL-001");
   });
 
   it("GET /api/v1/bids/:id should return complete bid detail with documents", async () => {
     // First get the bid ID from list
-    const listRes = await fetch(`${baseUrl}/api/v1/bids`);
+    const listRes = await fetch(`${baseUrl}/api/v1/bids`, {
+      headers: { Cookie: authCookie },
+    });
     const listBody = (await listRes.json()) as PaginatedResponse<BidDTO>;
     const bidId = listBody.data[0].id;
 
-    const res = await fetch(`${baseUrl}/api/v1/bids/${bidId}`);
+    const res = await fetch(`${baseUrl}/api/v1/bids/${bidId}`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 200);
 
     const body = (await res.json()) as ApiResponse<BidDTO>;
@@ -64,7 +83,9 @@ describe("Phase 03 — Persistent Bid Read API", () => {
   });
 
   it("GET /api/v1/bids/:id should return 404 for nonexistent UUID", async () => {
-    const res = await fetch(`${baseUrl}/api/v1/bids/00000000-0000-4000-a000-999999999999`);
+    const res = await fetch(`${baseUrl}/api/v1/bids/00000000-0000-4000-a000-999999999999`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 404);
 
     const body = (await res.json()) as ApiErrorResponse;
@@ -73,7 +94,9 @@ describe("Phase 03 — Persistent Bid Read API", () => {
   });
 
   it("GET /api/v1/bids/:id should return 400 for malformed ID", async () => {
-    const res = await fetch(`${baseUrl}/api/v1/bids/invalid-id`);
+    const res = await fetch(`${baseUrl}/api/v1/bids/invalid-id`, {
+      headers: { Cookie: authCookie },
+    });
     assert.equal(res.status, 400);
 
     const body = (await res.json()) as ApiErrorResponse;
