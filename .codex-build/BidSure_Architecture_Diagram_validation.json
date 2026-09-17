@@ -1,0 +1,634 @@
+{
+  "schemaVersion": "presentation-finalization.v1",
+  "finalSha256": "6e0e62b3b2a75fdf8fccddfd1b03a8d259293ee06079af3213af0929737a7549",
+  "byteCount": 16163,
+  "packageIntegrity": {
+    "chart_count": 0,
+    "claim_boundary": "Structural package checks only; no slide text, notes, formulas, chart values, or native PowerPoint execution were inspected.",
+    "finding_count": 0,
+    "findings": [],
+    "notes_parts_skipped": 1,
+    "relationship_part_count": 7,
+    "slide_count": 1,
+    "status": "pass",
+    "exitCode": 0,
+    "findingCount": 0,
+    "warnings": []
+  },
+  "presentationLayout": {
+    "finding_count": 0,
+    "findings": [],
+    "font_policy": {
+      "checked_text_script_count": 60,
+      "native_font_rendering_verified": false,
+      "observed_font_families": [
+        "Arial"
+      ],
+      "observed_font_use_counts": {
+        "Arial": 60
+      },
+      "passed": true,
+      "performed": true
+    },
+    "slide_count": 1,
+    "slide_size_in": [
+      13.3333,
+      7.5
+    ],
+    "warning_count": 63,
+    "warnings": [
+      {
+        "connector_id": "83",
+        "connector_z": 28,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "84",
+        "connector_z": 29,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "85",
+        "connector_z": 30,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "86",
+        "connector_z": 31,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "87",
+        "connector_z": 32,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "88",
+        "connector_z": 33,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "89",
+        "connector_z": 34,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "89",
+        "connector_z": 34,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "11",
+        "text_z": 12
+      },
+      {
+        "connector_id": "90",
+        "connector_z": 35,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "90",
+        "connector_z": 35,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "90",
+        "connector_z": 35,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "91",
+        "connector_z": 36,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "91",
+        "connector_z": 36,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "91",
+        "connector_z": 36,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "92",
+        "connector_z": 37,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "92",
+        "connector_z": 37,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "92",
+        "connector_z": 37,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "92",
+        "connector_z": 37,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "92",
+        "connector_z": 37,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "21",
+        "text_z": 22
+      },
+      {
+        "connector_id": "93",
+        "connector_z": 38,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "93",
+        "connector_z": 38,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "94",
+        "connector_z": 39,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "94",
+        "connector_z": 39,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "95",
+        "connector_z": 40,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "95",
+        "connector_z": 40,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "96",
+        "connector_z": 41,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "96",
+        "connector_z": 41,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "21",
+        "text_z": 22
+      },
+      {
+        "connector_id": "97",
+        "connector_z": 42,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "23",
+        "text_z": 24
+      },
+      {
+        "connector_id": "98",
+        "connector_z": 43,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "98",
+        "connector_z": 43,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "98",
+        "connector_z": 43,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "98",
+        "connector_z": 43,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "17",
+        "text_z": 18
+      },
+      {
+        "connector_id": "98",
+        "connector_z": 43,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "18",
+        "text_z": 19
+      },
+      {
+        "connector_id": "99",
+        "connector_z": 44,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "99",
+        "connector_z": 44,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "99",
+        "connector_z": 44,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "99",
+        "connector_z": 44,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "18",
+        "text_z": 19
+      },
+      {
+        "connector_id": "99",
+        "connector_z": 44,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "21",
+        "text_z": 22
+      },
+      {
+        "connector_id": "100",
+        "connector_z": 45,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "100",
+        "connector_z": 45,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "100",
+        "connector_z": 45,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "101",
+        "connector_z": 46,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "101",
+        "connector_z": 46,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "101",
+        "connector_z": 46,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "101",
+        "connector_z": 46,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "23",
+        "text_z": 24
+      },
+      {
+        "connector_id": "102",
+        "connector_z": 47,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "7",
+        "text_z": 8
+      },
+      {
+        "connector_id": "102",
+        "connector_z": 47,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "102",
+        "connector_z": 47,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "15",
+        "text_z": 16
+      },
+      {
+        "connector_id": "102",
+        "connector_z": 47,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "22",
+        "text_z": 23
+      },
+      {
+        "connector_id": "103",
+        "connector_z": 48,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "103",
+        "connector_z": 48,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "103",
+        "connector_z": 48,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "20",
+        "text_z": 21
+      },
+      {
+        "connector_id": "103",
+        "connector_z": 48,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "25",
+        "text_z": 26
+      },
+      {
+        "connector_id": "104",
+        "connector_z": 49,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "13",
+        "text_z": 14
+      },
+      {
+        "connector_id": "104",
+        "connector_z": 49,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "14",
+        "text_z": 15
+      },
+      {
+        "connector_id": "104",
+        "connector_z": 49,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "20",
+        "text_z": 21
+      },
+      {
+        "connector_id": "104",
+        "connector_z": 49,
+        "kind": "connector_over_text",
+        "slide": 1,
+        "text_object_id": "25",
+        "text_z": 26
+      },
+      {
+        "kind": "substantial_text_frame_overlap",
+        "left_object_id": "12",
+        "overlap_height_in": 0.8542,
+        "overlap_width_in": 1.2292,
+        "right_object_id": "56",
+        "slide": 1
+      }
+    ],
+    "exitCode": 0,
+    "findingCount": 0,
+    "fontPolicy": {
+      "checked_text_script_count": 60,
+      "native_font_rendering_verified": false,
+      "observed_font_families": [
+        "Arial"
+      ],
+      "observed_font_use_counts": {
+        "Arial": 60
+      },
+      "passed": true,
+      "performed": true
+    }
+  },
+  "fontSelection": {
+    "basis": "design",
+    "approvedFamilies": [
+      "Arial"
+    ],
+    "scriptFonts": {},
+    "referenceSha256": null,
+    "referenceFontsVerifiedInEncodedText": false,
+    "checked_text_script_count": 60,
+    "native_font_rendering_verified": false,
+    "observed_font_families": [
+      "Arial"
+    ],
+    "observed_font_use_counts": {
+      "Arial": 60
+    },
+    "passed": true,
+    "performed": true
+  },
+  "firstPartyImport": {
+    "performed": true,
+    "passed": true,
+    "slideCount": 1,
+    "sha256": "6e0e62b3b2a75fdf8fccddfd1b03a8d259293ee06079af3213af0929737a7549",
+    "runtimeNodeModules": "C:\\Users\\hp\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules",
+    "nodeExecutable": "C:\\Users\\hp\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe"
+  },
+  "nativeTableArithmetic": {
+    "performed": true,
+    "checked_column_count": 0,
+    "checks": [],
+    "claim_boundary": "Displayed-value arithmetic with rounding tolerance; not source-data verification.",
+    "eligible_table_count": 0,
+    "finding_count": 0,
+    "findings": [],
+    "native_table_count": 0,
+    "passed": true,
+    "schema_version": "presentation-native-table-arithmetic.v1",
+    "skipped_tables": [],
+    "slide_count": 1,
+    "warning_count": 0,
+    "warnings": []
+  },
+  "nativeChartTitles": {
+    "performed": true,
+    "checks": [],
+    "finding_count": 0,
+    "findings": [],
+    "native_chart_count": 0,
+    "native_powerpoint_verified": false,
+    "passed": true,
+    "presentation_sha256": "6e0e62b3b2a75fdf8fccddfd1b03a8d259293ee06079af3213af0929737a7549",
+    "schema_version": "presentation-native-chart-titles.v1",
+    "slide_count": 1,
+    "source_text_emitted": false,
+    "unresolved_linked_title_count": 0
+  },
+  "sourceDerivedPolicyFlags": [
+    "--expected-slide-size-emu",
+    "12192000,6858000",
+    "--validate-heading-fit",
+    "--cover-role",
+    "none",
+    "--approved-font-family",
+    "Arial"
+  ],
+  "nativeChartValidation": {
+    "detectedOwnerSlides": [],
+    "detectedChartCount": 0,
+    "targetApplication": null,
+    "sourceChartOwnersExplicitlyDeclared": false,
+    "validatorRan": false,
+    "passed": true
+  }
+}

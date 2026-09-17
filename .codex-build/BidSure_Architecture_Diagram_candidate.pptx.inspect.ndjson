@@ -1,0 +1,61 @@
+{"kind":"deck","id":"pr/8s16ed","name":"Deck"}
+{"kind":"layout","layoutId":"139ca4dc-56b2-4865-a6aa-a6f49732ca11","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"8fd685c7-b2f4-4d9b-a0dd-0d2f47e93af2","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/e09cvq","slide":1,"title":"BIDSURE","textShapes":34}
+{"kind":"textbox","id":"sh/q1cje18r","slide":1,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,130,26]}
+{"kind":"textbox","id":"sh/d4329g72","slide":1,"text":"SYSTEM ARCHITECTURE","textPreview":"SYSTEM ARCHITECTURE","textChars":19,"textLines":1,"bbox":[42,54,540,42]}
+{"kind":"textbox","id":"sh/c3u1gbqh","slide":1,"text":"Node.js + Express | Evidence-first compliance verification for GeM procurement","textPreview":"Node.js + Express | Evidence-first compliance verification for GeM procurement","textChars":78,"textLines":1,"bbox":[44,97,720,20]}
+{"kind":"textbox","id":"sh/z65kbqp8","slide":1,"text":"Editable structure diagram","textPreview":"Editable structure diagram","textChars":26,"textLines":1,"bbox":[1088,32,150,18]}
+{"kind":"textbox","id":"sh/y5cjil8n","slide":1,"text":"Bidder\nPre-check portal","textPreview":"Bidder | Pre-check portal","textChars":23,"textLines":2,"bbox":[42,144,145,56]}
+{"kind":"textbox","id":"sh/lsn2d07e","slide":1,"text":"Procurement Officer\nReview console","textPreview":"Procurement Officer | Review console","textChars":34,"textLines":2,"bbox":[42,222,145,56]}
+{"kind":"textbox","id":"sh/0re1kvqt","slide":1,"text":"INTERNET / EDGE NETWORK","textPreview":"INTERNET / EDGE NETWORK","textChars":23,"textLines":1,"bbox":[220,136,1000,172]}
+{"kind":"textbox","id":"sh/fa10zmp4","slide":1,"text":"DNS + TLS\nHTTPS : 443","textPreview":"DNS + TLS | HTTPS : 443","textChars":21,"textLines":2,"bbox":[246,185,120,56]}
+{"kind":"textbox","id":"sh/e9sj6h8j","slide":1,"text":"WAF / Rate limit\nRequest filtering","textPreview":"WAF / Rate limit | Request filtering","textChars":34,"textLines":2,"bbox":[396,185,135,56]}
+{"kind":"textbox","id":"sh/wrmd4v6x","slide":1,"text":"Load balancer\nPublic entry route","textPreview":"Load balancer | Public entry route","textChars":32,"textLines":2,"bbox":[562,185,135,56]}
+{"kind":"textbox","id":"sh/hsvux0ni","slide":1,"text":"Web frontend\nReact + Vite","textPreview":"Web frontend | React + Vite","textChars":25,"textLines":2,"bbox":[730,185,135,56]}
+{"kind":"textbox","id":"sh/up4v25or","slide":1,"text":"Express API service\nNode.js + TypeScript\nREST / JSON\nJWT / SSO","textPreview":"Express API service | Node.js + TypeScript | REST / JSON | JWT / SSO","textChars":62,"textLines":4,"bbox":[885,172,160,82]}
+{"kind":"textbox","id":"sh/vqdcvq5c","slide":1,"text":"BIDSURE VPC / PRIVATE NETWORK","textPreview":"BIDSURE VPC / PRIVATE NETWORK","textChars":29,"textLines":1,"bbox":[220,330,1000,300]}
+{"kind":"textbox","id":"sh/4f6d8f6t","slide":1,"text":"PRIVATE APP SUBNET","textPreview":"PRIVATE APP SUBNET","textChars":18,"textLines":1,"bbox":[246,370,508,226]}
+{"kind":"textbox","id":"sh/5gfu1kne","slide":1,"text":"PRIVATE DATA SUBNET","textPreview":"PRIVATE DATA SUBNET","textChars":19,"textLines":1,"bbox":[784,370,410,226]}
+{"kind":"textbox","id":"sh/id4v65on","slide":1,"text":"Tender & bid\nservice\nCase lifecycle","textPreview":"Tender & bid | service | Case lifecycle","textChars":35,"textLines":3,"bbox":[270,416,140,62]}
+{"kind":"textbox","id":"sh/jedcza58","slide":1,"text":"Document\nintelligence\nOCR + extraction","textPreview":"Document | intelligence | OCR + extraction","textChars":38,"textLines":3,"bbox":[430,416,140,62]}
+{"kind":"textbox","id":"sh/kj2twb6p","slide":1,"text":"Verification\nservice\nAdapters + checks","textPreview":"Verification | service | Adapters + checks","textChars":38,"textLines":3,"bbox":[590,416,140,62]}
+{"kind":"textbox","id":"sh/lkbupgna","slide":1,"text":"Compliance engine\nVersioned TypeScript rules","textPreview":"Compliance engine | Versioned TypeScript rules","textChars":44,"textLines":2,"bbox":[350,505,180,62]}
+{"kind":"textbox","id":"sh/1g3atcfy","slide":1,"text":"Risk + decision\nRecommendation only","textPreview":"Risk + decision | Recommendation only","textChars":35,"textLines":2,"bbox":[550,505,180,62]}
+{"kind":"textbox","id":"sh/0fu907yd","slide":1,"text":"MongoDB\nCases, rules, findings","textPreview":"MongoDB | Cases, rules, findings","textChars":30,"textLines":2,"bbox":[806,408,170,62]}
+{"kind":"textbox","id":"sh/felsr2xs","slide":1,"text":"Object storage\nPDFs, images, hashes","textPreview":"Object storage | PDFs, images, hashes","textChars":35,"textLines":2,"bbox":[994,408,170,62]}
+{"kind":"textbox","id":"sh/edcryxg7","slide":1,"text":"Redis + BullMQ\nJobs, retries, queues","textPreview":"Redis + BullMQ | Jobs, retries, queues","textChars":36,"textLines":2,"bbox":[806,496,170,62]}
+{"kind":"textbox","id":"sh/9knaxcfa","slide":1,"text":"Audit log\nAppend-only events","textPreview":"Audit log | Append-only events","textChars":28,"textLines":2,"bbox":[994,496,170,62]}
+{"kind":"textbox","id":"sh/ojet4ryp","slide":1,"text":"EXTERNAL AUTHORISED SOURCES / ADAPTERS","textPreview":"EXTERNAL AUTHORISED SOURCES / ADAPTERS","textChars":38,"textLines":1,"bbox":[220,650,1000,54]}
+{"kind":"textbox","id":"sh/nilsvmx4","slide":1,"text":"GSTN  |  Udyam  |  MCA21  |  DigiLocker  |  EPFO / ESIC  |  Startup India  |  GeM / CPPP","textPreview":"GSTN  |  Udyam  |  MCA21  |  DigiLocker  |  EPFO / ESIC  |  Startup India  |  GeM / CPPP","textChars":88,"textLines":1,"bbox":[252,670,930,18]}
+{"kind":"shape","id":"sh/mhcr2hgj","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/x8na1wf6","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/w7et8ryl","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/uhof6psr","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/vixgfu9c","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/wj6h8zax","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/hkfyh4ri","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/i5oza9s3","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/j6xgje9o","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/47qhcjat","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/58zyl4re","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/698ze9sz","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/rahgne9k","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/fqdg7e1o","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/ep4fy9k3","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/1svy9oju","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/0rmx0j29","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/nuxgby10","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/2toz2tkf","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/pwfydojq","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/ov6h4j25","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/3ytgzu1g","slide":1,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ixkfqpkv","slide":1,"text":"HTTPS : 443","textPreview":"HTTPS : 443","textChars":11,"textLines":1,"bbox":[270,164,90,15]}
+{"kind":"textbox","id":"sh/83id0vit","slide":1,"text":"REST / JSON","textPreview":"REST / JSON","textChars":11,"textLines":1,"bbox":[865,159,100,15]}
+{"kind":"textbox","id":"sh/t4rut0ze","slide":1,"text":"internal service calls","textPreview":"internal service calls","textChars":22,"textLines":1,"bbox":[486,318,160,15]}
+{"kind":"textbox","id":"sh/61gvyl0n","slide":1,"text":"async jobs","textPreview":"async jobs","textChars":10,"textLines":1,"bbox":[709,448,75,15]}
+{"kind":"textbox","id":"sh/72pcrqh8","slide":1,"text":"source verification","textPreview":"source verification","textChars":19,"textLines":1,"bbox":[660,618,130,15]}
+{"kind":"textbox","id":"sh/kfydwbix","slide":1,"text":"solid = synchronous request","textPreview":"solid = synchronous request","textChars":27,"textLines":1,"bbox":[910,92,145,15]}
+{"kind":"textbox","id":"sh/l07upgzi","slide":1,"text":"dashed = async / external","textPreview":"dashed = async / external","textChars":25,"textLines":1,"bbox":[1060,92,160,15]}
+{"kind":"textbox","id":"sh/ydgvul0r","slide":1,"text":"TECH STACK\nReact + Vite\nNode.js + Express\nTypeScript\nMongoDB\nRedis + BullMQ\nObject storage","textPreview":"TECH STACK | React + Vite | Node.js + Express | TypeScript | MongoDB | Redis + BullMQ | Object storage","textChars":90,"textLines":7,"bbox":[1065,144,155,116]}
+{"kind":"notes","id":"nt/e09cvq","slide":1,"text":"Architecture diagram for BidSure SIH26100. The diagram reflects the revised stack requested by the user: Node.js and Express replace Python and Flask/FastAPI. External government integrations are represented as authorised adapters and should use approved APIs, sandbox data or mock responses for the hackathon. Human officer authority remains outside the automated decision engine."}

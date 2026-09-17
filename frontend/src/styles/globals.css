@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/* ============================================================
+   BIDSURE DESIGN TOKENS
+   Centralized CSS custom properties — single source of truth.
+   Do not scatter arbitrary Tailwind values when a token exists.
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* ── Surfaces ──────────────────────────────────────────── */
+    --background:       210 40% 98%;
+    --surface:          0   0%  100%;
+    --surface-elevated: 0   0%  100%;
+    --surface-muted:    210 40%  96%;
+
+    /* ── Foreground ────────────────────────────────────────── */
+    --foreground:       222 47%  11%;
+    --foreground-muted: 215 16%  47%;
+    --foreground-subtle:215 13%  65%;
+
+    /* ── Border ────────────────────────────────────────────── */
+    --border:           214 32%  91%;
+    --border-strong:    214 24%  80%;
+    --input:            214 32%  91%;
+
+    /* ── Brand ─────────────────────────────────────────────── */
+    --primary:          221 83%  53%;
+    --primary-foreground: 210 40% 98%;
+    --primary-hover:    221 83%  46%;
+
+    /* ── Secondary / Accent ────────────────────────────────── */
+    --secondary:        210 40%  96%;
+    --secondary-foreground: 222 47% 11%;
+    --accent:           210 40%  96%;
+    --accent-foreground: 222 47% 11%;
+
+    /* ── Semantic status — compliance / verification ────────
+       CRITICAL: Status must NEVER be communicated by color alone.
+       Always pair with an icon and a text label.
+    ────────────────────────────────────────────────────────── */
+    --status-pass:      142  76%  36%;   /* green  */
+    --status-pass-bg:   142  76%  95%;
+    --status-pass-border:142 60%  78%;
+
+    --status-fail:        0  84%  50%;   /* red    */
+    --status-fail-bg:     0  84%  95%;
+    --status-fail-border: 0  70%  80%;
+
+    --status-pending:   221  83%  53%;   /* blue   */
+    --status-pending-bg:221  83%  95%;
+    --status-pending-border:221 60% 78%;
+
+    --status-review:     38  92%  50%;   /* amber  */
+    --status-review-bg:  38  92%  95%;
+    --status-review-border:38 80%  78%;
+
+    --status-na:        215  16%  60%;   /* slate  */
+    --status-na-bg:     215  16%  95%;
+    --status-na-border: 215  13%  80%;
+
+    /* ── Semantic feedback ─────────────────────────────────── */
+    --success:          142  76%  36%;
+    --success-foreground: 210 40% 98%;
+    --success-bg:       142  76%  95%;
+
+    --warning:           38  92%  50%;
+    --warning-foreground:38  92%  10%;
+    --warning-bg:        38  92%  95%;
+
+    --destructive:        0  84%  50%;
+    --destructive-foreground: 210 40% 98%;
+    --destructive-bg:     0  84%  95%;
+
+    --info:             221  83%  53%;
+    --info-foreground:  210  40%  98%;
+    --info-bg:          221  83%  95%;
+
+    /* ── Risk levels ───────────────────────────────────────── */
+    --risk-low:         142  76%  36%;
+    --risk-medium:       38  92%  50%;
+    --risk-high:         17  90%  55%;
+    --risk-critical:      0  84%  50%;
+
+    /* ── Source / Environment labels ───────────────────────── */
+    --source-live:      142  76%  36%;
+    --source-mock:      275  70%  55%;
+    --source-demo:       38  92%  50%;
+
+    /* ── Focus ─────────────────────────────────────────────── */
+    --ring:             221  83%  53%;
+
+    /* ── Card / Popover ────────────────────────────────────── */
+    --card:             0   0%  100%;
+    --card-foreground:  222  47%  11%;
+    --popover:          0   0%  100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* ── Radius ────────────────────────────────────────────── */
+    --radius-sm:        0.25rem;
+    --radius:           0.5rem;
+    --radius-md:        0.5rem;
+    --radius-lg:        0.75rem;
+    --radius-full:      9999px;
+
+    /* ── Shadow ─────────────────────────────────────────────── */
+    --shadow-sm:        0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow:           0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md:        0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+    /* ── Transition ─────────────────────────────────────────── */
+    --transition-fast:  100ms ease;
+    --transition:       150ms ease;
+    --transition-slow:  200ms ease;
+
+    /* ── Typography scale ───────────────────────────────────── */
+    --text-xs:   0.75rem;    /* 12px — caption, label */
+    --text-sm:   0.875rem;   /* 14px — body-small, table */
+    --text-base: 1rem;       /* 16px — body */
+    --text-lg:   1.125rem;   /* 18px — subsection title */
+    --text-xl:   1.25rem;    /* 20px — section title */
+    --text-2xl:  1.5rem;     /* 24px — page title */
+    --text-3xl:  1.875rem;   /* 30px — display */
+
+    --leading-tight:  1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed:1.625;
+
+    /* ── Spacing scale ──────────────────────────────────────── */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10:2.5rem;
+    --space-12:3rem;
+    --space-16:4rem;
+  }
+
+  /* ── Base resets ─────────────────────────────────────────── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Focus visible ───────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* ── Typography ──────────────────────────────────────────── */
+  h1 { font-size: var(--text-2xl); font-weight: 700; line-height: var(--leading-tight); }
+  h2 { font-size: var(--text-xl);  font-weight: 600; line-height: var(--leading-tight); }
+  h3 { font-size: var(--text-lg);  font-weight: 600; line-height: var(--leading-tight); }
+  h4 { font-size: var(--text-base);font-weight: 600; }
+  h5 { font-size: var(--text-sm);  font-weight: 600; }
+  h6 { font-size: var(--text-xs);  font-weight: 600; }
+
+  /* ── Mono / code ─────────────────────────────────────────── */
+  code, kbd, samp, pre {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro",
+      Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-size: 0.9em;
+  }
+}

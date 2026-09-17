@@ -1,0 +1,97 @@
+{"kind":"deck","id":"pr/66e0du","name":"Deck"}
+{"kind":"layout","layoutId":"2d901b04-a436-446b-be02-bdca5a4ec8c3","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"3e606d0e-a28a-4600-95a4-dfd85db3122c","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/rtca1h","slide":1,"title":"BIDSURE","textShapes":45}
+{"kind":"textbox","id":"sh/vmt4nepg","slide":1,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,25,130,22]}
+{"kind":"textbox","id":"sh/g72lwj61","slide":1,"text":"SECURE SYSTEM ARCHITECTURE","textPreview":"SECURE SYSTEM ARCHITECTURE","textChars":26,"textLines":1,"bbox":[42,53,600,38]}
+{"kind":"textbox","id":"sh/h8bmpo7m","slide":1,"text":"SIH26100 | Node.js + Express | Controlled verification broker","textPreview":"SIH26100 | Node.js + Express | Controlled verification broker","textChars":61,"textLines":1,"bbox":[44,96,600,18]}
+{"kind":"textbox","id":"sh/6h03q98z","slide":1,"text":"Structure first. Routes second. Evidence always.","textPreview":"Structure first. Routes second. Evidence always.","textChars":48,"textLines":1,"bbox":[840,54,390,24]}
+{"kind":"textbox","id":"sh/7i9kjepk","slide":1,"text":"CLIENTS","textPreview":"CLIENTS","textChars":7,"textLines":1,"bbox":[35,135,145,455]}
+{"kind":"textbox","id":"sh/8jilszq5","slide":1,"text":"BIDSURE PRIVATE NETWORK","textPreview":"BIDSURE PRIVATE NETWORK","textChars":23,"textLines":1,"bbox":[205,135,720,455]}
+{"kind":"textbox","id":"sh/tkbml47q","slide":1,"text":"AUTHORISED EXTERNAL SOURCES","textPreview":"AUTHORISED EXTERNAL SOURCES","textChars":27,"textLines":1,"bbox":[950,135,295,455]}
+{"kind":"textbox","id":"sh/yd03mp83","slide":1,"text":"Bidder\nPre-check","textPreview":"Bidder | Pre-check","textChars":16,"textLines":2,"bbox":[52,205,110,62]}
+{"kind":"textbox","id":"sh/je9kfup8","slide":1,"text":"Officer\nReview console","textPreview":"Officer | Review console","textChars":22,"textLines":2,"bbox":[52,315,110,62]}
+{"kind":"textbox","id":"sh/nml87etw","slide":1,"text":"Auditor\nRead-only export","textPreview":"Auditor | Read-only export","textChars":24,"textLines":2,"bbox":[52,425,110,62]}
+{"kind":"textbox","id":"sh/2lc7y9cr","slide":1,"text":"All clients use HTTPS. No external portal credentials reach the browser.","textPreview":"All clients use HTTPS. No external portal credentials reach the browser.","textChars":72,"textLines":1,"bbox":[48,505,120,62]}
+{"kind":"textbox","id":"sh/9o3q94b2","slide":1,"text":"PUBLIC EDGE","textPreview":"PUBLIC EDGE","textChars":11,"textLines":1,"bbox":[230,166,120,18]}
+{"kind":"textbox","id":"sh/onu90zuh","slide":1,"text":"WAF /\nrate limit\nIngress policy","textPreview":"WAF / | rate limit | Ingress policy","textChars":31,"textLines":3,"bbox":[235,190,125,58]}
+{"kind":"textbox","id":"sh/bq58bet8","slide":1,"text":"React + Vite\nFrontend","textPreview":"React + Vite | Frontend","textChars":21,"textLines":2,"bbox":[405,190,125,58]}
+{"kind":"textbox","id":"sh/apcr29cn","slide":1,"text":"Express API\nNode.js + TypeScript\nREST / JSON | OIDC","textPreview":"Express API | Node.js + TypeScript | REST / JSON | OIDC","textChars":51,"textLines":3,"bbox":[575,180,180,78]}
+{"kind":"textbox","id":"sh/xsnqdobe","slide":1,"text":"Egress\ngateway\nAllowlisted routes","textPreview":"Egress | gateway | Allowlisted routes","textChars":33,"textLines":3,"bbox":[790,190,105,58]}
+{"kind":"textbox","id":"sh/wre94jut","slide":1,"text":"CONTROL PLANE","textPreview":"CONTROL PLANE","textChars":13,"textLines":1,"bbox":[230,282,150,18]}
+{"kind":"textbox","id":"sh/ru18zut4","slide":1,"text":"Tender + case\nVersions, clauses","textPreview":"Tender + case | Versions, clauses","textChars":31,"textLines":2,"bbox":[235,320,140,64]}
+{"kind":"textbox","id":"sh/qts7qpcj","slide":1,"text":"Document + evidence\nOCR, hashes, fields","textPreview":"Document + evidence | OCR, hashes, fields","textChars":39,"textLines":2,"bbox":[405,320,140,64]}
+{"kind":"textbox","id":"sh/upgbyxw7","slide":1,"text":"Verification\nAdapters, freshness","textPreview":"Verification | Adapters, freshness","textChars":32,"textLines":2,"bbox":[575,320,140,64]}
+{"kind":"textbox","id":"sh/vq9c7idc","slide":1,"text":"Rules + decision\nScore, review, audit","textPreview":"Rules + decision | Score, review, audit","textChars":37,"textLines":2,"bbox":[745,320,140,64]}
+{"kind":"textbox","id":"sh/gbit0nex","slide":1,"text":"DATA PLANE","textPreview":"DATA PLANE","textChars":10,"textLines":1,"bbox":[230,418,150,18]}
+{"kind":"textbox","id":"sh/hcru9svi","slide":1,"text":"MongoDB\nCase metadata","textPreview":"MongoDB | Case metadata","textChars":21,"textLines":2,"bbox":[235,455,140,64]}
+{"kind":"textbox","id":"sh/6lgbudwv","slide":1,"text":"Object storage\nDocuments, hashes","textPreview":"Object storage | Documents, hashes","textChars":32,"textLines":2,"bbox":[405,455,140,64]}
+{"kind":"textbox","id":"sh/7mps3idg","slide":1,"text":"Redis + BullMQ\nAsync jobs","textPreview":"Redis + BullMQ | Async jobs","textChars":25,"textLines":2,"bbox":[575,455,140,64]}
+{"kind":"textbox","id":"sh/8nytwne1","slide":1,"text":"Audit store\nAppend-only events","textPreview":"Audit store | Append-only events","textChars":30,"textLines":2,"bbox":[745,455,140,64]}
+{"kind":"textbox","id":"sh/to7a5svm","slide":1,"text":"API Setu / approved APIs\nProvider onboarding + consent","textPreview":"API Setu / approved APIs | Provider onboarding + consent","textChars":54,"textLines":2,"bbox":[980,190,235,52]}
+{"kind":"textbox","id":"sh/yhwbqdwz","slide":1,"text":"GSTN / PAN\nStatus + identity","textPreview":"GSTN / PAN | Status + identity","textChars":28,"textLines":2,"bbox":[980,275,110,54]}
+{"kind":"textbox","id":"sh/jipszyd4","slide":1,"text":"Udyam / NSIC\nMSE evidence","textPreview":"Udyam / NSIC | MSE evidence","textChars":25,"textLines":2,"bbox":[1105,275,110,54]}
+{"kind":"textbox","id":"sh/1cve5gf2","slide":1,"text":"MCA21 / DPIIT\nEntity + startup","textPreview":"MCA21 / DPIIT | Entity + startup","textChars":30,"textLines":2,"bbox":[980,365,110,54]}
+{"kind":"textbox","id":"sh/0bmdwbyh","slide":1,"text":"DigiLocker\nIssuer documents","textPreview":"DigiLocker | Issuer documents","textChars":27,"textLines":2,"bbox":[1105,365,110,54]}
+{"kind":"textbox","id":"sh/fadw36xw","slide":1,"text":"EPFO / ESIC\nWhere applicable","textPreview":"EPFO / ESIC | Where applicable","textChars":28,"textLines":2,"bbox":[980,455,110,54]}
+{"kind":"textbox","id":"sh/e94vu1gb","slide":1,"text":"BIS / debarment\nProduct + exclusion","textPreview":"BIS / debarment | Product + exclusion","textChars":35,"textLines":2,"bbox":[1105,455,110,54]}
+{"kind":"shape","id":"sh/d8be1wfq","slide":1,"bbox":[162,220,73,0]}
+{"kind":"shape","id":"sh/s72dsry5","slide":1,"bbox":[225,215,10,10]}
+{"kind":"textbox","id":"sh/r6twzmxk","slide":1,"text":"HTTPS","textPreview":"HTTPS","textChars":5,"textLines":1,"bbox":[182,201,42,14]}
+{"kind":"shape","id":"sh/q5kvq1gf","slide":1,"bbox":[162,330,73,0]}
+{"kind":"shape","id":"sh/5kbexwfu","slide":1,"bbox":[225,325,10,10]}
+{"kind":"shape","id":"sh/4j2dory9","slide":1,"bbox":[162,440,73,0]}
+{"kind":"shape","id":"sh/4nu54vy5","slide":1,"bbox":[225,435,10,10]}
+{"kind":"shape","id":"sh/5o3mx0fq","slide":1,"bbox":[360,219,45,0]}
+{"kind":"shape","id":"sh/ilcn2lgz","slide":1,"bbox":[398,214,10,10]}
+{"kind":"shape","id":"sh/jml4vqxk","slide":1,"bbox":[530,219,45,0]}
+{"kind":"shape","id":"sh/sbu58veh","slide":1,"bbox":[568,214,10,10]}
+{"kind":"shape","id":"sh/tcnm10fm","slide":1,"bbox":[755,219,35,0]}
+{"kind":"shape","id":"sh/69cn65wb","slide":1,"bbox":[783,214,10,10]}
+{"kind":"textbox","id":"sh/ral4zqxw","slide":1,"text":"request path","textPreview":"request path","textChars":12,"textLines":1,"bbox":[410,160,80,14]}
+{"kind":"shape","id":"sh/8falwbyx","slide":1,"bbox":[665,258,0,36]}
+{"kind":"shape","id":"sh/9gjmpgfi","slide":1,"bbox":[305,294,550,0]}
+{"kind":"textbox","id":"sh/bap8beh0","slide":1,"text":"internal service route","textPreview":"internal service route","textChars":22,"textLines":1,"bbox":[520,268,120,14]}
+{"kind":"shape","id":"sh/a9g729gf","slide":1,"bbox":[305,294,0,26]}
+{"kind":"shape","id":"sh/xcrqdoz6","slide":1,"bbox":[300,312,10,10]}
+{"kind":"shape","id":"sh/cbip4jyl","slide":1,"bbox":[475,294,0,26]}
+{"kind":"shape","id":"sh/36p87uh4","slide":1,"bbox":[470,312,10,10]}
+{"kind":"shape","id":"sh/25g7y90j","slide":1,"bbox":[645,294,0,26]}
+{"kind":"shape","id":"sh/p87q94zu","slide":1,"bbox":[640,312,10,10]}
+{"kind":"shape","id":"sh/o7yp0zyp","slide":1,"bbox":[815,294,0,26]}
+{"kind":"shape","id":"sh/fi5o3uhs","slide":1,"bbox":[810,312,10,10]}
+{"kind":"shape","id":"sh/ehw7up07","slide":1,"bbox":[645,384,0,46]}
+{"kind":"shape","id":"sh/idwr6pkf","slide":1,"bbox":[305,430,510,0]}
+{"kind":"textbox","id":"sh/je58fu1k","slide":1,"text":"evidence and event writes","textPreview":"evidence and event writes","textChars":25,"textLines":1,"bbox":[470,400,145,14]}
+{"kind":"shape","id":"sh/4fe98z25","slide":1,"bbox":[305,430,0,25]}
+{"kind":"shape","id":"sh/5gnqhkjq","slide":1,"bbox":[300,447,10,10]}
+{"kind":"shape","id":"sh/61wrapkb","slide":1,"bbox":[475,430,0,25]}
+{"kind":"shape","id":"sh/r258ju1w","slide":1,"bbox":[470,447,10,10]}
+{"kind":"shape","id":"sh/s3e9cz2h","slide":1,"bbox":[645,430,0,25]}
+{"kind":"shape","id":"sh/t47ql4j2","slide":1,"bbox":[640,447,10,10]}
+{"kind":"shape","id":"sh/e5gre9kn","slide":1,"bbox":[815,430,0,25]}
+{"kind":"shape","id":"sh/f6p8ne1s","slide":1,"bbox":[810,447,10,10]}
+{"kind":"shape","id":"sh/p0rud83a","slide":1,"bbox":[715,352,75,0]}
+{"kind":"shape","id":"sh/ozit43mp","slide":1,"bbox":[782,347,10,10]}
+{"kind":"textbox","id":"sh/ny9sbyl4","slide":1,"text":"approved source call","textPreview":"approved source call","textChars":20,"textLines":1,"bbox":[730,365,110,14]}
+{"kind":"shape","id":"sh/2x0b2t4j","slide":1,"bbox":[895,219,75,0]}
+{"kind":"shape","id":"sh/x4buh836","slide":1,"bbox":[962,214,10,10]}
+{"kind":"shape","id":"sh/c32t8nml","slide":1,"bbox":[952,219,0,311]}
+{"kind":"shape","id":"sh/b29cfil0","slide":1,"bbox":[952,216,28,0]}
+{"kind":"shape","id":"sh/a10b6d4v","slide":1,"bbox":[972,211,10,10]}
+{"kind":"shape","id":"sh/lsbuls3i","slide":1,"bbox":[952,302,28,0]}
+{"kind":"shape","id":"sh/kr2tcnmx","slide":1,"bbox":[972,297,10,10]}
+{"kind":"shape","id":"sh/svyl8v29","slide":1,"bbox":[952,392,28,0]}
+{"kind":"shape","id":"sh/tw7m103u","slide":1,"bbox":[972,387,10,10]}
+{"kind":"shape","id":"sh/6tg36lk3","slide":1,"bbox":[952,482,28,0]}
+{"kind":"shape","id":"sh/7up4zqlo","slide":1,"bbox":[972,477,10,10]}
+{"kind":"textbox","id":"sh/kryl4v2x","slide":1,"text":"source-specific adapter contracts","textPreview":"source-specific adapter contracts","textChars":33,"textLines":1,"bbox":[976,530,235,16]}
+{"kind":"textbox","id":"sh/5s7mx03i","slide":1,"text":"ROUTE LEGEND","textPreview":"ROUTE LEGEND","textChars":12,"textLines":1,"bbox":[42,625,100,16]}
+{"kind":"shape","id":"sh/i5g32lk7","slide":1,"bbox":[142,633,48,0]}
+{"kind":"textbox","id":"sh/jqp4vqlc","slide":1,"text":"synchronous","textPreview":"synchronous","textChars":11,"textLines":1,"bbox":[198,625,80,16]}
+{"kind":"shape","id":"sh/w3el0b21","slide":1,"bbox":[290,633,48,0]}
+{"kind":"textbox","id":"sh/x4nmtg3m","slide":1,"text":"external / async","textPreview":"external / async","textChars":16,"textLines":1,"bbox":[346,625,100,16]}
+{"kind":"textbox","id":"sh/zy54j658","slide":1,"text":"TECHNOLOGY BASELINE","textPreview":"TECHNOLOGY BASELINE","textChars":19,"textLines":1,"bbox":[500,625,150,16]}
+{"kind":"textbox","id":"sh/yxcna1on","slide":1,"text":"React + Vite  |  Node.js 24 LTS  |  Express 5  |  TypeScript  |  MongoDB  |  Redis + BullMQ  |  S3-compatible storage","textPreview":"React + Vite  |  Node.js 24 LTS  |  Express 5  |  TypeScript  |  MongoDB  |  Redis + BullMQ  |  S3-compatible storage","textChars":117,"textLines":1,"bbox":[500,645,700,18]}
+{"kind":"textbox","id":"sh/l0nmlgne","slide":1,"text":"Human officer decision remains the final qualification authority.","textPreview":"Human officer decision remains the final qualification authority.","textChars":65,"textLines":1,"bbox":[500,669,500,16]}
+{"kind":"notes","id":"nt/rtca1h","slide":1,"text":"Cleaned architecture diagram for BidSure SIH26100. This version uses dedicated horizontal and vertical connector lanes so lines do not pass through component boxes. The architecture shows clients, public edge, private control/data planes, egress gateway, and authorised external sources. Node.js and Express replace Python and Flask/FastAPI. External integration requires provider approval, scoped credentials, consent or authority, and source-specific contracts."}

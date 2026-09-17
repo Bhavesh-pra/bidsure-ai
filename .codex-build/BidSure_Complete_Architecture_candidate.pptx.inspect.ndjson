@@ -1,0 +1,277 @@
+{"kind":"deck","id":"pr/5dzq8h","name":"Deck"}
+{"kind":"layout","layoutId":"90834ad8-7203-4d54-8f5c-8a78c5bcdceb","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"1e06f6c2-ad9a-47cd-b6a0-e2ea9ee3da00","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/7lin2i","slide":1,"title":"BIDSURE","textShapes":35}
+{"kind":"textbox","id":"sh/xcfit0bu","slide":1,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,120,20]}
+{"kind":"textbox","id":"sh/a9ozylc3","slide":1,"text":"Complete BidSure System Architecture","textPreview":"Complete BidSure System Architecture","textChars":36,"textLines":1,"bbox":[42,53,880,40]}
+{"kind":"textbox","id":"sh/bax0rqto","slide":1,"text":"Registration, authentication, evidence, verification, decision and audit operate as one controlled platform","textPreview":"Registration, authentication, evidence, verification, decision and audit operate as one controlled platform","textChars":107,"textLines":1,"bbox":[44,98,980,18]}
+{"kind":"shape","id":"sh/kzq14vu5","slide":1,"bbox":[42,126,1196,0]}
+{"kind":"textbox","id":"sh/l0zix0bq","slide":1,"text":"SIH26100 | Architecture set 1 of 5","textPreview":"SIH26100 | Architecture set 1 of 5","textChars":34,"textLines":1,"bbox":[42,687,220,14]}
+{"kind":"textbox","id":"sh/yx8j25cz","slide":1,"text":"Node.js + Express + TypeScript","textPreview":"Node.js + Express + TypeScript","textChars":30,"textLines":1,"bbox":[1008,687,230,14]}
+{"kind":"textbox","id":"sh/zyh0vqtk","slide":1,"text":"USERS AND WORKSPACES","textPreview":"USERS AND WORKSPACES","textChars":20,"textLines":1,"bbox":[36,150,155,490]}
+{"kind":"textbox","id":"sh/03mhsbu1","slide":1,"text":"Bidder portal\nRegistration and pre-check","textPreview":"Bidder portal | Registration and pre-check","textChars":40,"textLines":2,"bbox":[55,218,118,55]}
+{"kind":"textbox","id":"sh/14vilgvm","slide":1,"text":"Officer console\nTender review and decision","textPreview":"Officer console | Tender review and decision","textChars":42,"textLines":2,"bbox":[55,330,118,55]}
+{"kind":"textbox","id":"sh/14f6lkn6","slide":1,"text":"Admin console\nRules and source control","textPreview":"Admin console | Rules and source control","textChars":38,"textLines":2,"bbox":[55,442,118,55]}
+{"kind":"textbox","id":"sh/gj65cfml","slide":1,"text":"Organisation profile, role and tender scope determine what each user can access.","textPreview":"Organisation profile, role and tender scope determine what each user can access.","textChars":80,"textLines":1,"bbox":[55,535,115,58]}
+{"kind":"textbox","id":"sh/fixoja50","slide":1,"text":"BIDSURE APPLICATION AND DATA PLATFORM","textPreview":"BIDSURE APPLICATION AND DATA PLATFORM","textChars":37,"textLines":1,"bbox":[215,150,710,490]}
+{"kind":"textbox","id":"sh/ehona54f","slide":1,"text":"PUBLIC ENTRY","textPreview":"PUBLIC ENTRY","textChars":12,"textLines":1,"bbox":[238,177,110,16]}
+{"kind":"textbox","id":"sh/p8z6p4n2","slide":1,"text":"Registration and identity\nOTP or SSO, organisation profile, RBAC","textPreview":"Registration and identity | OTP or SSO, organisation profile, RBAC","textChars":64,"textLines":2,"bbox":[240,203,135,62]}
+{"kind":"textbox","id":"sh/o7q5gzmx","slide":1,"text":"React frontend\nBidder and officer views","textPreview":"React frontend | Bidder and officer views","textChars":39,"textLines":2,"bbox":[400,203,125,62]}
+{"kind":"textbox","id":"sh/36xonu5c","slide":1,"text":"Express API gateway\nAuthentication, routing, policy and OpenAPI contracts","textPreview":"Express API gateway | Authentication, routing, policy and OpenAPI contracts","textChars":73,"textLines":2,"bbox":[550,190,160,82]}
+{"kind":"textbox","id":"sh/25onep4r","slide":1,"text":"Document intake guard\nUpload, scan, hash and queue","textPreview":"Document intake guard | Upload, scan, hash and queue","textChars":50,"textLines":2,"bbox":[735,203,155,62]}
+{"kind":"textbox","id":"sh/dcz6t4ne","slide":1,"text":"BUSINESS SERVICES","textPreview":"BUSINESS SERVICES","textChars":17,"textLines":1,"bbox":[238,300,130,16]}
+{"kind":"textbox","id":"sh/cbqpkzmt","slide":1,"text":"Tender management\nTender, clauses, corrigenda, requirements","textPreview":"Tender management | Tender, clauses, corrigenda, requirements","textChars":59,"textLines":2,"bbox":[240,330,125,65]}
+{"kind":"textbox","id":"sh/wrihc7y1","slide":1,"text":"Evidence service\nOCR fields, documents, confidence","textPreview":"Evidence service | OCR fields, documents, confidence","textChars":50,"textLines":2,"bbox":[385,330,125,65]}
+{"kind":"textbox","id":"sh/hsri5cfm","slide":1,"text":"Verification orchestrator\nAdapter jobs, freshness and conflicts","textPreview":"Verification orchestrator | Adapter jobs, freshness and conflicts","textChars":63,"textLines":2,"bbox":[530,330,125,65]}
+{"kind":"textbox","id":"sh/up0zaxgb","slide":1,"text":"Compliance engine\nRules, findings, score and recommendation","textPreview":"Compliance engine | Rules, findings, score and recommendation","textChars":59,"textLines":2,"bbox":[675,330,125,65]}
+{"kind":"textbox","id":"sh/vq9032xw","slide":1,"text":"Decision\nOfficer action","textPreview":"Decision | Officer action","textChars":23,"textLines":2,"bbox":[820,330,75,65]}
+{"kind":"textbox","id":"sh/4vihgryd","slide":1,"text":"CLOUD DATA SERVICES","textPreview":"CLOUD DATA SERVICES","textChars":19,"textLines":1,"bbox":[238,430,140,16]}
+{"kind":"textbox","id":"sh/5wbi9cfy","slide":1,"text":"MongoDB\nCases, users, rules, findings","textPreview":"MongoDB | Cases, users, rules, findings","textChars":37,"textLines":2,"bbox":[240,460,125,65]}
+{"kind":"textbox","id":"sh/it0zehg7","slide":1,"text":"Cloud object storage\nPDFs, images, versions, exports","textPreview":"Cloud object storage | PDFs, images, versions, exports","textChars":52,"textLines":2,"bbox":[385,460,125,65]}
+{"kind":"textbox","id":"sh/ju907mxs","slide":1,"text":"Redis and BullMQ\nOCR, adapters, retries and schedules","textPreview":"Redis and BullMQ | OCR, adapters, retries and schedules","textChars":53,"textLines":2,"bbox":[530,460,125,65]}
+{"kind":"textbox","id":"sh/kzyh4ny9","slide":1,"text":"Audit store\nAccess, evidence, rule and decision events","textPreview":"Audit store | Access, evidence, rule and decision events","textChars":54,"textLines":2,"bbox":[675,460,125,65]}
+{"kind":"textbox","id":"sh/l07yxsfe","slide":1,"text":"Rule registry\nVersions","textPreview":"Rule registry | Versions","textChars":22,"textLines":2,"bbox":[820,460,75,65]}
+{"kind":"textbox","id":"sh/3edk3qhc","slide":1,"text":"INTEGRATION CONTROL PLANE","textPreview":"INTEGRATION CONTROL PLANE","textChars":25,"textLines":1,"bbox":[950,150,292,490]}
+{"kind":"textbox","id":"sh/2d4jal0r","slide":1,"text":"Source registry and policy\nPurpose, consent, credentials, rate and freshness rules","textPreview":"Source registry and policy | Purpose, consent, credentials, rate and freshness rules","textChars":82,"textLines":2,"bbox":[975,205,240,58]}
+{"kind":"textbox","id":"sh/pgf250z2","slide":1,"text":"Adapter gateway\nNormalises every source into one verification contract","textPreview":"Adapter gateway | Normalises every source into one verification contract","textChars":70,"textLines":2,"bbox":[975,295,240,65]}
+{"kind":"textbox","id":"sh/of6lcvih","slide":1,"text":"Mock platform\nSynthetic bidder data and demo APIs","textPreview":"Mock platform | Synthetic bidder data and demo APIs","textChars":49,"textLines":2,"bbox":[975,400,110,70]}
+{"kind":"textbox","id":"sh/fqdkzqh0","slide":1,"text":"Approved sources\nAPI Setu and provider APIs","textPreview":"Approved sources | API Setu and provider APIs","textChars":43,"textLines":2,"bbox":[1105,400,110,70]}
+{"kind":"textbox","id":"sh/ep4j6l0f","slide":1,"text":"Demo and production use the same adapter contract. The source policy decides which one runs.","textPreview":"Demo and production use the same adapter contract. The source policy decides which one runs.","textChars":92,"textLines":1,"bbox":[980,505,230,45]}
+{"kind":"shape","id":"sh/1cv21gz6","slide":1,"bbox":[173,245,67,0]}
+{"kind":"shape","id":"sh/grm18bil","slide":1,"bbox":[229,240,11,11]}
+{"kind":"shape","id":"sh/rmtkv6h4","slide":1,"bbox":[173,357,67,0]}
+{"kind":"shape","id":"sh/6lkj210j","slide":1,"bbox":[229,352,11,11]}
+{"kind":"shape","id":"sh/mt4n69w3","slide":1,"bbox":[173,469,67,0]}
+{"kind":"shape","id":"sh/7uxofedo","slide":1,"bbox":[229,464,11,11]}
+{"kind":"shape","id":"sh/8v658je9","slide":1,"bbox":[375,234,25,0]}
+{"kind":"shape","id":"sh/9wf6h4ve","slide":1,"bbox":[391,229,11,11]}
+{"kind":"shape","id":"sh/yp4n2pwr","slide":1,"bbox":[525,234,25,0]}
+{"kind":"shape","id":"sh/zqdobuxc","slide":1,"bbox":[541,229,11,11]}
+{"kind":"shape","id":"sh/krm54zex","slide":1,"bbox":[710,234,25,0]}
+{"kind":"shape","id":"sh/lsv6d4vi","slide":1,"bbox":[726,229,11,11]}
+{"kind":"shape","id":"sh/a1knypwv","slide":1,"bbox":[630,272,0,40]}
+{"kind":"shape","id":"sh/b2do7uxg","slide":1,"bbox":[302,312,555,0]}
+{"kind":"shape","id":"sh/dgjqdsfy","slide":1,"bbox":[302,312,0,18]}
+{"kind":"shape","id":"sh/sfa94nyd","slide":1,"bbox":[297,320,11,11]}
+{"kind":"shape","id":"sh/re18bixs","slide":1,"bbox":[447,312,0,18]}
+{"kind":"shape","id":"sh/qtsr2dg7","slide":1,"bbox":[442,320,11,11]}
+{"kind":"shape","id":"sh/5szq98fm","slide":1,"bbox":[592,312,0,18]}
+{"kind":"shape","id":"sh/4rq903yh","slide":1,"bbox":[587,320,11,11]}
+{"kind":"shape","id":"sh/3qh87ixw","slide":1,"bbox":[737,312,0,18]}
+{"kind":"shape","id":"sh/ip8rydgb","slide":1,"bbox":[732,320,11,11]}
+{"kind":"shape","id":"sh/hozq58zq","slide":1,"bbox":[857,312,0,18]}
+{"kind":"shape","id":"sh/gnq9w3y5","slide":1,"bbox":[852,320,11,11]}
+{"kind":"shape","id":"sh/87u9c361","slide":1,"bbox":[592,395,0,47]}
+{"kind":"shape","id":"sh/983ql87m","slide":1,"bbox":[302,442,555,0]}
+{"kind":"shape","id":"sh/m5sratov","slide":1,"bbox":[302,442,0,18]}
+{"kind":"shape","id":"sh/76l8jypg","slide":1,"bbox":[297,451,11,11]}
+{"kind":"shape","id":"sh/03a98365","slide":1,"bbox":[447,442,0,18]}
+{"kind":"shape","id":"sh/l4jqho7a","slide":1,"bbox":[442,451,11,11]}
+{"kind":"shape","id":"sh/y1sr6toz","slide":1,"bbox":[592,442,0,18]}
+{"kind":"shape","id":"sh/z218fypk","slide":1,"bbox":[587,451,11,11]}
+{"kind":"shape","id":"sh/4ze9kn69","slide":1,"bbox":[737,442,0,18]}
+{"kind":"shape","id":"sh/50natsnu","slide":1,"bbox":[732,451,11,11]}
+{"kind":"shape","id":"sh/f69kzqd8","slide":1,"bbox":[857,442,0,18]}
+{"kind":"shape","id":"sh/e5036lcn","slide":1,"bbox":[852,451,11,11]}
+{"kind":"shape","id":"sh/18r21gve","slide":1,"bbox":[655,362,320,0]}
+{"kind":"shape","id":"sh/07il8vut","slide":1,"bbox":[964,357,11,11]}
+{"kind":"shape","id":"sh/nut43qt4","slide":1,"bbox":[1095,263,0,32]}
+{"kind":"shape","id":"sh/2903alcj","slide":1,"bbox":[1090,283,11,11]}
+{"kind":"shape","id":"sh/pwbm50ba","slide":1,"bbox":[1085,435,20,0]}
+{"kind":"shape","id":"sh/ov2lcvup","slide":1,"bbox":[1095,430,11,11]}
+{"kind":"textbox","id":"sh/3epkr6d0","slide":1,"text":"source request","textPreview":"source request","textChars":14,"textLines":1,"bbox":[785,367,86,14]}
+{"kind":"notes","id":"nt/7lin2i","slide":1,"text":"Complete system architecture requested after team review. The slide shows registration, authentication, frontend, Express API routing, document intake, business services, cloud data services, mock platform, source adapters and approved production sources. The user and earlier project sources define the product requirements."}
+{"kind":"slide","id":"sl/2ib51m","slide":2,"title":"BIDSURE","textShapes":24}
+{"kind":"textbox","id":"sh/wfyh0zqh","slide":2,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,120,20]}
+{"kind":"textbox","id":"sh/vep0rupw","slide":2,"text":"Bid Processing and Verification Workflow","textPreview":"Bid Processing and Verification Workflow","textChars":40,"textLines":1,"bbox":[42,53,880,40]}
+{"kind":"textbox","id":"sh/adgzyp8b","slide":2,"text":"The platform keeps every stage visible so officers can understand what happened, why it happened and what requires action","textPreview":"The platform keeps every stage visible so officers can understand what happened, why it happened and what requires action","textChars":121,"textLines":1,"bbox":[44,98,980,18]}
+{"kind":"shape","id":"sh/9c7ipk7q","slide":2,"bbox":[42,126,1196,0]}
+{"kind":"textbox","id":"sh/8rehwfq5","slide":2,"text":"SIH26100 | Architecture set 2 of 5","textPreview":"SIH26100 | Architecture set 2 of 5","textChars":34,"textLines":1,"bbox":[42,687,220,14]}
+{"kind":"textbox","id":"sh/nq50napk","slide":2,"text":"Node.js + Express + TypeScript","textPreview":"Node.js + Express + TypeScript","textChars":30,"textLines":1,"bbox":[1008,687,230,14]}
+{"kind":"textbox","id":"sh/mpwzu58f","slide":2,"text":"Bidder path","textPreview":"Bidder path","textChars":11,"textLines":1,"bbox":[54,164,120,18]}
+{"kind":"textbox","id":"sh/lonilk7u","slide":2,"text":"System path","textPreview":"System path","textChars":11,"textLines":1,"bbox":[54,354,120,18]}
+{"kind":"textbox","id":"sh/0nehsfq9","slide":2,"text":"Officer path","textPreview":"Officer path","textChars":12,"textLines":1,"bbox":[54,550,120,18]}
+{"kind":"textbox","id":"sh/ihoja98r","slide":2,"text":"1  Register and authenticate\nOTP or SSO, organisation profile, user role","textPreview":"1  Register and authenticate | OTP or SSO, organisation profile, user role","textChars":72,"textLines":2,"bbox":[170,155,150,70]}
+{"kind":"textbox","id":"sh/jihkje9c","slide":2,"text":"2  Create tender workspace\nTender version, clauses, documents and corrigenda","textPreview":"2  Create tender workspace | Tender version, clauses, documents and corrigenda","textChars":76,"textLines":2,"bbox":[365,155,150,70]}
+{"kind":"textbox","id":"sh/kjq1cjqx","slide":2,"text":"3  Submit bid package\nDocuments, declarations, certificates and metadata","textPreview":"3  Submit bid package | Documents, declarations, certificates and metadata","textChars":72,"textLines":2,"bbox":[560,155,150,70]}
+{"kind":"textbox","id":"sh/5kz2l4ri","slide":2,"text":"4  Pre-check status\nBidder sees missing or expired documents before submission","textPreview":"4  Pre-check status | Bidder sees missing or expired documents before submission","textChars":78,"textLines":2,"bbox":[755,155,150,70]}
+{"kind":"shape","id":"sh/adoj6p8v","slide":2,"bbox":[320,190,45,0]}
+{"kind":"shape","id":"sh/vex0fu9g","slide":2,"bbox":[354,185,11,11]}
+{"kind":"shape","id":"sh/wf618zq1","slide":2,"bbox":[515,190,45,0]}
+{"kind":"shape","id":"sh/xgf2h4r6","slide":2,"bbox":[549,185,11,11]}
+{"kind":"shape","id":"sh/mp4j2p8j","slide":2,"bbox":[710,190,45,0]}
+{"kind":"shape","id":"sh/nad0bu94","slide":2,"bbox":[744,185,11,11]}
+{"kind":"textbox","id":"sh/butgjqpw","slide":2,"text":"5  Intake and evidence creation\nVirus scan, file hash, OCR, document type, extracted fields","textPreview":"5  Intake and evidence creation | Virus scan, file hash, OCR, document type, extracted fields","textChars":91,"textLines":2,"bbox":[170,340,150,80]}
+{"kind":"textbox","id":"sh/qtkzalob","slide":2,"text":"6  Source verification\nMock or approved adapter returns normalised status and freshness","textPreview":"6  Source verification | Mock or approved adapter returns normalised status and freshness","textChars":87,"textLines":2,"bbox":[365,340,150,80]}
+{"kind":"textbox","id":"sh/dgbyl072","slide":2,"text":"7  Rule evaluation\nTender requirement plus evidence plus source result","textPreview":"7  Rule evaluation | Tender requirement plus evidence plus source result","textChars":70,"textLines":2,"bbox":[560,340,150,80]}
+{"kind":"textbox","id":"sh/cv2hcv6h","slide":2,"text":"8  Risk and recommendation\nPass, fail, pending or review required with reasons","textPreview":"8  Risk and recommendation | Pass, fail, pending or review required with reasons","textChars":78,"textLines":2,"bbox":[755,340,150,80]}
+{"kind":"shape","id":"sh/zitgnqp8","slide":2,"bbox":[320,380,45,0]}
+{"kind":"shape","id":"sh/yhkzelon","slide":2,"bbox":[354,375,11,11]}
+{"kind":"shape","id":"sh/lkvyp07y","slide":2,"bbox":[515,380,45,0]}
+{"kind":"shape","id":"sh/0jmhgv6t","slide":2,"bbox":[549,375,11,11]}
+{"kind":"shape","id":"sh/fm9gb6po","slide":2,"bbox":[710,380,45,0]}
+{"kind":"shape","id":"sh/ul0f21oj","slide":2,"bbox":[744,375,11,11]}
+{"kind":"shape","id":"sh/kredc7m1","slide":2,"bbox":[635,225,0,95]}
+{"kind":"shape","id":"sh/5s7e5cnm","slide":2,"bbox":[630,308,11,11]}
+{"kind":"textbox","id":"sh/i5wvax4b","slide":2,"text":"9  Officer evidence review\nOpen source, document and rule evidence before deciding","textPreview":"9  Officer evidence review | Open source, document and rule evidence before deciding","textChars":82,"textLines":2,"bbox":[365,530,160,74]}
+{"kind":"textbox","id":"sh/j65wj25g","slide":2,"text":"10  Officer action\nQualify, clarify, escalate or disqualify with reason","textPreview":"10  Officer action | Qualify, clarify, escalate or disqualify with reason","textChars":71,"textLines":2,"bbox":[570,530,160,74]}
+{"kind":"textbox","id":"sh/w3ed8nm5","slide":2,"text":"11  Audit and report\nFrozen decision input, event log and export","textPreview":"11  Audit and report | Frozen decision input, event log and export","textChars":64,"textLines":2,"bbox":[775,530,160,74]}
+{"kind":"shape","id":"sh/x4nuhsnq","slide":2,"bbox":[525,567,45,0]}
+{"kind":"shape","id":"sh/a1wv6d4z","slide":2,"bbox":[554,562,11,11]}
+{"kind":"shape","id":"sh/v25cfi5k","slide":2,"bbox":[730,567,45,0]}
+{"kind":"shape","id":"sh/gzydkrm9","slide":2,"bbox":[759,562,11,11]}
+{"kind":"shape","id":"sh/h0redwnu","slide":2,"bbox":[830,420,0,90]}
+{"kind":"shape","id":"sh/d4ja5o36","slide":2,"bbox":[825,498,11,11]}
+{"kind":"textbox","id":"sh/c3atcj2l","slide":2,"text":"CONDITIONS AND EXCEPTIONS","textPreview":"CONDITIONS AND EXCEPTIONS","textChars":25,"textLines":1,"bbox":[965,150,270,455]}
+{"kind":"textbox","id":"sh/b21s3elg","slide":2,"text":"Low OCR confidence\nRoute to manual evidence correction. Do not evaluate uncertain values as a pass.","textPreview":"Low OCR confidence | Route to manual evidence correction. Do not evaluate uncertain values as a pass.","textChars":99,"textLines":2,"bbox":[990,205,220,63]}
+{"kind":"textbox","id":"sh/q1sra9kv","slide":2,"text":"Source unavailable or rate limited\nSet Pending Re-verification. Retry under source policy.","textPreview":"Source unavailable or rate limited | Set Pending Re-verification. Retry under source policy.","textChars":90,"textLines":2,"bbox":[990,295,220,63]}
+{"kind":"textbox","id":"sh/l8ja9o3i","slide":2,"text":"Mandatory requirement failed\nShow the rule, linked evidence and permitted officer action.","textPreview":"Mandatory requirement failed | Show the rule, linked evidence and permitted officer action.","textChars":89,"textLines":2,"bbox":[990,385,220,63]}
+{"kind":"textbox","id":"sh/07atgj2x","slide":2,"text":"Data conflict\nSet Review Required. Preserve both sources and their timestamps.","textPreview":"Data conflict | Set Review Required. Preserve both sources and their timestamps.","textChars":78,"textLines":2,"bbox":[990,475,220,63]}
+{"kind":"notes","id":"nt/2ib51m","slide":2,"text":"End-to-end workflow. Stage 1 to 4 describes user onboarding and submission. Stage 5 to 8 describes system processing and verification. Stage 9 to 11 describes the procurement officer review, decision and audit. Exception states prevent silent passes."}
+{"kind":"slide","id":"sl/cd9xom","slide":3,"title":"BIDSURE","textShapes":25}
+{"kind":"textbox","id":"sh/ovidcf6t","slide":3,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,120,20]}
+{"kind":"textbox","id":"sh/3a9cjap8","slide":3,"text":"AI and Document Intelligence Architecture","textPreview":"AI and Document Intelligence Architecture","textChars":41,"textLines":1,"bbox":[42,53,880,40]}
+{"kind":"textbox","id":"sh/290ba5on","slide":3,"text":"AI structures evidence and produces explanations. Rules and officers control the compliance outcome","textPreview":"AI structures evidence and produces explanations. Rules and officers control the compliance outcome","textChars":99,"textLines":1,"bbox":[44,98,980,18]}
+{"kind":"shape","id":"sh/18ruh072","slide":3,"bbox":[42,126,1196,0]}
+{"kind":"textbox","id":"sh/g7itov6h","slide":3,"text":"SIH26100 | Architecture set 3 of 5","textPreview":"SIH26100 | Architecture set 3 of 5","textChars":34,"textLines":1,"bbox":[42,687,220,14]}
+{"kind":"textbox","id":"sh/f69cfqpw","slide":3,"text":"Node.js + Express + TypeScript","textPreview":"Node.js + Express + TypeScript","textChars":30,"textLines":1,"bbox":[1008,687,230,14]}
+{"kind":"textbox","id":"sh/e50bm58r","slide":3,"text":"UNTRUSTED INPUTS","textPreview":"UNTRUSTED INPUTS","textChars":16,"textLines":1,"bbox":[42,150,220,470]}
+{"kind":"textbox","id":"sh/l4vut47m","slide":3,"text":"Tender documents\nATC, STC, corrigenda and requirement clauses","textPreview":"Tender documents | ATC, STC, corrigenda and requirement clauses","textChars":61,"textLines":2,"bbox":[68,210,168,58]}
+{"kind":"textbox","id":"sh/k3mdkz61","slide":3,"text":"Bidder documents\nCertificates, declarations, authorisations and financial evidence","textPreview":"Bidder documents | Certificates, declarations, authorisations and financial evidence","textChars":82,"textLines":2,"bbox":[68,300,168,58]}
+{"kind":"textbox","id":"sh/yxc72lsz","slide":3,"text":"Source responses\nMock and provider responses in source-specific formats","textPreview":"Source responses | Mock and provider responses in source-specific formats","textChars":71,"textLines":2,"bbox":[68,390,168,58]}
+{"kind":"textbox","id":"sh/zylovqt4","slide":3,"text":"Documents can contain misleading text. BidSure treats every uploaded document as data, never as instructions.","textPreview":"Documents can contain misleading text. BidSure treats every uploaded document as data, never as instructions.","textChars":109,"textLines":1,"bbox":[68,500,168,54]}
+{"kind":"textbox","id":"sh/0zup4vap","slide":3,"text":"CONTROLLED AI AND EVIDENCE PIPELINE","textPreview":"CONTROLLED AI AND EVIDENCE PIPELINE","textChars":35,"textLines":1,"bbox":[290,150,620,470]}
+{"kind":"textbox","id":"sh/l0n6x0ba","slide":3,"text":"File guard\nType and size checks, virus scan, hash, object storage","textPreview":"File guard | Type and size checks, virus scan, hash, object storage","textChars":65,"textLines":2,"bbox":[320,205,125,70]}
+{"kind":"textbox","id":"sh/qtc7y1sn","slide":3,"text":"OCR worker\nPage text, bounding boxes and confidence","textPreview":"OCR worker | Page text, bounding boxes and confidence","textChars":51,"textLines":2,"bbox":[475,205,125,70]}
+{"kind":"textbox","id":"sh/bulor6t8","slide":3,"text":"Classifier\nDocument type and issuer pattern","textPreview":"Classifier | Document type and issuer pattern","textChars":43,"textLines":2,"bbox":[630,205,125,70]}
+{"kind":"textbox","id":"sh/cvup0bat","slide":3,"text":"LLM extraction\nSchema-only output","textPreview":"LLM extraction | Schema-only output","textChars":33,"textLines":2,"bbox":[785,205,95,70]}
+{"kind":"shape","id":"sh/dw36tgbe","slide":3,"bbox":[445,240,30,0]}
+{"kind":"shape","id":"sh/apw7a5sr","slide":3,"bbox":[464,235,11,11]}
+{"kind":"shape","id":"sh/vq5o3atc","slide":3,"bbox":[600,240,30,0]}
+{"kind":"shape","id":"sh/7yxcfy5s","slide":3,"bbox":[619,235,11,11]}
+{"kind":"shape","id":"sh/6xov6d47","slide":3,"bbox":[755,240,30,0]}
+{"kind":"shape","id":"sh/t0fuh8ni","slide":3,"bbox":[774,235,11,11]}
+{"kind":"textbox","id":"sh/sz6d83md","slide":3,"text":"Evidence validator\nSchema validation, confidence thresholds, entity matching and duplicate detection","textPreview":"Evidence validator | Schema validation, confidence thresholds, entity matching and duplicate detection","textChars":100,"textLines":2,"bbox":[395,350,160,76]}
+{"kind":"textbox","id":"sh/f2xcji5o","slide":3,"text":"Evidence graph\nRequirement, field, page, source and confidence links","textPreview":"Evidence graph | Requirement, field, page, source and confidence links","textChars":68,"textLines":2,"bbox":[590,350,145,76]}
+{"kind":"textbox","id":"sh/u1ovad43","slide":3,"text":"Rule engine\nDeterministic policy evaluation","textPreview":"Rule engine | Deterministic policy evaluation","textChars":43,"textLines":2,"bbox":[770,350,110,76]}
+{"kind":"shape","id":"sh/hozulsnu","slide":3,"bbox":[833,275,0,55]}
+{"kind":"shape","id":"sh/g36dcnm9","slide":3,"bbox":[828,318,11,11]}
+{"kind":"shape","id":"sh/3qhcni50","slide":3,"bbox":[555,388,35,0]}
+{"kind":"shape","id":"sh/2p8vex4f","slide":3,"bbox":[579,383,11,11]}
+{"kind":"shape","id":"sh/0vat4n2d","slide":3,"bbox":[735,388,35,0]}
+{"kind":"shape","id":"sh/1wjuxsjy","slide":3,"bbox":[759,383,11,11]}
+{"kind":"textbox","id":"sh/et8b2xkn","slide":3,"text":"AI explanation layer\nPlain-language finding summary and clarification questions","textPreview":"AI explanation layer | Plain-language finding summary and clarification questions","textChars":79,"textLines":2,"bbox":[495,480,150,70]}
+{"kind":"textbox","id":"sh/zuhcv21s","slide":3,"text":"Officer review\nEvidence-linked action and reason capture","textPreview":"Officer review | Evidence-linked action and reason capture","textChars":56,"textLines":2,"bbox":[680,480,150,70]}
+{"kind":"shape","id":"sh/crqt0n2h","slide":3,"bbox":[645,515,35,0]}
+{"kind":"shape","id":"sh/dszutsj2","slide":3,"bbox":[669,510,11,11]}
+{"kind":"shape","id":"sh/q58bydkb","slide":3,"bbox":[715,426,0,42]}
+{"kind":"shape","id":"sh/rqhcri1w","slide":3,"bbox":[710,456,11,11]}
+{"kind":"textbox","id":"sh/43qtw325","slide":3,"text":"MODEL SAFETY BOUNDARY","textPreview":"MODEL SAFETY BOUNDARY","textChars":21,"textLines":1,"bbox":[940,150,295,470]}
+{"kind":"textbox","id":"sh/p4zup8jq","slide":3,"text":"No direct source access\nThe model cannot call government APIs or use credentials.","textPreview":"No direct source access | The model cannot call government APIs or use credentials.","textChars":81,"textLines":2,"bbox":[970,205,235,55]}
+{"kind":"textbox","id":"sh/t8vqx4zi","slide":3,"text":"Prompt isolation\nDocument text remains quoted input; system policy stays outside the document.","textPreview":"Prompt isolation | Document text remains quoted input; system policy stays outside the document.","textChars":94,"textLines":2,"bbox":[970,290,235,55]}
+{"kind":"textbox","id":"sh/s7m94jix","slide":3,"text":"Data minimisation\nRedact or use approved local inference before sending sensitive content to a model.","textPreview":"Data minimisation | Redact or use approved local inference before sending sensitive content to a model.","textChars":101,"textLines":2,"bbox":[970,375,235,55]}
+{"kind":"textbox","id":"sh/76d8vehc","slide":3,"text":"Reproducibility\nStore model/version, prompt template, schema result and reviewer correction.","textPreview":"Reproducibility | Store model/version, prompt template, schema result and reviewer correction.","textChars":92,"textLines":2,"bbox":[970,460,235,55]}
+{"kind":"notes","id":"nt/cd9xom","slide":3,"text":"AI architecture. The model processes approved, controlled data and returns only schema-constrained candidates. A deterministic validator and rule engine control compliance outcomes. The officer has final authority. The safety boundary addresses prompt injection, raw data leakage and unsafe automated action."}
+{"kind":"slide","id":"sl/jo5qo4","slide":4,"title":"BIDSURE","textShapes":24}
+{"kind":"textbox","id":"sh/wzep4rip","slide":4,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,120,20]}
+{"kind":"textbox","id":"sh/vy5ovm14","slide":4,"text":"Integration and Mock Platform Architecture","textPreview":"Integration and Mock Platform Architecture","textChars":42,"textLines":1,"bbox":[42,53,880,40]}
+{"kind":"textbox","id":"sh/axwn2h0j","slide":4,"text":"The same adapter contract supports SIH demo data today and approved government data sources later","textPreview":"The same adapter contract supports SIH demo data today and approved government data sources later","textChars":97,"textLines":1,"bbox":[44,98,980,18]}
+{"kind":"shape","id":"sh/9w36tcjy","slide":4,"bbox":[42,126,1196,0]}
+{"kind":"textbox","id":"sh/8vu507it","slide":4,"text":"SIH26100 | Architecture set 4 of 5","textPreview":"SIH26100 | Architecture set 4 of 5","textChars":34,"textLines":1,"bbox":[42,687,220,14]}
+{"kind":"textbox","id":"sh/nulor218","slide":4,"text":"Node.js + Express + TypeScript","textPreview":"Node.js + Express + TypeScript","textChars":30,"textLines":1,"bbox":[1008,687,230,14]}
+{"kind":"textbox","id":"sh/mtcnyhkn","slide":4,"text":"BIDSURE VERIFICATION CONTROL","textPreview":"BIDSURE VERIFICATION CONTROL","textChars":28,"textLines":1,"bbox":[42,155,355,450]}
+{"kind":"textbox","id":"sh/ls36pcj2","slide":4,"text":"Source policy\nPurpose, consent, role, freshness and retention","textPreview":"Source policy | Purpose, consent, role, freshness and retention","textChars":61,"textLines":2,"bbox":[72,215,135,68]}
+{"kind":"textbox","id":"sh/0ru5w72h","slide":4,"text":"Source registry\nVersion, owner, endpoint and credential reference","textPreview":"Source registry | Version, owner, endpoint and credential reference","textChars":65,"textLines":2,"bbox":[232,215,135,68]}
+{"kind":"textbox","id":"sh/ulw3adkn","slide":4,"text":"Adapter orchestrator\nQueue, retries, rate limits, circuit breaker and normalised result","textPreview":"Adapter orchestrator | Queue, retries, rate limits, circuit breaker and normalised result","textChars":87,"textLines":2,"bbox":[120,335,200,78]}
+{"kind":"textbox","id":"sh/fm5k3il8","slide":4,"text":"Common verification contract\nSubject, purpose, status, evidence, freshness, response hash and audit ID","textPreview":"Common verification contract | Subject, purpose, status, evidence, freshness, response hash and audit ID","textChars":102,"textLines":2,"bbox":[120,465,200,72]}
+{"kind":"shape","id":"sh/g7ylcn2t","slide":4,"bbox":[220,283,0,42]}
+{"kind":"shape","id":"sh/h87m5s3e","slide":4,"bbox":[215,313,11,11]}
+{"kind":"shape","id":"sh/6hw36dkr","slide":4,"bbox":[220,413,0,42]}
+{"kind":"shape","id":"sh/7i5kzilw","slide":4,"bbox":[215,443,11,11]}
+{"kind":"textbox","id":"sh/sjel8n2h","slide":4,"text":"SIH DEMO ENVIRONMENT","textPreview":"SIH DEMO ENVIRONMENT","textChars":20,"textLines":1,"bbox":[430,155,365,450]}
+{"kind":"textbox","id":"sh/tkn21s32","slide":4,"text":"Synthetic bidder data\nGood, bad, expired and conflicting cases","textPreview":"Synthetic bidder data | Good, bad, expired and conflicting cases","textChars":62,"textLines":2,"bbox":[458,210,135,65]}
+{"kind":"textbox","id":"sh/idc32tkf","slide":4,"text":"Mock API server\nSame JSON shape as production adapter","textPreview":"Mock API server | Same JSON shape as production adapter","textChars":53,"textLines":2,"bbox":[625,210,135,65]}
+{"kind":"textbox","id":"sh/jelkvyl0","slide":4,"text":"Mock GST and Udyam\nStatus and identity examples","textPreview":"Mock GST and Udyam | Status and identity examples","textChars":47,"textLines":2,"bbox":[458,330,135,60]}
+{"kind":"textbox","id":"sh/ni103u1s","slide":4,"text":"Mock DigiLocker and MCA\nDocument and entity examples","textPreview":"Mock DigiLocker and MCA | Document and entity examples","textChars":52,"textLines":2,"bbox":[625,330,135,60]}
+{"kind":"textbox","id":"sh/mhsza907","slide":4,"text":"Failure simulator\nTimeout, rate limit and schema change","textPreview":"Failure simulator | Timeout, rate limit and schema change","textChars":55,"textLines":2,"bbox":[540,455,135,60]}
+{"kind":"shape","id":"sh/9kji54jy","slide":4,"bbox":[610,275,0,45]}
+{"kind":"shape","id":"sh/8jahczid","slide":4,"bbox":[525,320,170,0]}
+{"kind":"shape","id":"sh/vm107e1o","slide":4,"bbox":[525,320,0,10]}
+{"kind":"shape","id":"sh/alsje90j","slide":4,"bbox":[520,318,11,11]}
+{"kind":"shape","id":"sh/xo3i9oju","slide":4,"bbox":[695,320,0,10]}
+{"kind":"shape","id":"sh/wna1gji9","slide":4,"bbox":[690,318,11,11]}
+{"kind":"shape","id":"sh/bqh0va1k","slide":4,"bbox":[610,390,0,55]}
+{"kind":"shape","id":"sh/qp8z250z","slide":4,"bbox":[605,433,11,11]}
+{"kind":"textbox","id":"sh/gj25grul","slide":4,"text":"PRODUCTION INTEGRATION PATH","textPreview":"PRODUCTION INTEGRATION PATH","textChars":27,"textLines":1,"bbox":[825,155,410,450]}
+{"kind":"textbox","id":"sh/hkv6pwv6","slide":4,"text":"API Setu / provider onboarding\nApproved application, credentials and subscriptions","textPreview":"API Setu / provider onboarding | Approved application, credentials and subscriptions","textChars":82,"textLines":2,"bbox":[855,205,160,65]}
+{"kind":"textbox","id":"sh/uhknehcf","slide":4,"text":"Egress controls\nAllowlist, TLS or mTLS, rate policy","textPreview":"Egress controls | Allowlist, TLS or mTLS, rate policy","textChars":51,"textLines":2,"bbox":[1045,205,160,65]}
+{"kind":"textbox","id":"sh/vitonmd0","slide":4,"text":"Approved APIs\nGSTN, Udyam, MCA21 and other authorised services","textPreview":"Approved APIs | GSTN, Udyam, MCA21 and other authorised services","textChars":62,"textLines":2,"bbox":[855,330,160,65]}
+{"kind":"textbox","id":"sh/8v25c7up","slide":4,"text":"Controlled evidence path\nDocument proof when no approved API exists","textPreview":"Controlled evidence path | Document proof when no approved API exists","textChars":67,"textLines":2,"bbox":[1045,330,160,65]}
+{"kind":"textbox","id":"sh/tgb6lcva","slide":4,"text":"Source audit record\nRequest, response hash, timestamp and policy decision","textPreview":"Source audit record | Request, response hash, timestamp and policy decision","textChars":73,"textLines":2,"bbox":[950,455,160,60]}
+{"kind":"shape","id":"sh/6tknahcj","slide":4,"bbox":[935,270,0,50]}
+{"kind":"shape","id":"sh/7utoj2d4","slide":4,"bbox":[930,308,11,11]}
+{"kind":"shape","id":"sh/sr6pobut","slide":4,"bbox":[1125,270,0,50]}
+{"kind":"shape","id":"sh/dcf6xgve","slide":4,"bbox":[1120,308,11,11]}
+{"kind":"shape","id":"sh/9w72p8bq","slide":4,"bbox":[935,425,190,0]}
+{"kind":"shape","id":"sh/ovylg3a5","slide":4,"bbox":[1030,425,0,20]}
+{"kind":"shape","id":"sh/nupknytk","slide":4,"bbox":[1025,433,11,11]}
+{"kind":"shape","id":"sh/mtg3etsf","slide":4,"bbox":[320,375,138,0]}
+{"kind":"shape","id":"sh/x0rmt8b2","slide":4,"bbox":[447,370,11,11]}
+{"kind":"textbox","id":"sh/wzylk3ah","slide":4,"text":"demo mode","textPreview":"demo mode","textChars":9,"textLines":1,"bbox":[345,354,85,14]}
+{"kind":"shape","id":"sh/bypkritw","slide":4,"bbox":[320,425,535,0]}
+{"kind":"shape","id":"sh/axg3idsb","slide":4,"bbox":[844,420,11,11]}
+{"kind":"textbox","id":"sh/lormxsby","slide":4,"text":"approved production route","textPreview":"approved production route","textChars":25,"textLines":1,"bbox":[525,405,160,14]}
+{"kind":"notes","id":"nt/jo5qo4","slide":4,"text":"Integration architecture. The adapter orchestrator always uses the same common verification contract. During SIH, a mock platform returns synthetic data and controlled failures. Production uses API Setu or individually approved provider paths under source policy, consent and credential controls."}
+{"kind":"slide","id":"sl/06k6qa","slide":5,"title":"BIDSURE","textShapes":25}
+{"kind":"textbox","id":"sh/toze9gfe","slide":5,"text":"BIDSURE","textPreview":"BIDSURE","textChars":7,"textLines":1,"bbox":[42,26,120,20]}
+{"kind":"textbox","id":"sh/6l8vy1g3","slide":5,"text":"Cloud Storage, Operations and Security Architecture","textPreview":"Cloud Storage, Operations and Security Architecture","textChars":51,"textLines":1,"bbox":[42,53,880,40]}
+{"kind":"textbox","id":"sh/7mhw76xo","slide":5,"text":"Cloud storage, worker isolation, secrets, monitoring and recovery support the application without exposing source credentials or evidence","textPreview":"Cloud storage, worker isolation, secrets, monitoring and recovery support the application without exposing source credentials or evidence","textChars":137,"textLines":1,"bbox":[44,98,980,18]}
+{"kind":"shape","id":"sh/kjqdwryx","slide":5,"bbox":[42,126,1196,0]}
+{"kind":"textbox","id":"sh/5kze5wfi","slide":5,"text":"SIH26100 | Architecture set 5 of 5","textPreview":"SIH26100 | Architecture set 5 of 5","textChars":34,"textLines":1,"bbox":[42,687,220,14]}
+{"kind":"textbox","id":"sh/ihovahgr","slide":5,"text":"Node.js + Express + TypeScript","textPreview":"Node.js + Express + TypeScript","textChars":30,"textLines":1,"bbox":[1008,687,230,14]}
+{"kind":"textbox","id":"sh/jihw3mxc","slide":5,"text":"PUBLIC EDGE","textPreview":"PUBLIC EDGE","textChars":11,"textLines":1,"bbox":[42,150,210,460]}
+{"kind":"textbox","id":"sh/wf6d8ry1","slide":5,"text":"DNS and TLS\nHTTPS certificates and domain routing","textPreview":"DNS and TLS | HTTPS certificates and domain routing","textChars":49,"textLines":2,"bbox":[72,215,150,58]}
+{"kind":"textbox","id":"sh/xgfe1wf6","slide":5,"text":"WAF and rate limits\nThreat filtering and request quotas","textPreview":"WAF and rate limits | Threat filtering and request quotas","textChars":55,"textLines":2,"bbox":[72,310,150,58]}
+{"kind":"textbox","id":"sh/10rydo72","slide":5,"text":"Load balancer\nRoutes to frontend and API","textPreview":"Load balancer | Routes to frontend and API","textChars":40,"textLines":2,"bbox":[72,405,150,58]}
+{"kind":"shape","id":"sh/gzixkjqx","slide":5,"bbox":[147,273,0,27]}
+{"kind":"shape","id":"sh/fe9wbepc","slide":5,"bbox":[142,288,11,11]}
+{"kind":"shape","id":"sh/ed0fi98r","slide":5,"bbox":[147,368,0,27]}
+{"kind":"shape","id":"sh/tcre9476","slide":5,"bbox":[142,383,11,11]}
+{"kind":"textbox","id":"sh/sbixgzql","slide":5,"text":"PRIVATE APPLICATION ZONE","textPreview":"PRIVATE APPLICATION ZONE","textChars":24,"textLines":1,"bbox":[285,150,480,460]}
+{"kind":"textbox","id":"sh/ra9w7up0","slide":5,"text":"Frontend service\nReact static assets and user session","textPreview":"Frontend service | React static assets and user session","textChars":53,"textLines":2,"bbox":[315,210,125,60]}
+{"kind":"textbox","id":"sh/690fep8f","slide":5,"text":"Express API\nRoutes, RBAC, policy and cases","textPreview":"Express API | Routes, RBAC, policy and cases","textChars":42,"textLines":2,"bbox":[465,210,125,60]}
+{"kind":"textbox","id":"sh/587e547a","slide":5,"text":"Worker service\nOCR, adapters and reports","textPreview":"Worker service | OCR, adapters and reports","textChars":40,"textLines":2,"bbox":[615,210,120,60]}
+{"kind":"textbox","id":"sh/47yxczqp","slide":5,"text":"Monitoring\nMetrics, traces, alerts and dashboards","textPreview":"Monitoring | Metrics, traces, alerts and dashboards","textChars":49,"textLines":2,"bbox":[390,350,130,65]}
+{"kind":"textbox","id":"sh/wr2xszyl","slide":5,"text":"Secrets and KMS\nCredentials, encryption keys and rotation","textPreview":"Secrets and KMS | Credentials, encryption keys and rotation","textChars":57,"textLines":2,"bbox":[545,350,130,65]}
+{"kind":"shape","id":"sh/xsbyl4fq","slide":5,"bbox":[440,240,25,0]}
+{"kind":"shape","id":"sh/apkfqpgf","slide":5,"bbox":[454,235,11,11]}
+{"kind":"shape","id":"sh/vqtgjux0","slide":5,"bbox":[590,240,25,0]}
+{"kind":"shape","id":"sh/8n2xofy9","slide":5,"bbox":[604,235,11,11]}
+{"kind":"shape","id":"sh/9obehkfu","slide":5,"bbox":[527,270,0,65]}
+{"kind":"shape","id":"sh/ml0fmpg3","slide":5,"bbox":[522,323,11,11]}
+{"kind":"shape","id":"sh/nm9wfaxo","slide":5,"bbox":[675,270,0,65]}
+{"kind":"shape","id":"sh/sjmx0jyd","slide":5,"bbox":[670,323,11,11]}
+{"kind":"textbox","id":"sh/tkvytofy","slide":5,"text":"PRIVATE CLOUD DATA ZONE","textPreview":"PRIVATE CLOUD DATA ZONE","textChars":23,"textLines":1,"bbox":[795,150,440,460]}
+{"kind":"textbox","id":"sh/3qhsf2lc","slide":5,"text":"Managed MongoDB\nEncrypted metadata and records","textPreview":"Managed MongoDB | Encrypted metadata and records","textChars":46,"textLines":2,"bbox":[825,210,120,65]}
+{"kind":"textbox","id":"sh/2p8r6h4r","slide":5,"text":"Cloud object storage\nEncrypted files, versions and backups","textPreview":"Cloud object storage | Encrypted files, versions and backups","textChars":58,"textLines":2,"bbox":[970,210,120,65]}
+{"kind":"textbox","id":"sh/psjahc3i","slide":5,"text":"Redis\nJobs and cache","textPreview":"Redis | Jobs and cache","textChars":20,"textLines":2,"bbox":[1115,210,90,65]}
+{"kind":"textbox","id":"sh/ora987mx","slide":5,"text":"Audit retention\nAppend-only events and exports","textPreview":"Audit retention | Append-only events and exports","textChars":46,"textLines":2,"bbox":[825,350,120,65]}
+{"kind":"textbox","id":"sh/bu1sjmlo","slide":5,"text":"Backup vault\nEncrypted snapshots and restore tests","textPreview":"Backup vault | Encrypted snapshots and restore tests","textChars":50,"textLines":2,"bbox":[970,350,120,65]}
+{"kind":"textbox","id":"sh/atsrah43","slide":5,"text":"Egress\nApproved APIs","textPreview":"Egress | Approved APIs","textChars":20,"textLines":2,"bbox":[1115,350,90,65]}
+{"kind":"shape","id":"sh/xgjalw3u","slide":5,"bbox":[885,300,230,0]}
+{"kind":"shape","id":"sh/cva9crm9","slide":5,"bbox":[885,300,0,40]}
+{"kind":"shape","id":"sh/ryx87il4","slide":5,"bbox":[880,328,11,11]}
+{"kind":"shape","id":"sh/6xoryx4z","slide":5,"bbox":[1030,300,0,40]}
+{"kind":"shape","id":"sh/i1srexcf","slide":5,"bbox":[1025,328,11,11]}
+{"kind":"shape","id":"sh/j21sn2t0","slide":5,"bbox":[1160,275,0,65]}
+{"kind":"shape","id":"sh/k3a9gnul","slide":5,"bbox":[1155,328,11,11]}
+{"kind":"shape","id":"sh/543apsb6","slide":5,"bbox":[222,435,93,0]}
+{"kind":"shape","id":"sh/65crixcr","slide":5,"bbox":[304,430,11,11]}
+{"kind":"shape","id":"sh/76lsr2tc","slide":5,"bbox":[735,240,90,0]}
+{"kind":"shape","id":"sh/s7u9k7ux","slide":5,"bbox":[814,235,11,11]}
+{"kind":"shape","id":"sh/t83atcbi","slide":5,"bbox":[735,260,380,0]}
+{"kind":"shape","id":"sh/u9crmhcn","slide":5,"bbox":[1104,255,11,11]}
+{"kind":"textbox","id":"sh/falsvmt8","slide":5,"text":"application reads and writes through private service identities","textPreview":"application reads and writes through private service identities","textChars":63,"textLines":1,"bbox":[700,280,300,15]}
+{"kind":"textbox","id":"sh/p47ulgvq","slide":5,"text":"No database, object storage, worker or credential service is public.","textPreview":"No database, object storage, worker or credential service is public.","textChars":68,"textLines":1,"bbox":[320,505,730,20]}
+{"kind":"textbox","id":"sh/o3ydsbe5","slide":5,"text":"Security operations: least-privilege service identities, private network routes, encryption at rest and in transit, short-lived credentials, restore tests and alerting.","textPreview":"Security operations: least-privilege service identities, private network routes, encryption at rest and in transit, short-lived credentia...","textChars":168,"textLines":1,"bbox":[320,540,760,32]}
+{"kind":"notes","id":"nt/06k6qa","slide":5,"text":"Cloud and operations architecture. The application has a public edge, private application zone and private cloud data zone. Cloud object storage is explicitly included for original documents, versions, exports and backups. Database, storage, workers and secrets are not publicly accessible."}

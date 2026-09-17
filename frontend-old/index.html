@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BidSure AI — Evidence-Driven Bid Compliance Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#F7F9FC] text-slate-900 antialiased font-sans">
+    <div id="root"></div>
+    <script>
+      // Remove workers/caches left by older localhost practice projects before React boots.
+      window.__bidsureReady = (async function () {
+        if (!('serviceWorker' in navigator)) return;
+
+        var registrations = await navigator.serviceWorker.getRegistrations();
+        var wasControlled = Boolean(navigator.serviceWorker.controller);
+        await Promise.all(registrations.map(function (registration) {
+          return registration.unregister();
+        }));
+
+        if ('caches' in window) {
+          var cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(function (cacheName) {
+            return caches.delete(cacheName);
+          }));
+        }
+
+        // An active worker remains attached to its current page until reload.
+        if (wasControlled && !sessionStorage.getItem('bidsure-worker-cleaned')) {
+          sessionStorage.setItem('bidsure-worker-cleaned', '1');
+          window.location.reload();
+          await new Promise(function () {});
+        }
+
+        sessionStorage.removeItem('bidsure-worker-cleaned');
+      })();
+    </script>
+    <script type="module">
+      window.__bidsureReady.then(function () {
+        return import('/src/main.tsx');
+      });
+    </script>
+  </body>
+</html>

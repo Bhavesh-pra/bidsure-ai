@@ -1,21 +1,58 @@
-import type { Bidder } from './bidder';
-import type { Document } from './document';
+import type { ApiResponse, PaginatedResponse } from "./api";
 
-export interface Bid {
+export type BidStatus = "SUBMITTED" | "UNDER_REVIEW" | "ACCEPTED" | "REJECTED" | "WITHDRAWN";
+
+export interface BidderInfoDTO {
   id: string;
-  tenderId?: string;
-  tender_id?: string;
-  bidderId?: string;
-  bidder_id?: string;
-  amount?: number;
-  quoted_amount?: number;
-  currency?: string;
-  submittedAt?: string;
-  bidder?: Bidder;
-  tender?: { id: string; title: string };
-  status?: string;
-  compliance_score?: number;
-  risk_level?: string;
-  proposed_completion_date?: string;
-  documents?: Document[];
+  legalName: string;
+  tradeName: string | null;
+  contactEmail: string;
 }
+
+export interface BidTenderInfoDTO {
+  id: string;
+  title: string;
+  referenceNumber: string;
+}
+
+export interface BidTenderVersionInfoDTO {
+  id: string;
+  versionNumber: number;
+  title: string;
+}
+
+export interface BidDocumentItemDTO {
+  id: string;
+  category: string;
+  required: boolean;
+  document: {
+    id: string;
+    fileName: string;
+    mimeType: string;
+    fileSize: number;
+    processingStatus: string;
+    createdAt: string;
+  };
+}
+
+export interface BidDTO {
+  id: string;
+  organizationId: string;
+  tenderId: string;
+  tenderVersionId: string;
+  bidderId: string;
+  bidReference: string;
+  status: BidStatus | string;
+  totalAmount: number | null;
+  currency: string;
+  submittedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  bidder?: BidderInfoDTO;
+  tender?: BidTenderInfoDTO;
+  tenderVersion?: BidTenderVersionInfoDTO;
+  documents?: BidDocumentItemDTO[];
+}
+
+export type BidsResponse = PaginatedResponse<BidDTO>;
+export type BidDetailResponse = ApiResponse<BidDTO>;

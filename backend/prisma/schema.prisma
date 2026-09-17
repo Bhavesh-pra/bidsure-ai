@@ -1,0 +1,247 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---------------------------------------------------------------------------
+// ENUMS
+// ---------------------------------------------------------------------------
+
+enum Role {
+  BIDDER
+  PROCUREMENT_OFFICER
+  REVIEWER
+  AUDITOR
+  ADMIN
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum TenderStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  ARCHIVED
+}
+
+enum TenderVersionStatus {
+  DRAFT
+  PUBLISHED
+  SUPERSEDED
+}
+
+enum BidStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  EVALUATED
+  REJECTED
+  ACCEPTED
+}
+
+enum DocumentProcessingStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+// ---------------------------------------------------------------------------
+// MODELS
+// ---------------------------------------------------------------------------
+
+model Organization {
+  id        String             @id @default(uuid()) @db.Uuid
+  name      String
+  status    OrganizationStatus @default(ACTIVE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  users     User[]
+  tenders   Tender[]
+  bids      Bid[]
+  bidders   Bidder[]
+  documents Document[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  name           String
+  email          String       @unique
+  role           Role         @default(PROCUREMENT_OFFICER)
+  passwordHash   String?
+  status         UserStatus   @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@map("users")
+}
+
+model Tender {
+  id               String          @id @default(uuid()) @db.Uuid
+  organizationId   String          @db.Uuid
+  title            String
+  referenceNumber  String
+  status           TenderStatus    @default(DRAFT)
+  currentVersionId String?         @db.Uuid
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  versions         TenderVersion[]
+  bids             Bid[]
+
+  @@unique([organizationId, referenceNumber])
+  @@index([organizationId])
+  @@map("tenders")
+}
+
+model TenderVersion {
+  id            String              @id @default(uuid()) @db.Uuid
+  tenderId      String              @db.Uuid
+  versionNumber Int
+  title         String
+  description   String?
+  content       Json?
+  status        TenderVersionStatus @default(DRAFT)
+  createdAt     DateTime            @default(now())
+
+  tender        Tender              @relation(fields: [tenderId], references: [id], onDelete: Restrict)
+  requirements  Requirement[]
+  bids          Bid[]
+
+  @@unique([tenderId, versionNumber])
+  @@index([tenderId])
+  @@map("tender_versions")
+}
+
+model Requirement {
+  id              String               @id @default(uuid()) @db.Uuid
+  tenderVersionId String               @db.Uuid
+  identifier      String
+  category        String
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  tenderVersion   TenderVersion        @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
+  versions        RequirementVersion[]
+
+  @@unique([tenderVersionId, identifier])
+  @@index([tenderVersionId])
+  @@map("requirements")
+}
+
+model RequirementVersion {
+  id                 String      @id @default(uuid()) @db.Uuid
+  requirementId      String      @db.Uuid
+  versionNumber      Int
+  description        String
+  mandatory          Boolean     @default(true)
+  evaluationCriteria Json?
+  createdAt          DateTime    @default(now())
+
+  requirement        Requirement @relation(fields: [requirementId], references: [id], onDelete: Restrict)
+
+  @@unique([requirementId, versionNumber])
+  @@index([requirementId])
+  @@map("requirement_versions")
+}
+
+model Bidder {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String?       @db.Uuid
+  legalName      String
+  tradeName      String?
+  contactEmail   String
+  contactPhone   String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  bids           Bid[]
+
+  @@index([organizationId])
+  @@map("bidders")
+}
+
+model Bid {
+  id              String        @id @default(uuid()) @db.Uuid
+  organizationId  String        @db.Uuid
+  tenderId        String        @db.Uuid
+  tenderVersionId String        @db.Uuid
+  bidderId        String        @db.Uuid
+  bidReference    String
+  status          BidStatus     @default(DRAFT)
+  totalAmount     Decimal?      @db.Decimal(15, 2)
+  currency        String        @default("INR")
+  submittedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  tender          Tender        @relation(fields: [tenderId], references: [id], onDelete: Restrict)
+  tenderVersion   TenderVersion @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
+  bidder          Bidder        @relation(fields: [bidderId], references: [id], onDelete: Restrict)
+  bidDocuments    BidDocument[]
+
+  @@unique([tenderId, bidderId])
+  @@unique([organizationId, bidReference])
+  @@index([organizationId])
+  @@index([tenderId])
+  @@index([tenderVersionId])
+  @@index([bidderId])
+  @@map("bids")
+}
+
+model Document {
+  id               String                   @id @default(uuid()) @db.Uuid
+  organizationId   String                   @db.Uuid
+  storageKey       String
+  fileName         String
+  mimeType         String
+  fileSize         Int
+  sha256           String
+  processingStatus DocumentProcessingStatus @default(PENDING)
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+
+  organization     Organization             @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  bidDocuments     BidDocument[]
+
+  @@index([organizationId])
+  @@map("documents")
+}
+
+model BidDocument {
+  id         String   @id @default(uuid()) @db.Uuid
+  bidId      String   @db.Uuid
+  documentId String   @db.Uuid
+  category   String
+  required   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  bid        Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@unique([bidId, documentId])
+  @@index([bidId])
+  @@index([documentId])
+  @@map("bid_documents")
+}
