@@ -91,8 +91,13 @@ export const OfficerBidsPage: React.FC = () => {
                         <div className="font-semibold text-slate-900 text-xs">
                           {bid.tender?.title || "Unknown Tender"}
                         </div>
-                        <div className="text-xs font-mono text-slate-500">
-                          {bid.tender?.referenceNumber}
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs font-mono text-slate-500">
+                            {bid.tender?.referenceNumber}
+                          </span>
+                          <span className="text-[10px] font-mono font-semibold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            v{bid.tenderVersion?.versionNumber ?? 1}
+                          </span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-xs whitespace-nowrap">
@@ -121,11 +126,13 @@ export const OfficerBidsPage: React.FC = () => {
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <Badge
                           variant={
-                            bid.status === "SUBMITTED"
+                            bid.status === "DRAFT"
+                              ? "secondary"
+                              : bid.status === "SUBMITTED"
                               ? "default"
                               : bid.status === "ACCEPTED"
                               ? "success"
-                              : "secondary"
+                              : "outline"
                           }
                         >
                           {bid.status}

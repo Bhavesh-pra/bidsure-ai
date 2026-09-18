@@ -9,12 +9,14 @@ export type Action =
   | "publish"
   | "submit"
   | "review"
+  | "approve"
   | "audit";
 
 export type ResourceType =
   | "tender"
   | "bid"
   | "document"
+  | "requirement"
   | "user"
   | "organization"
   | "audit_log";
@@ -66,6 +68,9 @@ function canOfficer(action: Action, resource: ResourceType): boolean {
   if (resource === "tender") {
     return ["read", "create", "update", "publish", "delete"].includes(action);
   }
+  if (resource === "requirement") {
+    return ["read", "create", "update", "review", "approve"].includes(action);
+  }
   if (resource === "bid") {
     return ["read", "review"].includes(action);
   }
@@ -88,8 +93,8 @@ function canBidder(
   resource: ResourceType,
   entity?: { bidderId?: string | null; [key: string]: unknown }
 ): boolean {
-  if (resource === "tender") {
-    // Bidders can only read tenders (solicitations)
+  if (resource === "tender" || resource === "requirement") {
+    // Bidders can only read published tenders & specification requirements
     return action === "read";
   }
 
@@ -116,9 +121,12 @@ function canBidder(
 
 /**
  * Reviewer: Read-only evaluation of tenders and bids in own organization.
- * Cannot mutate tenders or create bids.
+ * Can propose and edit requirements, but CANNOT approve them (approval is officer-only).
  */
 function canReviewer(action: Action, resource: ResourceType): boolean {
+  if (resource === "requirement") {
+    return ["read", "review", "create", "update"].includes(action);
+  }
   if (["tender", "bid", "document"].includes(resource)) {
     return ["read", "review"].includes(action);
   }
@@ -134,20 +142,22 @@ function canAuditor(action: Action, resource: ResourceType): boolean {
   if (action !== "read" && action !== "audit") {
     return false;
   }
-  return ["tender", "bid", "document", "audit_log"].includes(resource);
+  return ["tender", "requirement", "bid", "document", "audit_log"].includes(resource);
 }
 
 /**
  * Admin: Tenant administration (users, settings).
- * Forbidden from officer procurement actions (creating tenders, evaluating bids).
+ * Can manage settings and emergency requirement approvals if needed.
  */
 function canAdmin(action: Action, resource: ResourceType): boolean {
   if (resource === "user" || resource === "organization") {
     return ["read", "create", "update", "delete"].includes(action);
   }
+  if (resource === "requirement") {
+    return ["read", "create", "update", "review", "approve"].includes(action);
+  }
   if (resource === "audit_log") {
     return action === "read";
   }
-  // Admin cannot act as procurement officer
   return false;
 }

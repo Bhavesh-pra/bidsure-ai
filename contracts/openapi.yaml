@@ -58,6 +58,447 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorEnvelope'
 
+  /tenders:
+    get:
+      summary: List Solicitations
+      description: Returns paginated tenders with deterministic sorting and filtering.
+      operationId: listTenders
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [DRAFT, PUBLISHED, CLOSED, ARCHIVED]
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: department
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated tenders list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TendersListResponse'
+    post:
+      summary: Create Tender
+      description: Creates a new tender with initial Version 1 snapshot atomically.
+      operationId: createTender
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenderRequest'
+      responses:
+        '201':
+          description: Tender created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+        '400':
+          description: Validation error.
+        '409':
+          description: Duplicate reference number conflict.
+
+  /tenders/{id}:
+    get:
+      summary: Get Tender Detail
+      description: Returns canonical tender with current version summary.
+      operationId: getTenderById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tender detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+        '404':
+          description: Tender not found.
+    patch:
+      summary: Update Tender Metadata
+      description: Updates mutable administrative metadata.
+      operationId: updateTenderMetadata
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTenderMetadataRequest'
+      responses:
+        '200':
+          description: Tender metadata updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+
+  /tenders/{id}/publish:
+    post:
+      summary: Publish Tender
+      description: Transitions tender lifecycle state from DRAFT to PUBLISHED.
+      operationId: publishTender
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tender published.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+
+  /tenders/{id}/close:
+    post:
+      summary: Close Tender
+      description: Transitions tender lifecycle state from PUBLISHED to CLOSED.
+      operationId: closeTender
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tender closed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+
+  /tenders/{id}/archive:
+    post:
+      summary: Archive Tender
+      description: Transitions tender lifecycle state to ARCHIVED.
+      operationId: archiveTender
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tender archived.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderResponse'
+
+  /tenders/{id}/versions:
+    get:
+      summary: List Tender Versions
+      description: Returns historical versions in deterministic descending order.
+      operationId: listTenderVersions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Historical versions list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderVersionsResponse'
+    post:
+      summary: Create Tender Version
+      description: Creates new immutable version snapshot atomically updating currentVersionId.
+      operationId: createTenderVersion
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenderVersionRequest'
+      responses:
+        '201':
+          description: Version created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVersionResponse'
+        '409':
+          description: Concurrency conflict.
+
+  /tenders/{id}/versions/{versionId}:
+    get:
+      summary: Get Specific Historical Version
+      description: Returns immutable historical snapshot.
+      operationId: getTenderVersionById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: versionId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Historical version snapshot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenderVersionResponse'
+        '404':
+          description: Version not found.
+
+  /tenders/{id}/requirements:
+    get:
+      summary: Get Tender Version Requirements
+      description: Returns read-only specification requirements for the active or requested version.
+      operationId: getTenderRequirements
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: versionId
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Requirements list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RequirementDTO'
+                  requestId:
+                    type: string
+
+  /bids/{bidId}/documents:
+    get:
+      summary: List Proposal Documents
+      description: Returns all secure documents associated with a bid proposal.
+      operationId: getBidDocuments
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Bid proposal UUID
+      responses:
+        '200':
+          description: List of documents attached to proposal.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                  - requestId
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BidDocumentDTO'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                  requestId:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    post:
+      summary: Upload Proposal Document
+      description: Securely ingests, validates, hashes (SHA-256), scans, and stores a proposal document.
+      operationId: uploadBidDocument
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Bid proposal UUID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - documentType
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File payload (PDF, JPG, PNG; max 10MB)
+                documentType:
+                  type: string
+                  enum: [TECHNICAL_BID, FINANCIAL_BID, COMPLIANCE_CERTIFICATE, EMD_PROOF, POWER_OF_ATTORNEY, OTHER]
+                supersedesDocumentId:
+                  type: string
+                  format: uuid
+                  description: Optional ID of document being replaced
+      responses:
+        '201':
+          description: Document successfully ingested and enqueued for verification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BidDocumentDetailResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /bids/{bidId}/documents/{documentId}:
+    get:
+      summary: Get Proposal Document Details
+      description: Retrieves metadata and current ingestion status for a document.
+      operationId: getBidDocumentById
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: documentId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BidDocumentDetailResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      summary: Delete Proposal Document
+      description: Unlinks and deletes a document from a DRAFT bid proposal. Prohibited on SUBMITTED bids.
+      operationId: deleteBidDocument
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: documentId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document successfully removed.
+        '409':
+          description: Prohibited - proposal is submitted or finalized.
+
+  /bids/{bidId}/documents/{documentId}/retry:
+    post:
+      summary: Retry Failed Document Ingestion
+      description: Re-enqueues a document in FAILED state for security scanning and integrity processing.
+      operationId: retryBidDocument
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: documentId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document retry initiated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BidDocumentDetailResponse'
+
 components:
   schemas:
     HealthData:
@@ -173,3 +614,404 @@ components:
           type: string
           pattern: '^req_[0-9a-fA-F-]{36}$'
           example: "req_550e8400-e29b-41d4-a716-446655440000"
+
+    TenderDTO:
+      type: object
+      required:
+        - id
+        - organizationId
+        - title
+        - referenceNumber
+        - status
+        - currentVersionId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        referenceNumber:
+          type: string
+        category:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, CLOSED, ARCHIVED]
+        currentVersionId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        currentVersion:
+          $ref: '#/components/schemas/TenderVersionDTO'
+          nullable: true
+        versionsCount:
+          type: integer
+
+    TenderVersionDTO:
+      type: object
+      required:
+        - id
+        - tenderId
+        - versionNumber
+        - title
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenderId:
+          type: string
+          format: uuid
+        versionNumber:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        content:
+          type: object
+          nullable: true
+        changeSummary:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SUPERSEDED]
+        createdAt:
+          type: string
+          format: date-time
+        isCurrent:
+          type: boolean
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequirementDTO'
+
+    RequirementDTO:
+      type: object
+      required:
+        - id
+        - identifier
+        - category
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        identifier:
+          type: string
+        category:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        currentVersion:
+          type: object
+          properties:
+            versionNumber:
+              type: integer
+            description:
+              type: string
+            mandatory:
+              type: boolean
+
+    CreateTenderRequest:
+      type: object
+      required:
+        - title
+        - referenceNumber
+      properties:
+        title:
+          type: string
+        referenceNumber:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        department:
+          type: string
+        submissionDeadline:
+          type: string
+          format: date-time
+        budget:
+          type: number
+        content:
+          type: object
+
+    UpdateTenderMetadataRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+        department:
+          type: string
+        expectedVersion:
+          type: integer
+
+    CreateTenderVersionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        changeSummary:
+          type: string
+        submissionDeadline:
+          type: string
+          format: date-time
+        budget:
+          type: number
+        content:
+          type: object
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED]
+        expectedCurrentVersionId:
+          type: string
+          format: uuid
+
+    TenderResponse:
+      type: object
+      required:
+        - success
+        - data
+        - requestId
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/TenderDTO'
+        requestId:
+          type: string
+
+    TendersListResponse:
+      type: object
+      required:
+        - success
+        - data
+        - meta
+        - requestId
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenderDTO'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+        requestId:
+          type: string
+
+    TenderVersionsResponse:
+      type: object
+      required:
+        - success
+        - data
+        - requestId
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenderVersionDTO'
+        requestId:
+          type: string
+
+    TenderVersionResponse:
+      type: object
+      required:
+        - success
+        - data
+        - requestId
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/TenderVersionDTO'
+        requestId:
+          type: string
+
+    CreateVersionResponse:
+      type: object
+      required:
+        - success
+        - data
+        - requestId
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            tender:
+              $ref: '#/components/schemas/TenderDTO'
+            version:
+              $ref: '#/components/schemas/TenderVersionDTO'
+        requestId:
+          type: string
+
+    DocumentStatus:
+      type: string
+      enum:
+        - UPLOADING
+        - SCANNING
+        - PROCESSING
+        - READY
+        - FAILED
+        - QUARANTINED
+        - REPLACEMENT_REQUIRED
+      description: Authoritative document ingestion lifecycle state machine status.
+
+    DocumentDTO:
+      type: object
+      required:
+        - id
+        - organizationId
+        - fileName
+        - originalFilename
+        - mediaType
+        - extension
+        - sizeBytes
+        - sha256
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        fileName:
+          type: string
+        originalFilename:
+          type: string
+        mediaType:
+          type: string
+          example: "application/pdf"
+        extension:
+          type: string
+          example: "pdf"
+        sizeBytes:
+          type: integer
+          example: 1048576
+        sha256:
+          type: string
+          example: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        scanStatus:
+          type: string
+          nullable: true
+          example: "PASSED"
+        scanTimestamp:
+          type: string
+          format: date-time
+          nullable: true
+        failureCode:
+          type: string
+          nullable: true
+        failureMessage:
+          type: string
+          nullable: true
+        supersedesDocumentId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BidDocumentDTO:
+      type: object
+      required:
+        - id
+        - bidId
+        - documentId
+        - documentType
+        - document
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        bidId:
+          type: string
+          format: uuid
+        documentId:
+          type: string
+          format: uuid
+        documentType:
+          type: string
+          enum: [TECHNICAL_BID, FINANCIAL_BID, COMPLIANCE_CERTIFICATE, EMD_PROOF, POWER_OF_ATTORNEY, OTHER]
+        document:
+          $ref: '#/components/schemas/DocumentDTO'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BidDocumentDetailResponse:
+      type: object
+      required:
+        - success
+        - data
+        - requestId
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/BidDocumentDTO'
+        message:
+          type: string
+        requestId:
+          type: string
+          example: "req_550e8400-e29b-41d4-a716-446655440000"
+
+    DeleteDocumentResponse:
+      type: object
+      required:
+        - success
+        - message
+        - requestId
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        requestId:
+          type: string
+          example: "req_550e8400-e29b-41d4-a716-446655440000"
+

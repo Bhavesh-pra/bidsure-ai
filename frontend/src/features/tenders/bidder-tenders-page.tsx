@@ -88,7 +88,7 @@ export const BidderTendersPage: React.FC = () => {
                     <span>v{tender.currentVersion?.versionNumber ?? 1}</span>
                   </div>
                 </div>
-                <Link to={`/officer/tenders/${tender.id}`} className="block">
+                <Link to={`/bidder/tenders/${tender.id}`} className="block">
                   <Button variant="outline" size="sm" className="w-full justify-between text-xs">
                     <span>View Specifications & Requirements</span>
                     <ArrowRight className="w-3.5 h-3.5" />

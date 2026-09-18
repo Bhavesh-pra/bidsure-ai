@@ -60,11 +60,13 @@ export const BidderBidsPage: React.FC = () => {
                       </span>
                       <Badge
                         variant={
-                          bid.status === "SUBMITTED"
+                          bid.status === "DRAFT"
+                            ? "secondary"
+                            : bid.status === "SUBMITTED"
                             ? "default"
                             : bid.status === "ACCEPTED"
                             ? "success"
-                            : "secondary"
+                            : "outline"
                         }
                       >
                         {bid.status}
@@ -88,13 +90,13 @@ export const BidderBidsPage: React.FC = () => {
                       <Calendar className="w-3.5 h-3.5" />
                       <span>
                         {bid.submittedAt
-                          ? new Date(bid.submittedAt).toLocaleDateString()
-                          : new Date(bid.createdAt).toLocaleDateString()}
+                          ? `Submitted: ${new Date(bid.submittedAt).toLocaleDateString()}`
+                          : `Created: ${new Date(bid.createdAt).toLocaleDateString()}`}
                       </span>
                     </div>
-                    <Link to={`/officer/bids/${bid.id}`}>
+                    <Link to={`/bidder/bids/${bid.id}`}>
                       <Button variant="outline" size="sm" className="gap-1 text-xs mt-1">
-                        <span>View Submission</span>
+                        <span>{bid.status === "DRAFT" ? "Open Workspace" : "View Proposal"}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Button>
                     </Link>

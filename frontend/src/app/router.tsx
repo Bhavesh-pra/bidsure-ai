@@ -11,12 +11,16 @@ import { BidderDashboardPage } from "@/features/dashboard/bidder-dashboard-page"
 
 import { OfficerTendersPage } from "@/features/tenders/officer-tenders-page";
 import { OfficerTenderDetailsPage } from "@/features/tenders/officer-tender-details-page";
+import { OfficerTenderVersionPage } from "@/features/tenders/officer-tender-version-page";
 import { BidderTendersPage } from "@/features/tenders/bidder-tenders-page";
+import { BidderTenderDetailsPage } from "@/features/tenders/bidder-tender-details-page";
 
 import { RequirementsPage } from "@/features/requirements/requirements-page";
 import { OfficerBidsPage } from "@/features/bids/officer-bids-page";
 import { OfficerBidDetailsPage } from "@/features/bids/officer-bid-details-page";
 import { BidderBidsPage } from "@/features/bids/bidder-bids-page";
+import { BidderCreateBidPage } from "@/features/bids/bidder-create-bid-page";
+import { BidderBidWorkspacePage } from "@/features/bids/bidder-bid-workspace-page";
 
 import { DocumentsPage } from "@/features/documents/documents-page";
 import { EvidencePage } from "@/features/evidence/evidence-page";
@@ -72,7 +76,9 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <OfficerDashboardPage /> },
       { path: "tenders", element: <OfficerTendersPage /> },
       { path: "tenders/:id", element: <OfficerTenderDetailsPage /> },
+      { path: "tenders/:id/versions/:versionId", element: <OfficerTenderVersionPage /> },
       { path: "tenders/:id/requirements", element: <RequirementsPage /> },
+      { path: "tenders/:id/versions/:versionId/requirements", element: <RequirementsPage /> },
       { path: "bids", element: <OfficerBidsPage /> },
       { path: "bids/:id", element: <OfficerBidDetailsPage /> },
       { path: "bids/:id/compliance", element: <CompliancePage /> },
@@ -96,9 +102,10 @@ export const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <BidderDashboardPage /> },
       { path: "tenders", element: <BidderTendersPage /> },
-      { path: "tenders/:id", element: <BidderTendersPage /> },
+      { path: "tenders/:id", element: <BidderTenderDetailsPage /> },
       { path: "bids", element: <BidderBidsPage /> },
-      { path: "bids/:id", element: <BidderBidsPage /> },
+      { path: "bids/new", element: <BidderCreateBidPage /> },
+      { path: "bids/:id", element: <BidderBidWorkspacePage /> },
       { path: "bids/:id/documents", element: <DocumentsPage /> },
       { path: "bids/:id/verification", element: <VerificationPage /> },
       { path: "clarifications", element: <ClarificationsPage /> },

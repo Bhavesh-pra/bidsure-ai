@@ -4,6 +4,7 @@ import { errorTestRoutes } from "./error-test/error-test.routes.js";
 import { authRoutes } from "../modules/auth/auth.routes.js";
 import { tenderRoutes } from "../modules/tenders/tender.routes.js";
 import { bidRoutes } from "../modules/bids/bid.routes.js";
+import { requirementRoutes } from "../modules/requirements/requirement.routes.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 
 export const routes = Router();
@@ -19,5 +20,8 @@ routes.use("/auth", authRoutes);
 // Phase 03 & 04 — Protected Domain APIs
 routes.use("/tenders", requireAuth, tenderRoutes);
 routes.use("/bids", requireAuth, bidRoutes);
+
+// Phase 10 — Requirement Intelligence & Human Review
+routes.use("/requirements", requireAuth, requirementRoutes);
 
 

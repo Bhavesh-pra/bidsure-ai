@@ -42,6 +42,28 @@ const envSchema = z.object({
     .string()
     .default("100")
     .transform((v) => Number(v)),
+  DOCUMENT_MAX_SIZE_MB: z
+    .string()
+    .default("10")
+    .transform((v) => {
+      const n = Number(v);
+      if (isNaN(n) || n <= 0) throw new Error("DOCUMENT_MAX_SIZE_MB must be a positive number");
+      return n;
+    }),
+  DOCUMENT_STORAGE_DIR: z.string().default("./storage/documents"),
+  S3_ENDPOINT: z.string().optional(),
+  S3_BUCKET: z.string().default("bidsure-documents"),
+  S3_ACCESS_KEY: z.string().optional(),
+  S3_SECRET_KEY: z.string().optional(),
+  S3_REGION: z.string().default("us-east-1"),
+  REDIS_URL: z.string().optional(),
+  QUEUE_MODE: z.enum(["bullmq", "memory"]).default("memory"),
+  SCANNER_MODE: z.enum(["real", "development"]).default("development"),
+  CLAMAV_HOST: z.string().optional(),
+  CLAMAV_PORT: z
+    .string()
+    .default("3310")
+    .transform((v) => Number(v)),
 });
 
 type EnvInput = z.input<typeof envSchema>;
@@ -55,6 +77,18 @@ const rawEnv: EnvInput = {
   LOG_LEVEL: process.env["LOG_LEVEL"] as EnvInput["LOG_LEVEL"],
   RATE_LIMIT_WINDOW_MS: process.env["RATE_LIMIT_WINDOW_MS"],
   RATE_LIMIT_MAX: process.env["RATE_LIMIT_MAX"],
+  DOCUMENT_MAX_SIZE_MB: process.env["DOCUMENT_MAX_SIZE_MB"],
+  DOCUMENT_STORAGE_DIR: process.env["DOCUMENT_STORAGE_DIR"],
+  S3_ENDPOINT: process.env["S3_ENDPOINT"],
+  S3_BUCKET: process.env["S3_BUCKET"],
+  S3_ACCESS_KEY: process.env["S3_ACCESS_KEY"],
+  S3_SECRET_KEY: process.env["S3_SECRET_KEY"],
+  S3_REGION: process.env["S3_REGION"],
+  REDIS_URL: process.env["REDIS_URL"],
+  QUEUE_MODE: (process.env["QUEUE_MODE"] || (process.env["REDIS_URL"] ? "bullmq" : "memory")) as EnvInput["QUEUE_MODE"],
+  SCANNER_MODE: (process.env["SCANNER_MODE"] || (process.env["CLAMAV_HOST"] ? "real" : "development")) as EnvInput["SCANNER_MODE"],
+  CLAMAV_HOST: process.env["CLAMAV_HOST"],
+  CLAMAV_PORT: process.env["CLAMAV_PORT"],
 };
 
 const result = envSchema.safeParse(rawEnv);
@@ -79,6 +113,20 @@ export interface Config {
   rateLimitMax: number;
   serviceName: string;
   version: string;
+  /** Phase 08 Secure Document Ingestion Config */
+  documentMaxSizeMb: number;
+  documentMaxSizeBytes: number;
+  documentStorageDir: string;
+  s3Endpoint?: string | undefined;
+  s3Bucket: string;
+  s3AccessKey?: string | undefined;
+  s3SecretKey?: string | undefined;
+  s3Region: string;
+  redisUrl?: string | undefined;
+  queueMode: "bullmq" | "memory";
+  scannerMode: "real" | "development";
+  clamavHost?: string | undefined;
+  clamavPort: number;
   /** Convenience accessors */
   isDev: boolean;
   isProd: boolean;
@@ -96,6 +144,19 @@ export const config: Config = {
   rateLimitMax: env.RATE_LIMIT_MAX,
   serviceName: "bidsure-api",
   version: "1.0.0",
+  documentMaxSizeMb: env.DOCUMENT_MAX_SIZE_MB,
+  documentMaxSizeBytes: env.DOCUMENT_MAX_SIZE_MB * 1024 * 1024,
+  documentStorageDir: env.DOCUMENT_STORAGE_DIR,
+  s3Endpoint: env.S3_ENDPOINT,
+  s3Bucket: env.S3_BUCKET,
+  s3AccessKey: env.S3_ACCESS_KEY,
+  s3SecretKey: env.S3_SECRET_KEY,
+  s3Region: env.S3_REGION,
+  redisUrl: env.REDIS_URL,
+  queueMode: env.QUEUE_MODE,
+  scannerMode: env.SCANNER_MODE,
+  clamavHost: env.CLAMAV_HOST,
+  clamavPort: env.CLAMAV_PORT,
   isDev: env.NODE_ENV === "development",
   isProd: env.NODE_ENV === "production",
   isTest: env.NODE_ENV === "test",

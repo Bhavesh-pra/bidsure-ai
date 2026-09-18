@@ -1,6 +1,17 @@
 import type { ApiResponse, PaginatedResponse } from "./api";
 
-export type BidStatus = "SUBMITTED" | "UNDER_REVIEW" | "ACCEPTED" | "REJECTED" | "WITHDRAWN";
+export type BidStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "PROCESSING"
+  | "UNDER_REVIEW"
+  | "CLARIFICATION_REQUIRED"
+  | "READY_FOR_DECISION"
+  | "DECIDED"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "WITHDRAWN"
+  | "ARCHIVED";
 
 export interface BidderInfoDTO {
   id: string;
@@ -43,8 +54,10 @@ export interface BidDTO {
   bidderId: string;
   bidReference: string;
   status: BidStatus | string;
+  version: number;
   totalAmount: number | null;
   currency: string;
+  metadata?: Record<string, unknown> | null;
   submittedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -52,6 +65,21 @@ export interface BidDTO {
   tender?: BidTenderInfoDTO;
   tenderVersion?: BidTenderVersionInfoDTO;
   documents?: BidDocumentItemDTO[];
+}
+
+export interface CreateBidPayload {
+  tenderId: string;
+  tenderVersionId: string;
+  totalAmount?: number | null;
+  currency?: string;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface UpdateDraftBidPayload {
+  totalAmount?: number | null;
+  currency?: string;
+  metadata?: Record<string, unknown> | null;
+  expectedVersion?: number;
 }
 
 export type BidsResponse = PaginatedResponse<BidDTO>;

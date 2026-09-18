@@ -2,10 +2,13 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
+  ArrowRight,
   Calendar,
   Building,
   FileText,
   ShieldCheck,
+  FileCheck2,
+  Eye,
 } from "lucide-react";
 import { useBid } from "@/hooks/use-bids";
 import { Button } from "@/components/ui/button";
@@ -64,6 +67,12 @@ export const OfficerBidDetailsPage: React.FC = () => {
           </Button>
         </Link>
         <div className="flex items-center gap-2">
+          <Link to={`/officer/bids/${bid.id}/evidence`}>
+            <Button size="sm" variant="default" className="gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-xs">
+              <FileCheck2 className="w-3.5 h-3.5" />
+              <span>Review Evidence &amp; OCR</span>
+            </Button>
+          </Link>
           <Badge
             variant={
               bid.status === "SUBMITTED"
@@ -127,6 +136,49 @@ export const OfficerBidDetailsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Tender Version Snapshot Banner */}
+      <div className="p-4 rounded-lg bg-blue-50/75 border border-blue-200 text-blue-950 flex items-start gap-3">
+        <FileCheck2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs">
+          <p className="font-bold text-sm text-slate-900">
+            Authoritative Specification Snapshot: Version {bid.tenderVersion?.versionNumber ?? 1} ({bid.tenderVersion?.title || "Specification"})
+          </p>
+          <p className="text-slate-600 leading-relaxed">
+            This bid proposal was submitted against and is bound to Tender Version <strong>v{bid.tenderVersion?.versionNumber ?? 1}</strong> (UUID: {bid.tenderVersionId}). Future modifications or addenda published in newer tender versions do not alter this evaluation baseline.
+          </p>
+        </div>
+      </div>
+
+      {/* Proposal Scope & Executive Summary (if present) */}
+      {bid.metadata && typeof bid.metadata === "object" ? (
+        <Card>
+          <CardHeader className="pb-3 border-b border-slate-100">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <FileText className="w-4 h-4 text-indigo-600" />
+              Bidder Proposal Scope & Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-5 space-y-3 text-xs">
+            {(bid.metadata as Record<string, unknown>).proposalNote ? (
+              <div>
+                <span className="font-semibold text-slate-700 block">Proposal Reference Title:</span>
+                <p className="text-slate-900 mt-0.5">
+                  {String((bid.metadata as Record<string, unknown>).proposalNote)}
+                </p>
+              </div>
+            ) : null}
+            {(bid.metadata as Record<string, unknown>).executiveSummary ? (
+              <div>
+                <span className="font-semibold text-slate-700 block">Executive Summary:</span>
+                <p className="text-slate-700 mt-0.5 whitespace-pre-wrap leading-relaxed">
+                  {String((bid.metadata as Record<string, unknown>).executiveSummary)}
+                </p>
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+      ) : null}
 
       {/* Vendor Profile & Tender Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -224,6 +276,7 @@ export const OfficerBidDetailsPage: React.FC = () => {
                     <th className="py-3 px-4">Size</th>
                     <th className="py-3 px-4">Processing Status</th>
                     <th className="py-3 px-4">Uploaded</th>
+                    <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
@@ -259,6 +312,14 @@ export const OfficerBidDetailsPage: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4 whitespace-nowrap text-xs text-slate-500">
                         {new Date(docItem.document.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-3.5 px-4 whitespace-nowrap text-xs text-right">
+                        <Link to={`/officer/bids/${id}/evidence?docId=${docItem.document.id}`}>
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                            <Eye className="w-3.5 h-3.5" />
+                            Inspect Evidence
+                          </Button>
+                        </Link>
                       </td>
                     </tr>
                   ))}

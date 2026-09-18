@@ -46,7 +46,12 @@ enum TenderVersionStatus {
 enum BidStatus {
   DRAFT
   SUBMITTED
+  PROCESSING
   UNDER_REVIEW
+  CLARIFICATION_REQUIRED
+  READY_FOR_DECISION
+  DECIDED
+  ARCHIVED
   EVALUATED
   REJECTED
   ACCEPTED
@@ -58,10 +63,83 @@ enum DocumentProcessingStatus {
   FAILED
 }
 
+enum DocumentStatus {
+  UPLOADING
+  SCANNING
+  PROCESSING
+  READY
+  FAILED
+  QUARANTINED
+  REPLACEMENT_REQUIRED
+}
+
 enum IdempotencyStatus {
   IN_PROGRESS
   COMPLETED
   FAILED
+}
+
+enum OCRStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ExtractionStatus {
+  EXTRACTED
+  REVIEW_RECOMMENDED
+}
+
+enum RequirementStatus {
+  PROPOSED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  SUPERSEDED
+}
+
+enum RequirementCategory {
+  IDENTITY
+  LEGAL_ENTITY
+  GST_REGISTRATION
+  UDYAM_REGISTRATION
+  PAN
+  MCA_REGISTRATION
+  TURNOVER
+  EXPERIENCE
+  FINANCIAL_CAPACITY
+  TECHNICAL_CAPACITY
+  OEM_AUTHORIZATION
+  EMD
+  DECLARATION
+  CERTIFICATION
+  LOCAL_CONTENT
+  MSME_ELIGIBILITY
+  STARTUP_ELIGIBILITY
+  STATUTORY_COMPLIANCE
+  OTHER
+  REVIEW_REQUIRED
+}
+
+enum RequirementOperator {
+  EQUALS
+  NOT_EQUALS
+  STATUS_EQUALS
+  GREATER_THAN
+  GREATER_THAN_OR_EQUAL
+  LESS_THAN
+  LESS_THAN_OR_EQUAL
+  CONTAINS
+  EXISTS
+  DATE_BEFORE
+  DATE_AFTER
+  DATE_ON_OR_BEFORE
+  DATE_ON_OR_AFTER
+  BOOLEAN_TRUE
+  BOOLEAN_FALSE
+  MATCHES
+  ONE_OF
 }
 
 // ---------------------------------------------------------------------------
@@ -81,6 +159,8 @@ model Organization {
   bidders            Bidder[]
   documents          Document[]
   idempotencyRecords IdempotencyRecord[]
+  requirements       Requirement[]
+  auditEvents        AuditEvent[]
 
   @@map("organizations")
 }
@@ -102,6 +182,10 @@ model User {
   bidder             Bidder?             @relation(fields: [bidderId], references: [id], onDelete: SetNull)
   sessions           Session[]
   idempotencyRecords IdempotencyRecord[]
+  uploadedDocuments  Document[]          @relation("UserUploadedDocuments")
+  createdRequirementVersions  RequirementVersion[] @relation("RequirementVersionCreator")
+  approvedRequirementVersions RequirementVersion[] @relation("RequirementVersionApprover")
+  auditEvents                 AuditEvent[]
 
   @@index([organizationId])
   @@index([bidderId])
@@ -127,6 +211,8 @@ model Tender {
   organizationId   String          @db.Uuid
   title            String
   referenceNumber  String
+  category         String?
+  department       String?
   status           TenderStatus    @default(DRAFT)
   currentVersionId String?         @db.Uuid
   createdAt        DateTime        @default(now())
@@ -135,6 +221,8 @@ model Tender {
   organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   versions         TenderVersion[]
   bids             Bid[]
+  requirements     Requirement[]
+  tenderDocuments  TenderDocument[]
 
   @@unique([organizationId, referenceNumber])
   @@index([organizationId])
@@ -142,53 +230,101 @@ model Tender {
 }
 
 model TenderVersion {
-  id            String              @id @default(uuid()) @db.Uuid
-  tenderId      String              @db.Uuid
-  versionNumber Int
-  title         String
-  description   String?
-  content       Json?
-  status        TenderVersionStatus @default(DRAFT)
-  createdAt     DateTime            @default(now())
+  id                  String               @id @default(uuid()) @db.Uuid
+  tenderId            String               @db.Uuid
+  versionNumber       Int
+  title               String
+  description         String?
+  content             Json?
+  changeSummary       String?
+  status              TenderVersionStatus  @default(DRAFT)
+  createdAt           DateTime             @default(now())
 
-  tender        Tender              @relation(fields: [tenderId], references: [id], onDelete: Restrict)
-  requirements  Requirement[]
-  bids          Bid[]
+  tender              Tender               @relation(fields: [tenderId], references: [id], onDelete: Restrict)
+  requirements        Requirement[]
+  requirementVersions RequirementVersion[]
+  tenderDocuments     TenderDocument[]
+  bids                Bid[]
 
+  @@unique([id, tenderId])
   @@unique([tenderId, versionNumber])
   @@index([tenderId])
   @@map("tender_versions")
 }
 
 model Requirement {
-  id              String               @id @default(uuid()) @db.Uuid
-  tenderVersionId String               @db.Uuid
-  identifier      String
-  category        String
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  id               String               @id @default(uuid()) @db.Uuid
+  organizationId   String?              @db.Uuid
+  tenderId         String?              @db.Uuid
+  tenderVersionId  String               @db.Uuid
+  identifier       String
+  category         String
+  currentVersionId String?              @db.Uuid
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 
-  tenderVersion   TenderVersion        @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
-  versions        RequirementVersion[]
+  organization     Organization?        @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  tender           Tender?              @relation(fields: [tenderId], references: [id], onDelete: Restrict)
+  tenderVersion    TenderVersion        @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
+  currentVersion   RequirementVersion?  @relation("CurrentRequirementVersion", fields: [currentVersionId], references: [id], onDelete: SetNull)
+  versions         RequirementVersion[] @relation("RequirementToVersions")
+  complianceRules  ComplianceRule[]
 
   @@unique([tenderVersionId, identifier])
+  @@index([organizationId])
+  @@index([tenderId])
   @@index([tenderVersionId])
   @@map("requirements")
 }
 
 model RequirementVersion {
-  id                 String      @id @default(uuid()) @db.Uuid
-  requirementId      String      @db.Uuid
-  versionNumber      Int
-  description        String
-  mandatory          Boolean     @default(true)
-  evaluationCriteria Json?
-  createdAt          DateTime    @default(now())
+  id                     String               @id @default(uuid()) @db.Uuid
+  requirementId          String               @db.Uuid
+  tenderVersionId        String?              @db.Uuid
+  versionNumber          Int
+  status                 RequirementStatus    @default(PROPOSED)
+  category               RequirementCategory  @default(OTHER)
+  title                  String               @default("")
+  description            String
+  mandatory              Boolean              @default(true)
+  condition              String?
+  operator               RequirementOperator?
+  threshold              Json?
+  expectedValue          String?
+  requiredEvidenceType   String?
+  sourceClause           String?
+  sourcePage             Int?
+  sourceText             String?              @db.Text
+  sourceDocumentId       String?              @db.Uuid
+  sourceLocation         Json?
+  effectiveFrom          DateTime?            @default(now())
+  effectiveTo            DateTime?
+  aiGenerated            Boolean              @default(false)
+  aiModel                String?
+  aiModelVersion         String?
+  aiConfidence           Float?
+  createdBy              String?              @db.Uuid
+  approvedBy             String?              @db.Uuid
+  approvedAt             DateTime?
+  rejectionReason        String?              @db.Text
+  supersedesVersionId    String?              @db.Uuid
+  evaluationCriteria     Json?
+  createdAt              DateTime             @default(now())
 
-  requirement        Requirement @relation(fields: [requirementId], references: [id], onDelete: Restrict)
+  requirement            Requirement          @relation("RequirementToVersions", fields: [requirementId], references: [id], onDelete: Cascade)
+  tenderVersion          TenderVersion?       @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
+  sourceDocument         Document?            @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdByUser          User?                @relation("RequirementVersionCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  approvedByUser         User?                @relation("RequirementVersionApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+  supersedesVersion      RequirementVersion?  @relation("RequirementVersionSupersession", fields: [supersedesVersionId], references: [id], onDelete: SetNull)
+  supersededBy           RequirementVersion[] @relation("RequirementVersionSupersession")
+  currentForRequirements Requirement[]        @relation("CurrentRequirementVersion")
+  complianceRules        ComplianceRule[]
 
   @@unique([requirementId, versionNumber])
   @@index([requirementId])
+  @@index([tenderVersionId])
+  @@index([status])
   @@map("requirement_versions")
 }
 
@@ -218,15 +354,17 @@ model Bid {
   bidderId        String        @db.Uuid
   bidReference    String
   status          BidStatus     @default(DRAFT)
+  version         Int           @default(1)
   totalAmount     Decimal?      @db.Decimal(15, 2)
   currency        String        @default("INR")
+  metadata        Json?
   submittedAt     DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   tender          Tender        @relation(fields: [tenderId], references: [id], onDelete: Restrict)
-  tenderVersion   TenderVersion @relation(fields: [tenderVersionId], references: [id], onDelete: Restrict)
+  tenderVersion   TenderVersion @relation(fields: [tenderVersionId, tenderId], references: [id, tenderId], onDelete: Restrict)
   bidder          Bidder        @relation(fields: [bidderId], references: [id], onDelete: Restrict)
   bidDocuments    BidDocument[]
 
@@ -240,21 +378,45 @@ model Bid {
 }
 
 model Document {
-  id               String                   @id @default(uuid()) @db.Uuid
-  organizationId   String                   @db.Uuid
-  storageKey       String
-  fileName         String
-  mimeType         String
-  fileSize         Int
-  sha256           String
-  processingStatus DocumentProcessingStatus @default(PENDING)
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime                 @updatedAt
+  id                   String                   @id @default(uuid()) @db.Uuid
+  organizationId       String                   @db.Uuid
+  storageKey           String
+  fileName             String
+  originalFilename     String?
+  mimeType             String
+  mediaType            String?
+  extension            String                   @default("pdf")
+  fileSize             Int
+  sizeBytes            Int                      @default(0)
+  sha256               String
+  status               DocumentStatus
+  processingStatus     DocumentProcessingStatus @default(PENDING)
+  uploadedById         String?                  @db.Uuid
+  scanStatus           String?
+  scanTimestamp        DateTime?
+  failureCode          String?
+  failureMessage       String?
+  supersedesDocumentId String?                  @db.Uuid
+  documentType         String?
+  classificationConfidence Float?
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
 
-  organization     Organization             @relation(fields: [organizationId], references: [id], onDelete: Restrict)
-  bidDocuments     BidDocument[]
+  organization         Organization             @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  uploadedBy           User?                    @relation("UserUploadedDocuments", fields: [uploadedById], references: [id], onDelete: SetNull)
+  supersedesDocument   Document?                @relation("DocumentSupersession", fields: [supersedesDocumentId], references: [id], onDelete: SetNull)
+  supersededBy         Document[]               @relation("DocumentSupersession")
+  bidDocuments         BidDocument[]
+  tenderDocuments      TenderDocument[]
+  requirementVersions  RequirementVersion[]
+  ocrResults           OCRResult[]
+  classifications      DocumentClassification[]
+  evidence             ExtractedEvidence[]
 
   @@index([organizationId])
+  @@index([sha256])
+  @@index([organizationId, sha256])
+  @@index([uploadedById])
   @@map("documents")
 }
 
@@ -265,6 +427,7 @@ model BidDocument {
   category   String
   required   Boolean  @default(true)
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 
   bid        Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
   document   Document @relation(fields: [documentId], references: [id], onDelete: Restrict)
@@ -300,4 +463,149 @@ model IdempotencyRecord {
   @@index([expiresAt])
   @@map("idempotency_records")
 }
+
+model OCRResult {
+  id               String    @id @default(uuid()) @db.Uuid
+  documentId       String    @db.Uuid
+  runNumber        Int       @default(1)
+  status           OCRStatus @default(PENDING)
+  text             String?   @db.Text
+  pageCount        Int       @default(0)
+  pages            Json?
+  extractionMethod String    @default("HYBRID_OCR")
+  engine           String    @default("bidsure-ocr-engine")
+  engineVersion    String?   @default("1.0.0")
+  language         String?   @default("eng")
+  confidence       Float?
+  pipelineVersion  String    @default("phase09-v1")
+  isCurrent        Boolean   @default(true)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+
+  document         Document  @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@index([documentId])
+  @@index([documentId, isCurrent])
+  @@map("ocr_results")
+}
+
+model DocumentClassification {
+  id                String   @id @default(uuid()) @db.Uuid
+  documentId        String   @db.Uuid
+  runNumber         Int      @default(1)
+  documentType      String
+  confidence        Float
+  method            String   @default("RULE_BASED")
+  modelProvider     String?
+  modelName         String?
+  modelVersion      String?
+  pipelineVersion   String   @default("phase09-v1")
+  classifierVersion String   @default("phase09-classifier-v1")
+  isCurrent         Boolean  @default(true)
+  metadata          Json?
+  createdAt         DateTime @default(now())
+
+  document          Document @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@index([documentId])
+  @@index([documentId, isCurrent])
+  @@map("document_classifications")
+}
+
+model ExtractedEvidence {
+  id                String           @id @default(uuid()) @db.Uuid
+  documentId        String           @db.Uuid
+  runNumber         Int              @default(1)
+  field             String
+  value             String           @db.Text
+  normalizedValue   String?          @db.Text
+  page              Int              @default(1)
+  boundingBox       Json?
+  confidence        Float
+  method            String
+  extractionSource  String?          @db.Text
+  extractionStatus  ExtractionStatus @default(EXTRACTED)
+  modelProvider     String?
+  modelName         String?
+  modelVersion      String?
+  pipelineVersion   String           @default("phase09-v1")
+  extractorVersion  String           @default("phase09-extractor-v1")
+  isCurrent         Boolean          @default(true)
+  metadata          Json?
+  createdAt         DateTime         @default(now())
+
+  document          Document         @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@index([documentId])
+  @@index([field])
+  @@index([documentId, isCurrent])
+  @@map("extracted_evidence")
+}
+
+model ComplianceRule {
+  id                   String              @id @default(uuid()) @db.Uuid
+  requirementId        String              @db.Uuid
+  requirementVersionId String?             @db.Uuid
+  ruleType             String
+  operator             RequirementOperator?
+  expectedValue        String?
+  parameters           Json?               @default("{}")
+  priority             Int                 @default(100)
+  enabled              Boolean             @default(true)
+  version              Int                 @default(1)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  requirement          Requirement         @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+  requirementVersion   RequirementVersion? @relation(fields: [requirementVersionId], references: [id], onDelete: SetNull)
+
+  @@index([requirementId])
+  @@index([requirementVersionId])
+  @@index([ruleType])
+  @@map("compliance_rules")
+}
+
+model TenderDocument {
+  id              String         @id @default(uuid()) @db.Uuid
+  tenderId        String         @db.Uuid
+  tenderVersionId String?        @db.Uuid
+  documentId      String         @db.Uuid
+  category        String         @default("TENDER_SPECIFICATION")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+
+  tender          Tender         @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  tenderVersion   TenderVersion? @relation(fields: [tenderVersionId], references: [id], onDelete: SetNull)
+  document        Document       @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@unique([tenderId, documentId])
+  @@index([tenderId])
+  @@index([tenderVersionId])
+  @@index([documentId])
+  @@map("tender_documents")
+}
+
+model AuditEvent {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String        @db.Uuid
+  userId         String?       @db.Uuid
+  action         String
+  entityType     String
+  entityId       String
+  previousState  Json?
+  newState       Json?
+  metadata       Json?         @default("{}")
+  correlationId  String?
+  timestamp      DateTime      @default(now())
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([entityType, entityId])
+  @@index([timestamp])
+  @@map("audit_events")
+}
+
 

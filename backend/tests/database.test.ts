@@ -55,9 +55,10 @@ describe("Phase 03 — Domain Model & Relational Database Integrity", () => {
 
     assert.ok(tender, "Seed tender must exist");
     assert.equal(tender.referenceNumber, "TDR-2026-DEL-001");
-    assert.equal(tender.versions.length, 1);
+    assert.ok(tender.versions.length >= 1);
 
-    const v1 = tender.versions[0];
+    const v1 = tender.versions.find((v) => v.versionNumber === 1);
+    assert.ok(v1, "Version 1 must exist");
     assert.equal(v1.versionNumber, 1);
     assert.ok(v1.requirements.length >= 4, "Must have 4 seeded requirements");
 
